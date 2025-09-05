@@ -2,7 +2,7 @@
 ESP32-P4 is a system on a chip that integrates the following features:
 * High-performance MCU with RISC-V 32-bit dual-core and single-core microprocessors
 * Powerful image and voice processing capability
-* 16 MB or 32 MB PSRAM in the chip’s package
+* 16 MB Flash and 32 MB PSRAM in the chip’s package
 * 55 GPIOs, rich set of peripherals
 
 Powered by 40 nm technology, ESP32-P4 provides a robust, highly-integrated platform, which helps meet the continuous demands for efficient power usage, compact design, security, high performance, and reliability.
@@ -11,9 +11,9 @@ NOTE: ESP32P4 doesn't have WiFi and Bluetooth inside it, but is used with ESP32C
 
 This is how the board looks like.
 
-![Front View](docs/esp32-p4-function-ev-board-annotated-photo-front_v1.4.png)
+![Front View](docs/esp32-p4-function-ev-board-annotated-photo-front_v1.4.jpg)
 
-![Back View](docs/esp32-p4-function-ev-board-annotated-photo-back_v1.4.png)
+![Back View](docs/esp32-p4-function-ev-board-annotated-photo-back_v1.4.jpg)
 
 ## Block Diagram
-![Block Diagram](docs/esp32-p4-function-ev-board-block-diagram_v1.4.png)
+![Block Diagram](docs/esp32-p4-function-ev-board-block-diagram_v1.4.jpg)

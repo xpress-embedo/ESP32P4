@@ -1,0 +1,3 @@
+[submodule "esp-dev-kits"]
+	path = esp-dev-kits
+	url = https://github.com/espressif/esp-dev-kits.git
