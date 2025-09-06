@@ -1,0 +1,119 @@
+/*
+ * gui_mng.c
+ *
+ *  Created on: 06-Sep-2025
+ *      Author: abc@xyz
+ */
+
+#include "gui_mng.h"
+
+#include "esp_log.h"
+
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "freertos/semphr.h"
+
+// Private Macros
+#define GUI_EVENT_QUEUE_LEN                   (5)
+
+// Private Variables
+static const char *TAG = "GUI";
+static QueueHandle_t gui_q_event = NULL;
+
+// Private Function Declaration
+static void gui_init( void );
+static void gui_task(void *pvParameter);
+
+// Public Function Definition
+/**
+ * @brief GUI Start Function, this function will start the gui manager task
+ * @param  none
+ */
+void gui_start( void )
+{
+  gui_init();
+    
+  // callback function, task name, stack size, parameters, priority, task handle
+  xTaskCreate(&gui_task, "gui task", 4096*2, NULL, 5, NULL);
+}
+
+/**
+ * @brief Send GUI Event
+ * @param event Event Code
+ * @param pData Pointer to Data if Any
+ * @return BaseType_t pdTRUE if successful else pdFALSE
+ */
+BaseType_t gui_send_event( gui_mng_event_t event, void *pData )
+{
+  BaseType_t status = pdFALSE;
+  gui_q_msg_t msg;
+
+  if( event < GUI_MNG_EV_MAX )
+  {
+    msg.event_id  = event;
+    msg.data      = pData;
+    status = xQueueSend( gui_q_event, &msg, portMAX_DELAY );
+  }
+  return status;
+}
+
+// Private Function Definitions
+
+/**
+ * @brief gui initialization task, this will initialize the semaphire and display
+ * @param  none
+ */
+static void gui_init( void )
+{
+  // create message queue with the length GUI_EVENT_QUEUE_LEN
+  gui_q_event = xQueueCreate( GUI_EVENT_QUEUE_LEN, sizeof(gui_q_msg_t) );
+  if( gui_q_event == NULL )
+  {
+    ESP_LOGE(TAG, "Unable to Create Queue");
+  }
+  
+  bsp_display_cfg_t cfg = 
+  {
+    .lvgl_port_cfg = ESP_LVGL_PORT_INIT_CONFIG(),
+    .buffer_size = BSP_LCD_DRAW_BUFF_SIZE,
+    .double_buffer = BSP_LCD_DRAW_BUFF_DOUBLE,
+    .flags = 
+    {
+      .buff_dma = true,
+      .buff_spiram = false,
+      .sw_rotate = false,
+    }
+  };
+  bsp_display_start_with_config(&cfg);
+  bsp_display_backlight_on();
+
+  // main user interface
+  // gui_cfg_init();
+}
+
+/**
+ * @brief gui task Function which calls the lvgl timer handler function
+ *        and other updates on the user interface based on the events received
+ * @param *pvParameter  task parameter
+ */
+static void gui_task(void *pvParameter)
+{
+  gui_q_msg_t msg;
+  msg.event_id = GUI_MNG_EV_NONE;
+
+  while(1)
+  {   
+    // custom configurable function
+    gui_cfg_refresh();
+
+    // wait only GUI_MNG_REFRESH_TIME ms and then proceed
+    if( xQueueReceive(gui_q_event, &msg, pdMS_TO_TICKS(GUI_MNG_REFRESH_TIME)) )
+    {
+      // the below is the code to handle the state machine
+      if( GUI_MNG_EV_NONE != msg.event_id )
+      {
+        gui_cfg_mng_process(msg.event_id, msg.data);
+      }   // if event received in limit end
+    }     // xQueueReceive end
+  }
+}
