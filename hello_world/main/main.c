@@ -8,6 +8,7 @@
 #include "lvgl.h"
 #include "bsp/esp-bsp.h"
 #include "bsp/display.h"
+#include "bsp_board_extra.h"
 
 // Private Macros
 #define MAIN_TASK_PERIOD                    (5000)
@@ -57,5 +58,6 @@ void app_main(void)
     vTaskDelay(MAIN_TASK_PERIOD / portTICK_PERIOD_MS);
   }
 }
+
 
 // Private Function Definitions
