@@ -14,7 +14,7 @@
 #include "freertos/task.h"
 
 #include "lvgl.h"
-#include "ui.h"
+// #include "ui.h"
 
 // Private Macros
 #define NUM_ELEMENTS(x)                 (sizeof(x)/sizeof(x[0]))
@@ -49,7 +49,7 @@ void gui_cfg_init( void )
 {
   ESP_LOGI( TAG, "UI Init. Starts" );
   // generated using LVGL Editor
-  ui_init(NULL);
+  // ui_init(NULL);
   ESP_LOGI( TAG, "UI Init. Ends" );
 }
 
