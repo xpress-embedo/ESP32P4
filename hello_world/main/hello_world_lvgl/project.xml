@@ -1,0 +1,7 @@
+<project>
+    <targets>
+        <target name="ESP32P4">
+            <display width="1024" height="600"/>
+        </target>
+    </targets>
+</project>

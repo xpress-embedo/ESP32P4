@@ -2426,7 +2426,7 @@ CONFIG_CU_DIAGNOSTICS_COLOR_ALWAYS=y
 # end of CMake Utilities
 
 #
-# Board Support Package(ESP32-P4)
+# Board Support Package (ESP32-P4)
 #
 CONFIG_BSP_ERROR_CHECK=y
 
@@ -2468,8 +2468,9 @@ CONFIG_BSP_LCD_COLOR_FORMAT_RGB565=y
 # CONFIG_BSP_LCD_COLOR_FORMAT_RGB888 is not set
 CONFIG_BSP_LCD_TYPE_1024_600=y
 # CONFIG_BSP_LCD_TYPE_1280_800 is not set
+# CONFIG_BSP_LCD_TYPE_HDMI is not set
 # end of Display
-# end of Board Support Package(ESP32-P4)
+# end of Board Support Package (ESP32-P4)
 
 #
 # Audio Codec Device Configuration
@@ -2842,7 +2843,9 @@ CONFIG_LV_FS_DEFAULT_DRIVER_LETTER=0
 # CONFIG_LV_USE_QRCODE is not set
 # CONFIG_LV_USE_BARCODE is not set
 # CONFIG_LV_USE_FREETYPE is not set
-# CONFIG_LV_USE_TINY_TTF is not set
+CONFIG_LV_USE_TINY_TTF=y
+CONFIG_LV_TINY_TTF_FILE_SUPPORT=y
+# CONFIG_LV_TINY_TTF_CACHE_GLYPH_CNT is not set
 # CONFIG_LV_USE_RLOTTIE is not set
 # CONFIG_LV_USE_THORVG is not set
 # CONFIG_LV_USE_LZ4 is not set
