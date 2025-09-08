@@ -42,6 +42,7 @@ extern "C" {
 /*-------------------
  * Permanent screens
  *------------------*/
+extern lv_obj_t * main_screen;
 
 /*----------------
  * Global styles
@@ -84,7 +85,7 @@ void hello_world_lvgl_init_gen(const char * asset_path);
  **********************/
 
 /*Include all the widget and components of this library*/
-#include "screens/main_gen.h"
+#include "screens/main_screen_gen.h"
 
 #ifdef __cplusplus
 } /*extern "C"*/

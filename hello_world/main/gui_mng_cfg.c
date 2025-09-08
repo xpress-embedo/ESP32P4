@@ -14,7 +14,7 @@
 #include "freertos/task.h"
 
 #include "lvgl.h"
-#include "hello_world_lvgl/ui.h"
+#include "ui.h"
 
 // Private Macros
 #define NUM_ELEMENTS(x)                 (sizeof(x)/sizeof(x[0]))

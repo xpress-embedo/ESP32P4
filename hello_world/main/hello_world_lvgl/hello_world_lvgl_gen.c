@@ -37,6 +37,7 @@
 /*--------------------
  *  Permanent screens
  *-------------------*/
+lv_obj_t * main_screen;
 
 /*----------------
  * Global styles
@@ -114,6 +115,7 @@ void hello_world_lvgl_init_gen(const char * asset_path)
     /*If XML is enabled it's assumed that the permanent screens are created
      *manaully from XML using lv_xml_create()*/
 
+    main_screen = main_screen_create();
 #endif
 }
 

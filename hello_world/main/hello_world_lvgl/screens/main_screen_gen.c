@@ -1,12 +1,12 @@
 /**
- * @file main_gen.c
+ * @file main_screen_gen.c
  * @description Template source file for LVGL objects
  */
 
 /*********************
  *      INCLUDES
  *********************/
-#include "main_gen.h"
+#include "main_screen_gen.h"
 #include "ui.h"
 
 /*********************
@@ -31,7 +31,7 @@
  *   GLOBAL FUNCTIONS
  **********************/
 
-lv_obj_t * main_create(void)
+lv_obj_t * main_screen_create(void)
 {
     LV_TRACE_OBJ_CREATE("begin");
 
@@ -56,7 +56,7 @@ lv_obj_t * main_create(void)
 
     LV_TRACE_OBJ_CREATE("finished");
 
-    // lv_obj_set_name(lv_obj_0, "main");
+    // lv_obj_set_name(lv_obj_0, "main_screen");
 
     return lv_obj_0;
 }

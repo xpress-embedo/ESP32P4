@@ -1,9 +1,9 @@
 /**
- * @file main_gen.h
+ * @file main_screen_gen.h
  */
 
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef MAIN_SCREEN_H
+#define MAIN_SCREEN_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -33,7 +33,7 @@ extern "C" {
 
 
 
-lv_obj_t * main_create(void);
+lv_obj_t * main_screen_create(void);
 
 /**********************
  *      MACROS
@@ -43,4 +43,4 @@ lv_obj_t * main_create(void);
 } /*extern "C"*/
 #endif
 
-#endif /*MAIN_H*/
+#endif /*MAIN_SCREEN_H*/
