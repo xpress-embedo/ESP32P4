@@ -14,7 +14,9 @@ The following are the components/dependencies we have added to our base project 
 * `lvgl` : This component contains the LVGL graphics library.
 
 ### SDK Config Defaults
-The following command
+By default the ESP-IDF uses the `sdkconfig` during the build, and `sdkconfig.defaults` is only used when generating `sdkconfig` for the first time or when it is missing. Usualluy we write only the changes or preset values we want to apply.
+
+This project has following changes in comparison to the `sdkconfig` file generated automatically.
 ```
 CONFIG_IDF_TARGET="esp32p4"
 CONFIG_ESPTOOLPY_FLASHMODE_QIO=y
@@ -22,13 +24,6 @@ CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y
 CONFIG_SPIRAM=y
 CONFIG_SPIRAM_SPEED_200M=y
 CONFIG_SPIRAM_XIP_FROM_PSRAM=y
-CONFIG_LV_FONT_MONTSERRAT_12=y
-CONFIG_LV_FONT_MONTSERRAT_16=y
-CONFIG_LV_FONT_MONTSERRAT_18=y
-CONFIG_LV_FONT_MONTSERRAT_20=y
-CONFIG_LV_FONT_MONTSERRAT_22=y
-CONFIG_LV_FONT_MONTSERRAT_24=y
-CONFIG_LV_FONT_MONTSERRAT_26=y
 CONFIG_LV_USE_PERF_MONITOR=y
 CONFIG_IDF_EXPERIMENTAL_FEATURES=y
 ```
