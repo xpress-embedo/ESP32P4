@@ -44,6 +44,7 @@ lv_obj_t * main_create(void)
     }
 
     lv_obj_t * lv_obj_0 = lv_obj_create(NULL);
+    lv_obj_set_style_bg_color(lv_obj_0, lv_color_hex(0xcf9b9b), 0);
     lv_obj_set_width(lv_obj_0, lv_pct(100));
     lv_obj_set_height(lv_obj_0, lv_pct(100));
 
@@ -55,7 +56,7 @@ lv_obj_t * main_create(void)
 
     LV_TRACE_OBJ_CREATE("finished");
 
-    lv_obj_set_name(lv_obj_0, "main");
+    // lv_obj_set_name(lv_obj_0, "main");
 
     return lv_obj_0;
 }

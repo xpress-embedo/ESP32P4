@@ -14,7 +14,7 @@
 #include "freertos/task.h"
 
 #include "lvgl.h"
-#include "ui.h"
+#include "hello_world_lvgl/ui.h"
 
 // Private Macros
 #define NUM_ELEMENTS(x)                 (sizeof(x)/sizeof(x[0]))
@@ -48,8 +48,10 @@ static const gui_mng_event_cb_t gui_mng_event_cb[] =
 void gui_cfg_init( void )
 {
   ESP_LOGI( TAG, "UI Init. Starts" );
+  GUI_LOCK();
   // generated using LVGL Editor
   ui_init(NULL);
+  GUI_UNLOCK();
   ESP_LOGI( TAG, "UI Init. Ends" );
 }
 

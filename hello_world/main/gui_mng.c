@@ -76,7 +76,7 @@ static void gui_init( void )
   bsp_display_backlight_on();
 
   // main user interface
-  // gui_cfg_init();
+  gui_cfg_init();
 }
 
 /**
