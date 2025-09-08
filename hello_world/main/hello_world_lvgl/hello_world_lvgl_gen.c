@@ -45,9 +45,7 @@
 /*----------------
  * Fonts
  *----------------*/
-lv_font_t * font_title;
-extern uint8_t Inter_SemiBold_ttf_data[];
-extern size_t Inter_SemiBold_ttf_data_size;
+
 
 /*----------------
  * Images
@@ -76,8 +74,6 @@ void hello_world_lvgl_init_gen(const char * asset_path)
     /*----------------
      * Fonts
      *----------------*/
-    /* create tiny ttf font 'font_title' from C array */
-    font_title = lv_tiny_ttf_create_data(Inter_SemiBold_ttf_data, Inter_SemiBold_ttf_data_size, 42);
 
     /*----------------
      * Images
@@ -97,7 +93,6 @@ void hello_world_lvgl_init_gen(const char * asset_path)
     /*Register widgets*/
 
     /* Register fonts */
-    lv_xml_register_font(NULL, "font_title", font_title);
 
     /* Register subjects */
 

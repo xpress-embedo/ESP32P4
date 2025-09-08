@@ -20,6 +20,6 @@
     </images>
 
     <fonts>
-        <tiny_ttf name="font_title" size="42" src_path="fonts/Inter-SemiBold.ttf"/>
+        <!-- <tiny_ttf name="font_title" size="42" src_path="fonts/Inter-SemiBold.ttf"/> -->
     </fonts>
 </globals>

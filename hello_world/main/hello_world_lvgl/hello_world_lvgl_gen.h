@@ -51,7 +51,7 @@ extern "C" {
 /*----------------
  * Fonts
  *----------------*/
-extern lv_font_t * font_title;
+
 
 /*----------------
  * Images
