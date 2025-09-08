@@ -2412,6 +2412,20 @@ CONFIG_WIFI_PROV_STA_ALL_CHANNEL_SCAN=y
 # end of Wi-Fi Provisioning Manager
 
 #
+# Board Support Package
+#
+CONFIG_BSP_I2S_NUM=1
+# end of Board Support Package
+
+#
+# Audio playback
+#
+CONFIG_AUDIO_PLAYER_ENABLE_MP3=y
+CONFIG_AUDIO_PLAYER_ENABLE_WAV=y
+CONFIG_AUDIO_PLAYER_LOG_LEVEL=0
+# end of Audio playback
+
+#
 # CMake Utilities
 #
 # CONFIG_CU_RELINKER_ENABLE is not set
@@ -2438,7 +2452,6 @@ CONFIG_BSP_I2C_CLK_SPEED_HZ=400000
 #
 # I2S
 #
-CONFIG_BSP_I2S_NUM=1
 # end of I2S
 
 #

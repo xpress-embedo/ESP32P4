@@ -13,8 +13,6 @@
 #include "gui_mng_cfg.h"
 
 #include "bsp/esp-bsp.h"
-#include "bsp/display.h"
-#include "bsp_board_extra.h"
 
 // Public Macros
 #define GUI_LOCK()                            bsp_display_lock(0)

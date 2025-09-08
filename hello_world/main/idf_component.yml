@@ -14,7 +14,7 @@ dependencies:
   #   # `public` flag doesn't have an effect dependencies of the `main` component.
   #   # All dependencies of `main` are public by default.
   #   public: true
-  espressif/esp32_p4_function_ev_board: ^4.1.*
+  espressif/esp32_p4_function_ev_board: ^5.0.1
   espressif/esp_lcd_ek79007: ^1.0.2
   espressif/esp_lcd_ili9881c: ^1.0.1
   espressif/esp_lcd_touch: ^1.1.2
