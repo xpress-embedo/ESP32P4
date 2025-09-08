@@ -14,7 +14,7 @@
 #include "freertos/task.h"
 
 #include "lvgl.h"
-// #include "ui.h"
+#include "ui.h"
 
 // Private Macros
 #define NUM_ELEMENTS(x)                 (sizeof(x)/sizeof(x[0]))
@@ -49,7 +49,7 @@ void gui_cfg_init( void )
 {
   ESP_LOGI( TAG, "UI Init. Starts" );
   // generated using LVGL Editor
-  // ui_init(NULL);
+  ui_init(NULL);
   ESP_LOGI( TAG, "UI Init. Ends" );
 }
 
@@ -94,14 +94,14 @@ static void gui_hello_world( void *data )
 {
   GUI_LOCK();
   ESP_LOGI( TAG, "Hello World Event Received" );
-  /*Change the active screen's background color*/
-  lv_obj_set_style_bg_color(lv_screen_active(), lv_color_hex(0x003a57), LV_PART_MAIN);
+  // /*Change the active screen's background color*/
+  // lv_obj_set_style_bg_color(lv_screen_active(), lv_color_hex(0x003a57), LV_PART_MAIN);
 
-  /*Create a white label, set its text and align it to the center*/
-  lv_obj_t * label = lv_label_create(lv_screen_active());
-  lv_label_set_text(label, "Hello world");
-  lv_obj_set_style_text_color(lv_screen_active(), lv_color_hex(0xffffff), LV_PART_MAIN);
-  lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+  // /*Create a white label, set its text and align it to the center*/
+  // lv_obj_t * label = lv_label_create(lv_screen_active());
+  // lv_label_set_text(label, "Hello world");
+  // lv_obj_set_style_text_color(lv_screen_active(), lv_color_hex(0xffffff), LV_PART_MAIN);
+  // lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
   GUI_UNLOCK();
 }
 

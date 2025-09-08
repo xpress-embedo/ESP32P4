@@ -59,7 +59,7 @@ lv_obj_t * main_create(void)
 
     LV_TRACE_OBJ_CREATE("finished");
 
-    // lv_obj_set_name(lv_obj_0, "main");
+    lv_obj_set_name(lv_obj_0, "main");
 
     return lv_obj_0;
 }
