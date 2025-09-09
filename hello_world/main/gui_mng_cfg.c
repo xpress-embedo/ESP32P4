@@ -40,6 +40,17 @@ static const gui_mng_event_cb_t gui_mng_event_cb[] =
   { GUI_MNG_EV_HELLO_WORLD,             gui_hello_world               },
 };
 
+// Test Code Starts (to be removed later)
+void lv_example_get_started_1(void)
+{
+  /*Create a white label, set its text and align it to the center*/
+  lv_obj_t * label = lv_label_create(lv_screen_active());
+  lv_label_set_text(label, "Hello world");
+  lv_obj_set_style_text_color(lv_screen_active(), lv_color_hex(0x003a57), LV_PART_MAIN);
+  lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+}
+// Test Code Ends
+
 // Public Function Definitions
 /**
  * @brief GUI Configurable Initialization Function
@@ -50,7 +61,9 @@ void gui_cfg_init( void )
   ESP_LOGI( TAG, "UI Init. Starts" );
   GUI_LOCK();
   // generated using LVGL Editor
-  ui_init(NULL);
+  ui_init(NULL);    // not working
+  lv_example_get_started_1(); // working, test  function, to be removed later
+  
   GUI_UNLOCK();
   ESP_LOGI( TAG, "UI Init. Ends" );
 }
