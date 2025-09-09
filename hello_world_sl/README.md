@@ -71,3 +71,61 @@ The below is the explaination of each configuration setting:
 * `CONFIG_LV_USE_SYSMON=y`, `CONFIG_LV_USE_PERF_MONITOR=y` and `CONFIG_LV_PERF_MONITOR_ALIGN_BOTTOM_RIGHT=y` are configured together
 * `CONFIG_IDF_EXPERIMENTAL_FEATURES=y` : This enables the experimental features or some features which shall not be enabled accidently, for example `CONFIG_SPIRAM_SPEED_200M=y` this is available only when experimental features are enabled.
 * `# CONFIG_LV_BUILD_EXAMPLES is not set` and `# CONFIG_LV_BUILD_DEMOS is not set` : by disabling this setting we are configuring LVGL to not compile examples and demos to save some time.
+
+
+### Partition Table
+
+The following is the example partition table (as of now used for this project).
+
+| Name     | Type   | SubType | Offset  | Size     | Flags | Description                                                                       |
+| -------- | ------ | ------- | ------- | -------- | ----- | --------------------------------------------------------------------------------- |
+| nvs      | data   | nvs     | 0x9000  | 0x6000   |       | Non-Volatile Storage used by ESP-IDF to store key-value pairs.                    |
+| phy_init | data   | phy     | 0xf000  | 0x1000   |       | PHY Initialization Data-Stores RF calibration & PHY Settings for WiFi & Bluetooth |
+| config   | data   | 0x40    | 0x10000 | 0x10000  |       | Custom Configuration                                                              |
+| factory  | app    | factory | 0x20000 | 0xFE0000 |       | Main Application                                                                  |
+
+Here the `config` section contains the custom configuration files which will be generated externally using some external tool. One such Python Script to generate such file is as shown below.  
+```python
+import struct
+
+# Configuration values
+access_point_name = "ESP32_AP"
+ip_address = "192.168.0.1"
+serial_number = "SN0123456789"
+
+# Fixed sizes for each field (in bytes)
+AP_NAME_SIZE = 32
+IP_ADDR_SIZE = 16
+SERIAL_SIZE = 32
+
+# Pad or truncate each field
+def pad(value, size):
+    return value.encode('utf-8')[:size].ljust(size, b'\x00')
+
+# Create binary blob
+binary_data = b""
+binary_data += pad(access_point_name, AP_NAME_SIZE)
+binary_data += pad(ip_address, IP_ADDR_SIZE)
+binary_data += pad(serial_number, SERIAL_SIZE)
+
+# Save to file
+with open("config.bin", "wb") as f:
+    f.write(binary_data)
+
+print("Binary config written to config.bin")
+```
+And then to program this generated configuration, we will use the following command.
+```bash
+esptool.py write_flash 0x10000 config.bin
+```
+
+---
+
+**NOTE:** Initially I tried to keep `config` size as `0x1000` and `factory` app size as `0xFEF000`, but then ESP-IDF framework has given me an error, as shown below.
+```bash
+Partition factory invalid: Offset 0x11000 is not aligned to 0x10000
+```
+This is because ESP-IDF requires app partitions (like factory) to start at offsets aligned to 64KB boundaries (i.e., multiples of `0x10000`). While in the scenario I have choosen earlier the offset was `0x11000` is misaligned—it’s just `4KB` past the required boundary. Hence the table is updated as given above.
+
+---
+
