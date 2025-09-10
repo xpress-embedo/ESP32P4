@@ -5,6 +5,7 @@ idf_component_register(
     SRCS main.c         # list the source files of this component
     gui_mng.c
     gui_mng_cfg.c
+    data_config.c
     ui/screens/ui_MainScreen.c
     ui/ui.c
     ui/components/ui_comp_hook.c

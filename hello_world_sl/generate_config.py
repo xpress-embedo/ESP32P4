@@ -1,8 +1,8 @@
 import struct
 
 # Configuration values
-access_point_name = "ESP32_AP"
-ip_address = "192.168.0.1"
+access_point_name = "ESP324_AP"
+ip_address = "192.168.0.100"
 serial_number = "SN0123456789"
 
 # Fixed sizes for each field (in bytes)
@@ -24,4 +24,5 @@ binary_data += pad(serial_number, SERIAL_SIZE)
 with open("config.bin", "wb") as f:
     f.write(binary_data)
 
+print("Binary size:", len(binary_data))  # Should be at least 80 bytes
 print("Binary config written to config.bin")
