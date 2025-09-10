@@ -9,6 +9,8 @@ idf_component_register(
     ui/screens/ui_MainScreen.c
     ui/ui.c
     ui/components/ui_comp_hook.c
+    ui/images/ui_img_logo1_png.c
+    ui/images/ui_img_logo2_png.c
     ui/ui_helpers.c
     INCLUDE_DIRS        # optional, add here public include directories
     "." "ui" "ui/screens" ${LV_DEMO_DIR}

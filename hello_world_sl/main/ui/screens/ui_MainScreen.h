@@ -14,6 +14,7 @@ extern "C" {
 extern void ui_MainScreen_screen_init(void);
 extern void ui_MainScreen_screen_destroy(void);
 extern lv_obj_t * ui_MainScreen;
+extern lv_obj_t * ui_imgLogo;
 extern lv_obj_t * ui_lblHelloWorld;
 // CUSTOM VARIABLES
 

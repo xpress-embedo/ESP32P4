@@ -33,12 +33,15 @@ typedef struct _gui_mng_event_cb_t
 static void gui_hello_world( void *data );
 
 // Private Variables
+LV_IMG_DECLARE(ui_img_logo1_png);
+
 static const char *TAG = "GUI_CFG";
 
 static const gui_mng_event_cb_t gui_mng_event_cb[] =
 {
   { GUI_MNG_EV_HELLO_WORLD,             gui_hello_world               },
 };
+
 
 // Public Function Definitions
 /**
@@ -95,6 +98,7 @@ static void gui_hello_world( void *data )
 {
   GUI_LOCK();
   ESP_LOGI( TAG, "Hello World Event Received" );
+  lv_image_set_src(ui_imgLogo, &ui_img_logo1_png);
   // /*Change the active screen's background color*/
   // lv_obj_set_style_bg_color(lv_screen_active(), lv_color_hex(0x003a57), LV_PART_MAIN);
 
