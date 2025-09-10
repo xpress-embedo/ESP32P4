@@ -66,7 +66,7 @@ void cfg_init( void )
  * @brief This function returns the device default access point name
  * @param access_point_name 
  */
-void cgf_get_access_point( char *access_point_name )
+void cfg_get_access_point( char *access_point_name )
 {
   if ( is_initialized )
   {
@@ -78,7 +78,7 @@ void cgf_get_access_point( char *access_point_name )
  * @brief This function returns the device default access point IP address
  * @param ip_address 
  */
-void cgf_get_ip_address( char *ip_address )
+void cfg_get_ip_address( char *ip_address )
 {
   if ( is_initialized )
   {
@@ -90,7 +90,7 @@ void cgf_get_ip_address( char *ip_address )
  * @brief This function returns the device serial number
  * @param serial_number 
  */
-void cgf_get_serial_number( char *serial_number )
+void cfg_get_serial_number( char *serial_number )
 {
   if ( is_initialized )
   {
