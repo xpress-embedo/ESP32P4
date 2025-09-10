@@ -9,6 +9,7 @@
 #include "gui_mng_cfg.h"
 
 #include "esp_log.h"
+#include "esp_heap_caps.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -100,6 +101,7 @@ void gui_cfg_refresh( void )
  */
 static bool load_lvgl_image( const char *path, lv_img_dsc_t *img_dsc )
 {
+  // opens the image file in binary mode for reading
   FILE *f = fopen(path, "rb");
   if ( !f )
   {
@@ -107,10 +109,12 @@ static bool load_lvgl_image( const char *path, lv_img_dsc_t *img_dsc )
     return false;
   }
 
+  // calculates the file size by seeking to the end and rewinding
   fseek( f, 0, SEEK_END );
   size_t size = ftell( f );
   rewind(f);
 
+  // allocates memory for the image data
   uint8_t *buffer = malloc(size);
   if ( !buffer )
   {
@@ -119,12 +123,23 @@ static bool load_lvgl_image( const char *path, lv_img_dsc_t *img_dsc )
     return false;
   }
 
+  // reads the file data into the buffer and closes the file
   fread( buffer, 1, size, f );
   fclose(f);
 
+  // copies the image descriptor (metadata like width, height, color format) 
+  // from the start of the buffer
   memcpy( img_dsc, buffer, sizeof(lv_img_dsc_t) );
+  // Points img_dsc->data to the pixel data portion of the buffer
   img_dsc->data = buffer + sizeof(lv_img_dsc_t);
   return true;
+}
+
+static void unload_lvgl_image ( lv_obj_t *img, lv_img_dsc_t *img_dsc )
+{
+  lv_obj_del( img );
+  free( (void *)img_dsc->data - sizeof(lv_img_dsc_t) );
+  memset( img_dsc, 0, sizeof(lv_img_dsc_t) );
 }
 
 
@@ -134,26 +149,21 @@ static bool load_lvgl_image( const char *path, lv_img_dsc_t *img_dsc )
  */
 static void gui_hello_world( void *data )
 {
-  GUI_LOCK();
   ESP_LOGI( TAG, "Hello World Event Received" );
+  size_t free_heap = heap_caps_get_free_size(MALLOC_CAP_DEFAULT);
+  ESP_LOGW(TAG, "Free heap: %d bytes", free_heap);
+
   if ( load_lvgl_image("/assets/logo.bin", &img_logo_dsc) )
   {
+    GUI_LOCK();
     lv_img_set_src( ui_imgLogo, &img_logo_dsc);
+    GUI_UNLOCK();
+    free_heap = heap_caps_get_free_size(MALLOC_CAP_DEFAULT);
+    ESP_LOGW(TAG, "Free heap: %d bytes", free_heap);
   }
   else
   {
     ESP_LOGE(TAG, "Failed to load image");
   }
-
-  // lv_image_set_src(ui_imgLogo, &ui_img_logo1_png);
-  // /*Change the active screen's background color*/
-  // lv_obj_set_style_bg_color(lv_screen_active(), lv_color_hex(0x003a57), LV_PART_MAIN);
-
-  // /*Create a white label, set its text and align it to the center*/
-  // lv_obj_t * label = lv_label_create(lv_screen_active());
-  // lv_label_set_text(label, "Hello world");
-  // lv_obj_set_style_text_color(lv_screen_active(), lv_color_hex(0xffffff), LV_PART_MAIN);
-  // lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
-  GUI_UNLOCK();
 }
 
