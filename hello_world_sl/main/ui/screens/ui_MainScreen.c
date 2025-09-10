@@ -18,9 +18,8 @@ void ui_MainScreen_screen_init(void)
     lv_obj_remove_flag(ui_MainScreen, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_imgLogo = lv_image_create(ui_MainScreen);
-    lv_image_set_src(ui_imgLogo, &ui_img_logo2_png);
-    lv_obj_set_width(ui_imgLogo, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_imgLogo, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_width(ui_imgLogo, lv_pct(100));
+    lv_obj_set_height(ui_imgLogo, lv_pct(100));
     lv_obj_set_align(ui_imgLogo, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_imgLogo, LV_OBJ_FLAG_CLICKABLE);     /// Flags
     lv_obj_remove_flag(ui_imgLogo, LV_OBJ_FLAG_SCROLLABLE);      /// Flags

@@ -44,6 +44,12 @@ void app_main(void)
 
 
 // Private Function Definitions
+
+/**
+ * @brief Mount the LittleFS filesystem for assets
+ * @param  none
+ * @return none
+ */
 void mount_assets_fs( void )
 {
   const esp_vfs_littlefs_conf_t conf = 

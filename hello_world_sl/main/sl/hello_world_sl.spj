@@ -54,11 +54,11 @@
               },
               {
                 "nid": 60,
-                "flags": 51,
+                "flags": 34,
                 "strtype": "OBJECT/Size",
                 "intarray": [
-                  1,
-                  1
+                  100,
+                  100
                 ],
                 "InheritedType": 7
               },
@@ -124,7 +124,7 @@
               {
                 "nid": 1020,
                 "strtype": "IMAGE/Asset",
-                "strval": "assets/logo2.png",
+                "strval": "",
                 "InheritedType": 5
               },
               {
@@ -473,7 +473,7 @@
     "uiExportFolderPath": "D:\\Projects\\Embedded\\ESP32P4\\hello_world_sl\\main\\ui",
     "projectExportFolderPath": "",
     "custom_variable_prefix": "uic",
-    "backup_cnt": 10,
+    "backup_cnt": 15,
     "autosave_cnt": 0,
     "group_color_cnt": 0,
     "lvgl_version": "9.2.2",

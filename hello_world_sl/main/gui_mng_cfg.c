@@ -35,6 +35,7 @@ static void gui_hello_world( void *data );
 // Private Variables
 LV_IMG_DECLARE(ui_img_logo1_png);
 
+static lv_img_dsc_t img_logo_dsc;       // main logo image descriptor
 static const char *TAG = "GUI_CFG";
 
 static const gui_mng_event_cb_t gui_mng_event_cb[] =
@@ -90,6 +91,43 @@ void gui_cfg_refresh( void )
   // use this for periodic usage
 }
 
+// Private Function Definitions
+/**
+ * @brief 
+ * @param path 
+ * @param img_dsc 
+ * @return 
+ */
+static bool load_lvgl_image( const char *path, lv_img_dsc_t *img_dsc )
+{
+  FILE *f = fopen(path, "rb");
+  if ( !f )
+  {
+    ESP_LOGE("LVGL", "Failed to open image file: %s", path);
+    return false;
+  }
+
+  fseek( f, 0, SEEK_END );
+  size_t size = ftell( f );
+  rewind(f);
+
+  uint8_t *buffer = malloc(size);
+  if ( !buffer )
+  {
+    fclose(f);
+    ESP_LOGE("LVGL", "Failed to allocate memory");
+    return false;
+  }
+
+  fread( buffer, 1, size, f );
+  fclose(f);
+
+  memcpy( img_dsc, buffer, sizeof(lv_img_dsc_t) );
+  img_dsc->data = buffer + sizeof(lv_img_dsc_t);
+  return true;
+}
+
+
 /**
  * @brief Callback function when hello world event is received
  * @param data 
@@ -98,7 +136,16 @@ static void gui_hello_world( void *data )
 {
   GUI_LOCK();
   ESP_LOGI( TAG, "Hello World Event Received" );
-  lv_image_set_src(ui_imgLogo, &ui_img_logo1_png);
+  if ( load_lvgl_image("/assets/logo.bin", &img_logo_dsc) )
+  {
+    lv_img_set_src( ui_imgLogo, &img_logo_dsc);
+  }
+  else
+  {
+    ESP_LOGE(TAG, "Failed to load image");
+  }
+
+  // lv_image_set_src(ui_imgLogo, &ui_img_logo1_png);
   // /*Change the active screen's background color*/
   // lv_obj_set_style_bg_color(lv_screen_active(), lv_color_hex(0x003a57), LV_PART_MAIN);
 
