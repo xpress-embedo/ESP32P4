@@ -21,3 +21,4 @@ dependencies:
   espressif/esp_lcd_touch_gt911: ^1.1.3
   espressif/esp_lvgl_port: ^2.6.0
   lvgl/lvgl: ^9.2.*
+  joltwallet/littlefs: ^1.20.1

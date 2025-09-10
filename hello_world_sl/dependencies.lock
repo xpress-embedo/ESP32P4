@@ -139,6 +139,16 @@ dependencies:
     source:
       type: idf
     version: 5.5.1
+  joltwallet/littlefs:
+    component_hash: 8e12955f47e27e6070b76715a96d6c75fc2b44f069e8c33679332d9bdd3120c4
+    dependencies:
+    - name: idf
+      require: private
+      version: '>=5.0'
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 1.20.1
   lvgl/lvgl:
     component_hash: b702d642e03e95928046d5c6726558e6444e112420c77efa5fdb6650b0a13c5d
     dependencies: []
@@ -154,7 +164,8 @@ direct_dependencies:
 - espressif/esp_lcd_touch_gt911
 - espressif/esp_lvgl_port
 - idf
+- joltwallet/littlefs
 - lvgl/lvgl
-manifest_hash: 4d0277d8c063c816e0a10ef3664823f4a084485ef4c48177fb9b97df5cb4022d
+manifest_hash: 30cc22f330a0b18b36cb18121eceb94e301f15723c9b647bb6ebc3c0a126819e
 target: esp32p4
 version: 2.0.0

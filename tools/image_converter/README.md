@@ -38,3 +38,8 @@ The above command, converts the `logo1.png` image into `ui_img_logo1_png.c` file
 python LVGLImage.py --ofmt C --cf RGB565 --compress RLE --name ui_img_logo1_png -o ui_img_logo1_png.c logo1.png
 ```
 The above command, converts the `logo1.png` image into `ui_img_logo1_png.c` file, with the same variable name, and compress the image using RLE algorithm.
+
+```bash
+python LVGLImage.py --ofmt BIN --cf RGB565 --name ui_img_main_logo -o ui_img_main_logo.bin logo1.png
+```
+The above command, converts the `logo1.png` image into `ui_img_main_logo.bin` file i.e. the binary file, with the same variable name.
