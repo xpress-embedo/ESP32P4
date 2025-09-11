@@ -9,13 +9,13 @@
 #include "gui_mng_cfg.h"
 
 #include "esp_log.h"
-#include "esp_heap_caps.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
 #include "lvgl.h"
 #include "ui.h"
+#include "assets_mng.h"
 
 // Private Macros
 #define NUM_ELEMENTS(x)                 (sizeof(x)/sizeof(x[0]))
@@ -93,55 +93,6 @@ void gui_cfg_refresh( void )
 }
 
 // Private Function Definitions
-/**
- * @brief 
- * @param path 
- * @param img_dsc 
- * @return 
- */
-static bool load_lvgl_image( const char *path, lv_img_dsc_t *img_dsc )
-{
-  // opens the image file in binary mode for reading
-  FILE *f = fopen(path, "rb");
-  if ( !f )
-  {
-    ESP_LOGE("LVGL", "Failed to open image file: %s", path);
-    return false;
-  }
-
-  // calculates the file size by seeking to the end and rewinding
-  fseek( f, 0, SEEK_END );
-  size_t size = ftell( f );
-  rewind(f);
-
-  // allocates memory for the image data
-  uint8_t *buffer = malloc(size);
-  if ( !buffer )
-  {
-    fclose(f);
-    ESP_LOGE("LVGL", "Failed to allocate memory");
-    return false;
-  }
-
-  // reads the file data into the buffer and closes the file
-  fread( buffer, 1, size, f );
-  fclose(f);
-
-  // copies the image descriptor (metadata like width, height, color format) 
-  // from the start of the buffer
-  memcpy( img_dsc, buffer, sizeof(lv_img_dsc_t) );
-  // Points img_dsc->data to the pixel data portion of the buffer
-  img_dsc->data = buffer + sizeof(lv_img_dsc_t);
-  return true;
-}
-
-static void unload_lvgl_image ( lv_obj_t *img, lv_img_dsc_t *img_dsc )
-{
-  lv_obj_del( img );
-  free( (void *)img_dsc->data - sizeof(lv_img_dsc_t) );
-  memset( img_dsc, 0, sizeof(lv_img_dsc_t) );
-}
-
 
 /**
  * @brief Callback function when hello world event is received
@@ -150,16 +101,12 @@ static void unload_lvgl_image ( lv_obj_t *img, lv_img_dsc_t *img_dsc )
 static void gui_hello_world( void *data )
 {
   ESP_LOGI( TAG, "Hello World Event Received" );
-  size_t free_heap = heap_caps_get_free_size(MALLOC_CAP_DEFAULT);
-  ESP_LOGW(TAG, "Free heap: %d bytes", free_heap);
 
-  if ( load_lvgl_image("/assets/logo.bin", &img_logo_dsc) )
+  if ( assets_mng_load_image("/assets/logo.bin", &img_logo_dsc) )
   {
     GUI_LOCK();
     lv_img_set_src( ui_imgLogo, &img_logo_dsc);
     GUI_UNLOCK();
-    free_heap = heap_caps_get_free_size(MALLOC_CAP_DEFAULT);
-    ESP_LOGW(TAG, "Free heap: %d bytes", free_heap);
   }
   else
   {

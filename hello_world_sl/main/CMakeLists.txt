@@ -6,6 +6,7 @@ idf_component_register(
     gui_mng.c
     gui_mng_cfg.c
     data_config.c
+    assets_mng.c
     ui/screens/ui_MainScreen.c
     ui/ui.c
     ui/components/ui_comp_hook.c
