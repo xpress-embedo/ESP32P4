@@ -202,11 +202,11 @@
               },
               {
                 "nid": 50,
-                "flags": 17,
+                "flags": 34,
                 "strtype": "OBJECT/Position",
                 "intarray": [
-                  0,
-                  0
+                  5,
+                  5
                 ],
                 "InheritedType": 7
               },
@@ -223,7 +223,7 @@
               {
                 "nid": 70,
                 "strtype": "OBJECT/Align",
-                "strval": "CENTER",
+                "strval": "TOP_LEFT",
                 "InheritedType": 3
               },
               {
@@ -288,7 +288,7 @@
               {
                 "nid": 1030,
                 "strtype": "LABEL/Text",
-                "strval": "Hello World using Square Line Studio",
+                "strval": "Hello World",
                 "InheritedType": 10
               },
               {
@@ -473,7 +473,7 @@
     "uiExportFolderPath": "D:\\Projects\\Embedded\\ESP32P4\\hello_world_sl\\main\\ui",
     "projectExportFolderPath": "",
     "custom_variable_prefix": "uic",
-    "backup_cnt": 15,
+    "backup_cnt": 18,
     "autosave_cnt": 0,
     "group_color_cnt": 0,
     "lvgl_version": "9.2.2",

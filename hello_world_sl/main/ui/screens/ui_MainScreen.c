@@ -27,8 +27,9 @@ void ui_MainScreen_screen_init(void)
     ui_lblHelloWorld = lv_label_create(ui_MainScreen);
     lv_obj_set_width(ui_lblHelloWorld, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_lblHelloWorld, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_lblHelloWorld, LV_ALIGN_CENTER);
-    lv_label_set_text(ui_lblHelloWorld, "Hello World using Square Line Studio");
+    lv_obj_set_x(ui_lblHelloWorld, lv_pct(5));
+    lv_obj_set_y(ui_lblHelloWorld, lv_pct(5));
+    lv_label_set_text(ui_lblHelloWorld, "Hello World");
     lv_obj_set_style_text_font(ui_lblHelloWorld, &lv_font_montserrat_48, LV_PART_MAIN | LV_STATE_DEFAULT);
 
 }
