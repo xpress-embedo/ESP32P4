@@ -12,9 +12,10 @@ idf_component_register(
     ui/ui.c
     ui/components/ui_comp_hook.c
     ui/ui_helpers.c
+    ui/images/ui_img_wifi_png.c
     ui/images/ui_img_wifi_disconnected_png.c
     ui/images/ui_img_wifi_connected_png.c
-    fonts/ui_font_Number120.c
+    ui/fonts/ui_font_Number120.c
     INCLUDE_DIRS        # optional, add here public include directories
     "." "ui" "ui/screens" ${LV_DEMO_DIR}
     PRIV_INCLUDE_DIRS   # optional, add here private include directories

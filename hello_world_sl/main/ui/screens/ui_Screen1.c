@@ -6,10 +6,10 @@
 #include "../ui.h"
 
 lv_obj_t * ui_Screen1 = NULL;
-lv_obj_t * ui_panelHeaderScreen1 = NULL;
-lv_obj_t * ui_lblProjectNameMainScreen1 = NULL;
 lv_obj_t * ui_imgWiFiStatus1 = NULL;
 lv_obj_t * ui_imgLogo = NULL;
+lv_obj_t * ui_panelHeaderScreen1 = NULL;
+lv_obj_t * ui_lblProjectNameMainScreen1 = NULL;
 // event funtions
 
 // build funtions
@@ -18,6 +18,23 @@ void ui_Screen1_screen_init(void)
 {
     ui_Screen1 = lv_obj_create(NULL);
     lv_obj_remove_flag(ui_Screen1, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_imgWiFiStatus1 = lv_image_create(ui_Screen1);
+    lv_image_set_src(ui_imgWiFiStatus1, &ui_img_wifi_disconnected_png);
+    lv_obj_set_width(ui_imgWiFiStatus1, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_imgWiFiStatus1, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_imgWiFiStatus1, -10);
+    lv_obj_set_y(ui_imgWiFiStatus1, -10);
+    lv_obj_set_align(ui_imgWiFiStatus1, LV_ALIGN_BOTTOM_RIGHT);
+    lv_obj_add_flag(ui_imgWiFiStatus1, LV_OBJ_FLAG_CLICKABLE);     /// Flags
+    lv_obj_remove_flag(ui_imgWiFiStatus1, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_imgLogo = lv_image_create(ui_Screen1);
+    lv_obj_set_width(ui_imgLogo, lv_pct(100));
+    lv_obj_set_height(ui_imgLogo, lv_pct(100));
+    lv_obj_set_align(ui_imgLogo, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_imgLogo, LV_OBJ_FLAG_CLICKABLE);     /// Flags
+    lv_obj_remove_flag(ui_imgLogo, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_panelHeaderScreen1 = lv_obj_create(ui_Screen1);
     lv_obj_set_width(ui_panelHeaderScreen1, lv_pct(100));
@@ -38,23 +55,6 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_style_text_opa(ui_lblProjectNameMainScreen1, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_lblProjectNameMainScreen1, &lv_font_montserrat_48, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_imgWiFiStatus1 = lv_image_create(ui_Screen1);
-    lv_image_set_src(ui_imgWiFiStatus1, &ui_img_wifi_disconnected_png);
-    lv_obj_set_width(ui_imgWiFiStatus1, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_imgWiFiStatus1, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_imgWiFiStatus1, -10);
-    lv_obj_set_y(ui_imgWiFiStatus1, -10);
-    lv_obj_set_align(ui_imgWiFiStatus1, LV_ALIGN_BOTTOM_RIGHT);
-    lv_obj_add_flag(ui_imgWiFiStatus1, LV_OBJ_FLAG_CLICKABLE);     /// Flags
-    lv_obj_remove_flag(ui_imgWiFiStatus1, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-
-    ui_imgLogo = lv_image_create(ui_Screen1);
-    lv_obj_set_width(ui_imgLogo, lv_pct(100));
-    lv_obj_set_height(ui_imgLogo, lv_pct(100));
-    lv_obj_set_align(ui_imgLogo, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_imgLogo, LV_OBJ_FLAG_CLICKABLE);     /// Flags
-    lv_obj_remove_flag(ui_imgLogo, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-
 }
 
 void ui_Screen1_screen_destroy(void)
@@ -63,9 +63,9 @@ void ui_Screen1_screen_destroy(void)
 
     // NULL screen variables
     ui_Screen1 = NULL;
-    ui_panelHeaderScreen1 = NULL;
-    ui_lblProjectNameMainScreen1 = NULL;
     ui_imgWiFiStatus1 = NULL;
     ui_imgLogo = NULL;
+    ui_panelHeaderScreen1 = NULL;
+    ui_lblProjectNameMainScreen1 = NULL;
 
 }
