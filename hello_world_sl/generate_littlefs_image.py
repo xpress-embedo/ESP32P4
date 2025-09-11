@@ -5,7 +5,7 @@ from littlefs import LittleFS
 source_folder = "assets"
 output_image = "assets_lfs.img"
 block_size = 4096
-block_count = 512  # 512 blocks * 4096 = 2MB
+block_count = 2560  # 2560 blocks * 4096 = 10MB
 
 # Create LittleFS image
 fs = LittleFS(block_size=block_size, block_count=block_count)
