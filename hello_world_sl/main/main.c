@@ -109,7 +109,8 @@ void app_main(void)
   while(1)
   {
     // Get DHT11 Temperature and Humidity Values
-    if( dht11_read().status == DHT11_OK )
+    // if( dht11_read().status == DHT11_OK )
+    if ( 1 )
     {
       // uint8_t temp = (uint8_t)dht11_read().humidity;
       uint8_t temp = (uint8_t)(esp_random() % 100);
