@@ -2,13 +2,13 @@
 menu "Weather Monitor Configuration"
 config ESP_WIFI_SSID
     string "WiFi SSID"
-    default "SECOND"
+    default "TestWiFi"
     help
         SSID (network name) for the example to connect to.
 
 config ESP_WIFI_PASSWORD
     string "WiFi Password"
-    default "Brutal@garry"
+    default "12345678"
     help
         WiFi password (WPA or WPA2) for the example to use.
         
@@ -26,7 +26,7 @@ config INFLUXDB_ORG
     
 config INFLUXDB_BUCKET
     string "InfluxDB Bucket Name"
-    default "ESP32"
+    default "EmLab"
     help
     InfluxDB Bucket Name
 

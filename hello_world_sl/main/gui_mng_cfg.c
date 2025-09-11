@@ -121,19 +121,9 @@ void gui_cfg_mng_process( gui_mng_event_t event, void *data )
  */
 void gui_cfg_refresh( void )
 {
-  if ( load_sensor_screen_timer > 0 )
-  {
-    ESP_LOGE( TAG, "Time to Load Sensor Screen: %d", load_sensor_screen_timer );
-  }
-
-  if ( sensor_arc_animation_timer > 0 )
-  {
-    ESP_LOGE( TAG, "Time to ARC Animation: %d", sensor_arc_animation_timer );
-  }
-
   if( (load_sensor_screen_timer > 0) && (--load_sensor_screen_timer == 0) )
   {
-    ESP_LOGE( TAG, "Loading Sensor Screen Now" );
+    ESP_LOGI( TAG, "Loading Sensor Screen Now" );
     gui_send_event( GUI_MNG_EV_LOAD_SENSOR_SCREEN, NULL );
   }
   

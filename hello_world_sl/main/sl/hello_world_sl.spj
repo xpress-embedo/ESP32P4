@@ -2667,7 +2667,7 @@
                       {
                         "nid": 1030,
                         "strtype": "LABEL/Text",
-                        "strval": "5°C",
+                        "strval": "0%",
                         "InheritedType": 10
                       },
                       {
@@ -2830,7 +2830,7 @@
                       {
                         "nid": 1030,
                         "strtype": "LABEL/Text",
-                        "strval": "60°C",
+                        "strval": "100%",
                         "InheritedType": 10
                       },
                       {
@@ -2975,7 +2975,6 @@
                   },
                   {
                     "nid": 1010,
-                    "flags": 1048576,
                     "strtype": "ARC/Arc",
                     "InheritedType": 1
                   },
@@ -2983,15 +2982,15 @@
                     "nid": 1020,
                     "strtype": "ARC/Range",
                     "intarray": [
-                      5,
-                      60
+                      0,
+                      100
                     ],
                     "InheritedType": 7
                   },
                   {
                     "nid": 1030,
                     "strtype": "ARC/Value",
-                    "integer": 50,
+                    "integer": 60,
                     "InheritedType": 6
                   },
                   {
@@ -3119,8 +3118,7 @@
                     "InheritedType": 11
                   }
                 ],
-                "saved_objtypeKey": "ARC",
-                "tree_closed": true
+                "saved_objtypeKey": "ARC"
               },
               {
                 "guid": "GUID79655924-328345S874254",
@@ -3658,8 +3656,7 @@
                     "InheritedType": 11
                   }
                 ],
-                "saved_objtypeKey": "PANEL",
-                "tree_closed": true
+                "saved_objtypeKey": "PANEL"
               },
               {
                 "guid": "GUID28621829-328346S874254",
@@ -4340,7 +4337,7 @@
     "uiExportFolderPath": "D:\\Projects\\Embedded\\ESP32P4\\hello_world_sl\\main\\ui",
     "projectExportFolderPath": "",
     "custom_variable_prefix": "uic",
-    "backup_cnt": 109,
+    "backup_cnt": 111,
     "autosave_cnt": 0,
     "group_color_cnt": 1,
     "lvgl_version": "9.2.2",

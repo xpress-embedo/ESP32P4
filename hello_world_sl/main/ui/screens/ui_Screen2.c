@@ -180,8 +180,7 @@ void ui_Screen2_screen_init(void)
     lv_obj_set_width(ui_arcSensor2, 450);
     lv_obj_set_height(ui_arcSensor2, 450);
     lv_obj_set_align(ui_arcSensor2, LV_ALIGN_CENTER);
-    lv_arc_set_range(ui_arcSensor2, 5, 60);
-    lv_arc_set_value(ui_arcSensor2, 50);
+    lv_arc_set_value(ui_arcSensor2, 60);
     lv_obj_set_style_radius(ui_arcSensor2, 450, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_color(ui_arcSensor2, lv_color_hex(0x1E232D), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_arcSensor2, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -203,7 +202,7 @@ void ui_Screen2_screen_init(void)
     lv_obj_set_x(ui_lblMinSensor2, 80);
     lv_obj_set_y(ui_lblMinSensor2, -30);
     lv_obj_set_align(ui_lblMinSensor2, LV_ALIGN_BOTTOM_LEFT);
-    lv_label_set_text(ui_lblMinSensor2, "5°C");
+    lv_label_set_text(ui_lblMinSensor2, "0%");
     lv_obj_set_style_text_color(ui_lblMinSensor2, lv_color_hex(0x36B9F6), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(ui_lblMinSensor2, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_lblMinSensor2, &lv_font_montserrat_28, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -214,7 +213,7 @@ void ui_Screen2_screen_init(void)
     lv_obj_set_x(ui_lblMaxSensor1, -80);
     lv_obj_set_y(ui_lblMaxSensor1, -30);
     lv_obj_set_align(ui_lblMaxSensor1, LV_ALIGN_BOTTOM_RIGHT);
-    lv_label_set_text(ui_lblMaxSensor1, "60°C");
+    lv_label_set_text(ui_lblMaxSensor1, "100%");
     lv_obj_set_style_text_color(ui_lblMaxSensor1, lv_color_hex(0x36B9F6), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(ui_lblMaxSensor1, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_lblMaxSensor1, &lv_font_montserrat_28, LV_PART_MAIN | LV_STATE_DEFAULT);

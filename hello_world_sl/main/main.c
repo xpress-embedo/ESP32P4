@@ -98,7 +98,7 @@ void app_main(void)
     if( sntp_connect_status )
     {
       // now start the influxDB task
-      // influxdb_start();
+      influxdb_start();
       gui_send_event( GUI_MNG_EV_WIFI_INTERNET_CONNECTED, NULL );
     }
   }
@@ -113,7 +113,7 @@ void app_main(void)
     if ( 1 )
     {
       // uint8_t temp = (uint8_t)dht11_read().humidity;
-      uint8_t temp = (uint8_t)(esp_random() % 100);
+      uint8_t temp = 50 + (uint8_t)(esp_random() % 10);
       // humidity can't be greater than 100%, that means invalid data
       if( temp < 100 )
       {
@@ -122,7 +122,7 @@ void app_main(void)
           sensor_data.humidity[sensor_data.sensor_idx] = temp;
           sensor_data.humidity_current = temp;
           // temp = (uint8_t)dht11_read().temperature;
-          temp = (uint8_t)(esp_random() % 50);
+          temp = 20 + (uint8_t)(esp_random() % 5);
           sensor_data.temperature[sensor_data.sensor_idx] = temp;
           sensor_data.temperature_current = temp;
           ESP_LOGI(TAG, "Temperature: %d", sensor_data.temperature_current);
@@ -133,7 +133,7 @@ void app_main(void)
           // if wifi is connected, trigger event to send data to ThingSpeak
           if( wifi_connect_status && sntp_connect_status )
           {
-            // influxdb_send_event(INFLUXDB_EV_TEMP_HUMID, NULL);
+            influxdb_send_event(INFLUXDB_EV_TEMP_HUMID, NULL);
           }
           // reset the index
           if( sensor_data.sensor_idx >= SENSOR_BUFF_SIZE )
