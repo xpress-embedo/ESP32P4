@@ -4333,7 +4333,7 @@
     "theme_dark": false,
     "theme_color1": 5,
     "theme_color2": 0,
-    "uiExportFolderPath": "D:\\Projects\\Embedded\\ESP32P4\\hello_world_sl\\main\\ui",
+    "uiExportFolderPath": "D:\\Projects\\Embedded\\ESP32P4\\weather_monitor\\main\\ui",
     "projectExportFolderPath": "",
     "custom_variable_prefix": "uic",
     "backup_cnt": 124,
