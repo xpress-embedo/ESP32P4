@@ -22,4 +22,3 @@ dependencies:
   espressif/esp_lvgl_port: ^2.6.0
   lvgl/lvgl: ^9.2.*
   joltwallet/littlefs: ^1.20.1
-  espressif/esp_wifi_remote: ^0.16.3

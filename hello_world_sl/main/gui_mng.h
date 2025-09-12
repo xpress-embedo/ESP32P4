@@ -15,14 +15,6 @@
 #include "bsp/esp-bsp.h"
 
 // Public Macros
-
-// GUI_LOCK shouldn't be called from ISR, use this macro to assert if called from ISR context
-#if 0
-#define GUI_LOCK()                               do { \
-                                                      assert(!xPortInIsrContext()); \
-                                                      bsp_display_lock(0); \
-                                                    } while(0)
-#endif
 #define GUI_LOCK()                            bsp_display_lock(0)
 #define GUI_UNLOCK()                          bsp_display_unlock()
 

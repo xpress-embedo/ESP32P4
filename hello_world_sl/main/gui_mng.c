@@ -19,12 +19,10 @@
 // Private Variables
 static const char *TAG = "GUI";
 static QueueHandle_t gui_q_event = NULL;
-static TimerHandle_t gui_refresh_timer = NULL;
 
 // Private Function Declaration
 static void gui_init( void );
 static void gui_task(void *pvParameter);
-static void gui_refresh_cb( TimerHandle_t xTimer );
 
 // Public Function Definition
 /**
@@ -34,14 +32,9 @@ static void gui_refresh_cb( TimerHandle_t xTimer );
 void gui_start( void )
 {
   gui_init();
-
-  // create a periodic timer for GUI refresh
-  gui_refresh_timer = xTimerCreate("GUI Refresh", pdMS_TO_TICKS(GUI_MNG_REFRESH_TIME), pdTRUE, NULL, gui_refresh_cb );
-  // start the timer
-  xTimerStart(gui_refresh_timer, 0);
     
   // callback function, task name, stack size, parameters, priority, task handle
-  xTaskCreate(&gui_task, "gui task", 4096*8, NULL, 5, NULL);
+  xTaskCreate(&gui_task, "gui task", 4096*2, NULL, 5, NULL);
 }
 
 /**
@@ -97,7 +90,10 @@ static void gui_task(void *pvParameter)
   msg.event_id = GUI_MNG_EV_NONE;
 
   while(1)
-  {
+  {   
+    // custom configurable function
+    gui_cfg_refresh();
+
     // wait only GUI_MNG_REFRESH_TIME ms and then proceed
     if( xQueueReceive(gui_q_event, &msg, pdMS_TO_TICKS(GUI_MNG_REFRESH_TIME)) )
     {
@@ -109,15 +105,3 @@ static void gui_task(void *pvParameter)
     }     // xQueueReceive end
   }
 }
-
-
-/**
- * @brief GUI Refresh Timer Callback Function
- * This function will be called periodically based on the timer set
- * @param xTimer Timer Handle
- */
-void gui_refresh_cb(TimerHandle_t xTimer)
-{
-  gui_cfg_refresh();
-}
-
