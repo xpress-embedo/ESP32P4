@@ -44,9 +44,10 @@ static EventGroupHandle_t wifi_event_group;           // FreeRTOS event group to
 static uint8_t wifi_connect_retry = 0;
 static bool wifi_connect_status = false;
 static bool sntp_connect_status = false;
+static uint8_t wifi_mac_address[6] = { 0 };              // {AA,BB,CC,DD,EE,FF} MAC Address Format
 
 // Private Function Declarations
-static void log_heap( void );
+static void app_log_heap( void );
 static void app_connect_wifi( void );
 static void wifi_event_handler( void *arg, esp_event_base_t event_base, int32_t event_id, void * event_data );
 static void app_sntp_init( void );
@@ -76,7 +77,7 @@ void app_main(void)
   ESP_LOGI( TAG, "Starting Program" );
 
   // print available heap
-  log_heap();
+  app_log_heap();
 
   // start the gui task
   gui_start();
@@ -152,7 +153,7 @@ void app_main(void)
       ESP_LOGE(TAG, "Unable to Read DHT11 Status");
     }
     // print available heap
-    log_heap();
+    app_log_heap();
     // Wait before next measurement
     vTaskDelay(MAIN_TASK_PERIOD / portTICK_PERIOD_MS);
   }
@@ -176,6 +177,8 @@ sensor_data_t * get_temperature_humidity( void )
  */
 void get_mac_address( char *mac_str )
 {
+  #if 0
+  // This function will not work for ESP32P4 because it doesn't have EFUSE and will not read anything from there
   uint8_t mac[6];
   /* NOTE: there is an another function named esp_wifi_get_mac and the below function.
   Both function are used to get the mac address but there is a difference.
@@ -183,8 +186,33 @@ void get_mac_address( char *mac_str )
   This function may reflect the overridden MAC is esp_wifi_set_mac function was used
   while esp_read_mac returns the Factory Programmed MAC directly from EFUSE, doesn't
   require WiFi drivers to be running */
-  esp_read_mac( mac, ESP_MAC_WIFI_STA );
+  // esp_read_mac( mac, ESP_MAC_WIFI_STA );
   snprintf( mac_str, MAC_ADDR_SIZE, "%02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5] );
+  ESP_LOGI( TAG, "MAC Address: %s", mac_str );
+  #else
+  // Call this function after set_mac_address function
+  // because set_mac_address function will store the MAC address in wifi_mac_address variable
+  snprintf( mac_str, MAC_ADDR_SIZE, "%02X:%02X:%02X:%02X:%02X:%02X", \
+            wifi_mac_address[0], wifi_mac_address[1], wifi_mac_address[2], \
+            wifi_mac_address[3], wifi_mac_address[4], wifi_mac_address[5] );
+  ESP_LOGI( TAG, "MAC Address: %s", mac_str );
+  #endif
+}
+
+/**
+ * @brief Get the MAC Address of the device and set it to wifi_mac_address variable
+ *        esp_read_mac function will not work for ESP32P4 because it doesn't have EFUSE
+ *        and will not read anything from there, while this function will work because it
+ *        will query the MAC programmed in the ESP32C6 WiFi chip.
+ *        But make sure to call this function after esp_wifi_init function
+ *        This function stores the MAC address in wifi_mac_address variable, so
+ *        we have to not query again and again.
+ * @param  none
+ */
+void set_mac_address( void )
+{
+  // For ESP32P4 this function will work because it will query the MAC programmed in the ESP32C6 WiFi chip  
+  esp_wifi_get_mac( WIFI_IF_STA, wifi_mac_address );
 }
 
 long long get_time_ns( void )
@@ -202,7 +230,7 @@ long long get_time_ns( void )
  * @brief This function logs the current free heap size
  * @param  None
  */
-static void log_heap( void )
+static void app_log_heap( void )
 {
   size_t free_heap = heap_caps_get_free_size(MALLOC_CAP_DEFAULT);
   ESP_LOGW(TAG, "Free heap: %d bytes", free_heap);
@@ -228,6 +256,14 @@ static void app_connect_wifi( void )
   wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
 
   ESP_ERROR_CHECK( esp_wifi_init(&cfg) );
+
+  // This is an ESP32P4 device which doesn't have EFUSE, so esp_read_mac 
+  // function will not work while esp_wifi_get_mac function will work because 
+  // it will query the MAC programmed in the ESP32C6 WiFi chip
+  // so call this function to get the MAC address programmed in the WiFi chip
+  // and store it in wifi_mac_address variable, as we don't want to query again and again
+  // make sure to call this after esp_wifi_init function and only once
+  set_mac_address();
   
   // setting MAC address as hostname
   esp_netif_t *netif = esp_netif_get_handle_from_ifkey("WIFI_STA_DEF");
@@ -422,3 +458,4 @@ static bool app_sntp_get_time( void )
   }
   return status;
 }
+

@@ -124,7 +124,7 @@
               {
                 "nid": 1020,
                 "strtype": "IMAGE/Asset",
-                "strval": "",
+                "strval": "-",
                 "InheritedType": 5
               },
               {
@@ -1136,8 +1136,8 @@
                         "flags": 17,
                         "strtype": "OBJECT/Position",
                         "intarray": [
-                          80,
-                          -30
+                          70,
+                          -25
                         ],
                         "InheritedType": 7
                       },
@@ -1299,8 +1299,8 @@
                         "flags": 17,
                         "strtype": "OBJECT/Position",
                         "intarray": [
-                          -80,
-                          -30
+                          -40,
+                          -25
                         ],
                         "InheritedType": 7
                       },
@@ -1434,7 +1434,6 @@
                   },
                   {
                     "nid": 20,
-                    "flags": 1048576,
                     "strtype": "OBJECT/Layout",
                     "InheritedType": 1
                   },
@@ -1453,7 +1452,6 @@
                   },
                   {
                     "nid": 40,
-                    "flags": 1048576,
                     "strtype": "OBJECT/Transform",
                     "InheritedType": 1
                   },
@@ -1472,8 +1470,8 @@
                     "flags": 17,
                     "strtype": "OBJECT/Size",
                     "intarray": [
-                      450,
-                      450
+                      420,
+                      420
                     ],
                     "InheritedType": 7
                   },
@@ -1606,9 +1604,9 @@
                             "nid": 10310,
                             "strtype": "_style/Arc_Color",
                             "intarray": [
-                              54,
-                              185,
-                              246,
+                              15,
+                              18,
+                              21,
                               255
                             ],
                             "InheritedType": 7
@@ -1616,7 +1614,7 @@
                           {
                             "nid": 10320,
                             "strtype": "_style/Arc_Width",
-                            "integer": 25,
+                            "integer": 20,
                             "InheritedType": 6
                           }
                         ],
@@ -1650,7 +1648,7 @@
                           {
                             "nid": 10320,
                             "strtype": "_style/Arc_Width",
-                            "integer": 25,
+                            "integer": 20,
                             "InheritedType": 6
                           }
                         ],
@@ -1671,7 +1669,8 @@
                     "InheritedType": 11
                   }
                 ],
-                "saved_objtypeKey": "ARC"
+                "saved_objtypeKey": "ARC",
+                "tree_closed": true
               },
               {
                 "guid": "GUID62164969-328332S5784254",
@@ -2534,18 +2533,19 @@
                 "InheritedType": 11
               }
             ],
-            "saved_objtypeKey": "PANEL"
+            "saved_objtypeKey": "PANEL",
+            "tree_closed": true
           },
           {
-            "guid": "GUID96753092-328347S874254",
+            "guid": "GUID86749399-754243S1104255",
             "deepid": 331286492,
             "children": [
               {
-                "guid": "GUID38967544-328342S854254",
+                "guid": "GUID96489114-754238S1074255",
                 "deepid": 453378971,
                 "children": [
                   {
-                    "guid": "GUID57878343-328340S854254",
+                    "guid": "GUID71054417-754236S1074255",
                     "deepid": -1944879364,
                     "dont_export": false,
                     "locked": false,
@@ -2584,8 +2584,8 @@
                         "flags": 17,
                         "strtype": "OBJECT/Position",
                         "intarray": [
-                          80,
-                          -30
+                          70,
+                          -25
                         ],
                         "InheritedType": 7
                       },
@@ -2708,7 +2708,7 @@
                     "saved_objtypeKey": "LABEL"
                   },
                   {
-                    "guid": "GUID89757901-328341S854254",
+                    "guid": "GUID38477595-754237S1074255",
                     "deepid": -1245718889,
                     "dont_export": false,
                     "locked": false,
@@ -2747,8 +2747,8 @@
                         "flags": 17,
                         "strtype": "OBJECT/Position",
                         "intarray": [
-                          -80,
-                          -30
+                          -40,
+                          -25
                         ],
                         "InheritedType": 7
                       },
@@ -2882,7 +2882,6 @@
                   },
                   {
                     "nid": 20,
-                    "flags": 1048576,
                     "strtype": "OBJECT/Layout",
                     "InheritedType": 1
                   },
@@ -2901,7 +2900,6 @@
                   },
                   {
                     "nid": 40,
-                    "flags": 1048576,
                     "strtype": "OBJECT/Transform",
                     "InheritedType": 1
                   },
@@ -2920,8 +2918,8 @@
                     "flags": 17,
                     "strtype": "OBJECT/Size",
                     "intarray": [
-                      450,
-                      450
+                      420,
+                      420
                     ],
                     "InheritedType": 7
                   },
@@ -3053,9 +3051,9 @@
                             "nid": 10310,
                             "strtype": "_style/Arc_Color",
                             "intarray": [
-                              54,
-                              185,
-                              246,
+                              15,
+                              18,
+                              21,
                               255
                             ],
                             "InheritedType": 7
@@ -3063,7 +3061,7 @@
                           {
                             "nid": 10320,
                             "strtype": "_style/Arc_Width",
-                            "integer": 25,
+                            "integer": 20,
                             "InheritedType": 6
                           }
                         ],
@@ -3097,7 +3095,7 @@
                           {
                             "nid": 10320,
                             "strtype": "_style/Arc_Width",
-                            "integer": 25,
+                            "integer": 20,
                             "InheritedType": 6
                           }
                         ],
@@ -3121,15 +3119,15 @@
                 "saved_objtypeKey": "ARC"
               },
               {
-                "guid": "GUID79655924-328345S874254",
+                "guid": "GUID29485841-754241S1104255",
                 "deepid": -1174647787,
                 "children": [
                   {
-                    "guid": "GUID14096020-328344S874254",
+                    "guid": "GUID12156826-754240S1104255",
                     "deepid": 2034082529,
                     "children": [
                       {
-                        "guid": "GUID66698282-328343S874254",
+                        "guid": "GUID29827928-754239S1104255",
                         "deepid": 1453403498,
                         "dont_export": false,
                         "locked": false,
@@ -3659,7 +3657,7 @@
                 "saved_objtypeKey": "PANEL"
               },
               {
-                "guid": "GUID28621829-328346S874254",
+                "guid": "GUID19217762-754242S1104255",
                 "deepid": 632235263,
                 "dont_export": false,
                 "locked": false,
@@ -3819,7 +3817,8 @@
                     "InheritedType": 11
                   }
                 ],
-                "saved_objtypeKey": "LABEL"
+                "saved_objtypeKey": "LABEL",
+                "tree_closed": true
               }
             ],
             "dont_export": false,
@@ -4337,7 +4336,7 @@
     "uiExportFolderPath": "D:\\Projects\\Embedded\\ESP32P4\\hello_world_sl\\main\\ui",
     "projectExportFolderPath": "",
     "custom_variable_prefix": "uic",
-    "backup_cnt": 111,
+    "backup_cnt": 124,
     "autosave_cnt": 0,
     "group_color_cnt": 1,
     "lvgl_version": "9.2.2",
