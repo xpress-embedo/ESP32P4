@@ -1,6 +1,22 @@
 Weather Monitor
 ====================
+This project uses ESP32P4 Function EV development board, and ESP-IDF version 5.5.1, apart from this the UX is developed using Square Line Studio version 1.5.3. The LVGL graphics library used has the version 9.3.
 
+### Demo Picture
+<!-- ![Demo](doc/demo.jpg) -->
+<img src="doc/demo.jpg" alt="Demo" style="max-height: 350px; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.1);">
+
+### Grafana Snapshot
+![Grafana Demo](doc/demo_grafana.jpg)
+
+Following are the features of this project.
+* It connects with the WiFi Router (as of now this information is hard-coded)
+* It fetches the IST time using SNTP
+* It initializes the display and shows several meaningful screens and actions on the screens.
+* It initializes the DHT11 sensor and send the data to InfluxDB cloud, which is then used for visualization purpose on Grafana
+* DHT11 data is also displayed on Display.
+
+#### The following is documentation from Hello World project, which is still applicable
 The following is the website which we are using to add several components to our project.  
 [Espressif Component Registry Website](https://components.espressif.com/)
 

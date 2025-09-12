@@ -4336,7 +4336,7 @@
     "uiExportFolderPath": "D:\\Projects\\Embedded\\ESP32P4\\weather_monitor\\main\\ui",
     "projectExportFolderPath": "",
     "custom_variable_prefix": "uic",
-    "backup_cnt": 124,
+    "backup_cnt": 125,
     "autosave_cnt": 0,
     "group_color_cnt": 1,
     "lvgl_version": "9.2.2",
