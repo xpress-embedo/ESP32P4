@@ -1,0 +1,16 @@
+{
+  "codename": "Number120",
+  "ttf_path": "/assets/number_font.ttf",
+  "bin_path": "/assets\\ui_font_Number120.bin",
+  "c_path": "/assets\\ui_font_Number120.c",
+  "cfg_path": "/assets\\ui_font_Number120.fcfg",
+  "size": 120,
+  "bpp": 2,
+  "letters": 0,
+  "ranges": [
+    "0x20-0xFF"
+  ],
+  "symbols": "",
+  "customparams": "--no-compress --no-prefilter",
+  "uploaded": false
+}
