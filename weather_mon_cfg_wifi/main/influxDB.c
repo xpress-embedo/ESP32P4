@@ -13,7 +13,9 @@
 #include "esp_http_client.h"
 
 #include "main.h"
+#include "wifi_sta_mng.h"
 #include "influxDB.h"
+
 
 // Private Macros
 #define INFLUXDB_EVENT_QUEUE_LEN            (5)
@@ -114,7 +116,7 @@ static void influxdb_send_temp_humidity( void )
   sensor_data_t *sensor_data = get_temperature_humidity();
   temperature = sensor_data->temperature_current;
   humidity = sensor_data->humidity_current;
-  get_mac_address( mac_addr );
+  wifi_sta_get_mac_address( mac_addr );
 
   snprintf( data, sizeof(data), \
             "weather,device_id=%s temperature=%d,humidity=%d %lld", \

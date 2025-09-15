@@ -21,7 +21,6 @@ extern "C" {
 
 // Public Macros
 #define SENSOR_BUFF_SIZE                        (100u)
-#define MAC_ADDR_SIZE                           (18u)
 
 // Data Structure
 typedef struct _sensor_data_t
@@ -35,8 +34,6 @@ typedef struct _sensor_data_t
 
 // Public Function Definition
 sensor_data_t * get_temperature_humidity( void );
-void get_mac_address( char *mac_address );
-void set_mac_address( void );
 long long get_time_ns( void );
 
 #ifdef __cplusplus

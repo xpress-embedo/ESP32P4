@@ -9,6 +9,8 @@ idf_component_register(
     gui_mng_cfg.c
     data_config.c
     assets_mng.c
+    # nvs_mng.c
+    wifi_sta_mng.c
     ui/screens/ui_Screen1.c
     ui/screens/ui_Screen2.c
     ui/ui.c
