@@ -8,7 +8,6 @@
 lv_obj_t * ui_Screen2 = NULL;
 lv_obj_t * ui_panelHeaderScreen2 = NULL;
 lv_obj_t * ui_lblProjectNameMainScreen2 = NULL;
-lv_obj_t * ui_imgSetting2 = NULL;
 lv_obj_t * ui_panelSensor1 = NULL;
 lv_obj_t * ui_arcSensor1 = NULL;
 lv_obj_t * ui_lblMinSensor1 = NULL;
@@ -58,14 +57,6 @@ void ui_Screen2_screen_init(void)
     lv_obj_set_style_text_color(ui_lblProjectNameMainScreen2, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(ui_lblProjectNameMainScreen2, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_lblProjectNameMainScreen2, &lv_font_montserrat_48, LV_PART_MAIN | LV_STATE_DEFAULT);
-
-    ui_imgSetting2 = lv_image_create(ui_panelHeaderScreen2);
-    lv_image_set_src(ui_imgSetting2, &ui_img_setting_50px_png);
-    lv_obj_set_width(ui_imgSetting2, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_imgSetting2, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_imgSetting2, LV_ALIGN_RIGHT_MID);
-    lv_obj_add_flag(ui_imgSetting2, LV_OBJ_FLAG_CLICKABLE);     /// Flags
-    lv_obj_remove_flag(ui_imgSetting2, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_panelSensor1 = lv_obj_create(ui_Screen2);
     lv_obj_set_width(ui_panelSensor1, 500);
@@ -296,7 +287,6 @@ void ui_Screen2_screen_destroy(void)
     ui_Screen2 = NULL;
     ui_panelHeaderScreen2 = NULL;
     ui_lblProjectNameMainScreen2 = NULL;
-    ui_imgSetting2 = NULL;
     ui_panelSensor1 = NULL;
     ui_arcSensor1 = NULL;
     ui_lblMinSensor1 = NULL;

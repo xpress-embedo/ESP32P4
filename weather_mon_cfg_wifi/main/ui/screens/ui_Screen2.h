@@ -16,7 +16,6 @@ extern void ui_Screen2_screen_destroy(void);
 extern lv_obj_t * ui_Screen2;
 extern lv_obj_t * ui_panelHeaderScreen2;
 extern lv_obj_t * ui_lblProjectNameMainScreen2;
-extern lv_obj_t * ui_imgSetting2;
 extern lv_obj_t * ui_panelSensor1;
 extern lv_obj_t * ui_arcSensor1;
 extern lv_obj_t * ui_lblMinSensor1;

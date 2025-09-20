@@ -10,6 +10,9 @@ idf_component_register(
     gui_menu_mng.c
     data_config.c
     assets_mng.c
+    widgets/widgets.c
+    widgets/widget_button.c
+    widgets/widget_slider.c
     # nvs_mng.c
     wifi_sta_mng.c
     ui/screens/ui_Screen1.c
@@ -23,7 +26,7 @@ idf_component_register(
     ui/images/ui_img_setting_50px_png.c
     ui/fonts/ui_font_Number120.c
     INCLUDE_DIRS        # optional, add here public include directories
-    "." "ui" "ui/screens" ${LV_DEMO_DIR}
+    "." "widgets" "ui" "ui/screens" ${LV_DEMO_DIR}
     PRIV_INCLUDE_DIRS   # optional, add here private include directories
     REQUIRES            # optional, list the public requirements (component names)
     PRIV_REQUIRES       # optional, list the private requirements

@@ -44,8 +44,8 @@ LV_IMG_DECLARE(ui_img_wifi_connected_png);    // assets/wifi_connected.png
 LV_IMG_DECLARE(ui_img_logo1_png);    // assets/logo1.png
 LV_IMG_DECLARE(ui_img_logo2_png);    // assets/logo2.png
 LV_IMG_DECLARE(ui_img_logo3_png);    // assets/logo3.png
-LV_IMG_DECLARE(ui_img_wifi_png);    // assets/wifi.png
 LV_IMG_DECLARE(ui_img_setting_100px_png);    // assets/setting_100px.png
+LV_IMG_DECLARE(ui_img_wifi_png);    // assets/wifi.png
 
 // FONTS
 LV_FONT_DECLARE(ui_font_Number120);
