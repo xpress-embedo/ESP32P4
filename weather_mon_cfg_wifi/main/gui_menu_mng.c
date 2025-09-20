@@ -16,6 +16,7 @@
 
 // Private Variables
 static const char *TAG = "GUI_MENU";
+lv_obj_t * menu = NULL;                 // object pointer for the whole menu
 lv_obj_t * kb_wifi_pswd = NULL;         // object pointer for the keyboard
 lv_obj_t * txt_box_wifi_pswd = NULL;    // object pointer for the text area to enter WiFi password
 
@@ -30,6 +31,7 @@ typedef enum
 typedef void (*slider_callback_t)( int32_t value );
 
 // Private Function Prototypes
+static void menu_back_btn_event_cb( lv_event_t * e );
 static void settings_menu_event_cb( lv_event_t * e );
 static void create_menu_settings( void );
 static void create_wifi_settings_page( lv_obj_t * parent );
@@ -55,6 +57,22 @@ void gui_menu_mng_init( void )
 }
 
 // Private Function Definitions
+/**
+ * @brief Callback function when back button is pressed on menu
+ *        Once clicked the Menu is hidden and Main Screen is Displayed
+ * @param e pointer to event
+ */
+static void menu_back_btn_event_cb( lv_event_t * e )
+{
+  lv_event_code_t code = lv_event_get_code( e );
+  if ( code == LV_EVENT_CLICKED )
+  {
+    // no need to check if hidden then show and vice-versa, because showing and
+    // hiding is done using separate logics
+    lv_obj_add_flag( menu, LV_OBJ_FLAG_HIDDEN );
+    ESP_LOGI( TAG, "Menu Back Button Clicked" );
+  }
+}
 
 /**
  * @brief Callback function when settings image is pressed
@@ -66,6 +84,9 @@ static void settings_menu_event_cb( lv_event_t * e )
   lv_event_code_t code = lv_event_get_code( e );
   if ( code == LV_EVENT_CLICKED )
   {
+    // no need to check if hidden then show and vice-versa, because showing and
+    // hiding is done using separate logics
+    lv_obj_remove_flag( menu, LV_OBJ_FLAG_HIDDEN );
     ESP_LOGI( TAG, "Settings Image Clicked" );
   }
 }
@@ -83,8 +104,10 @@ static void settings_menu_event_cb( lv_event_t * e )
 static void create_menu_settings( void )
 {
   // TODO: I think it will be better to use main screen instead of lv_screen_active
-  lv_obj_t * menu = lv_menu_create( lv_screen_active() );
+  menu = lv_menu_create( lv_screen_active() );
   lv_menu_set_mode_root_back_button( menu, LV_MENU_ROOT_BACK_BUTTON_ENABLED );
+  // add callback for back button
+  lv_obj_add_event_cb( menu, menu_back_btn_event_cb, LV_EVENT_CLICKED, NULL );
   // configure back button event handler later
   lv_obj_set_size( menu, lv_display_get_horizontal_resolution(NULL), lv_display_get_vertical_resolution(NULL) );
   lv_obj_center( menu );
@@ -125,6 +148,9 @@ static void create_menu_settings( void )
   // set the page
   // lv_menu_set_page(menu, main_page);
   lv_menu_set_sidebar_page( menu, main_page );
+
+  // menu is hidden by default, and will be visible when setting icon is clicked
+  lv_obj_add_flag( menu, LV_OBJ_FLAG_HIDDEN );
 }
 
 /**
