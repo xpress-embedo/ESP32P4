@@ -13,6 +13,8 @@
 #include "esp_log.h"
 
 // Private Macros
+// un-comment this macro to use Menu in sidebar
+#define GUI_MENU_AS_SIDEBAR
 
 // Private Variables
 static const char *TAG = "GUI_MENU";
@@ -103,6 +105,9 @@ static void settings_menu_event_cb( lv_event_t * e )
  */
 static void create_menu_settings( void )
 {
+  lv_obj_t * header = NULL;
+  lv_obj_t * title_label = NULL;
+  
   // TODO: I think it will be better to use main screen instead of lv_screen_active
   menu = lv_menu_create( lv_screen_active() );
   lv_menu_set_mode_root_back_button( menu, LV_MENU_ROOT_BACK_BUTTON_ENABLED );
@@ -145,9 +150,24 @@ static void create_menu_settings( void )
   // lv_label_set_text(lbl_wifi, "WiFi");
   lv_menu_set_load_page_event( menu, btn_wifi, wifi_page );
 
+  // Increase the size of all headers
+  // NOTE: This is increasing the size of all headers by same font, need to find
+  // a way to control each menu header independently
+  header = lv_menu_get_main_header( menu );
+  // Assuming the title label is the first child of the header
+  title_label = lv_obj_get_child_by_type( header, 0, &lv_label_class );
+  // Apply font style
+  lv_obj_set_style_text_font( title_label, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT );
+
   // set the page
-  // lv_menu_set_page(menu, main_page);
+#ifdef GUI_MENU_AS_SIDEBAR
   lv_menu_set_sidebar_page( menu, main_page );
+  lv_obj_t * sidebar_header = lv_menu_get_sidebar_header( menu );
+  lv_obj_t * sidebar_title_label = lv_obj_get_child_by_type( sidebar_header, 0, &lv_label_class );
+  lv_obj_set_style_text_font( sidebar_title_label, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT );
+#else
+  lv_menu_set_page( menu, main_page);
+#endif
 
   // menu is hidden by default, and will be visible when setting icon is clicked
   lv_obj_add_flag( menu, LV_OBJ_FLAG_HIDDEN );
@@ -436,6 +456,11 @@ static lv_obj_t * create_text( lv_obj_t * parent, const char * icon, const char 
     label = lv_label_create( obj );
     lv_label_set_text( label, txt );
     lv_label_set_long_mode( label, LV_LABEL_LONG_SCROLL_CIRCULAR );
+    if ( builder_variant == LV_MENU_ITEM_BUILDER_VARIANT_1 )
+    {
+      // Need to increase the font size
+      lv_obj_set_style_text_font( label, &lv_font_montserrat_20, LV_PART_MAIN | LV_STATE_DEFAULT );
+    }
     lv_obj_set_flex_grow( label, 1 );
   }
 
