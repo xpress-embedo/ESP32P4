@@ -80,7 +80,7 @@ void app_main(void)
     {
       // now start the influxDB task
       influxdb_start();
-      gui_send_event( GUI_MNG_EV_WIFI_INTERNET_CONNECTED, NULL );
+      // gui_send_event( GUI_MNG_EV_WIFI_INTERNET_CONNECTED, NULL );
     }
   }
 

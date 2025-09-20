@@ -2,11 +2,12 @@
  * gui_mng_cfg.c
  *
  *  Created on: 06-Sep-2025
- *      Author: xpress_embedo
+ *      Author: abc@xyz
  */
  
 #include "gui_mng.h"
 #include "gui_mng_cfg.h"
+#include "gui_menu_mng.h"
 
 #include "esp_log.h"
 
@@ -87,6 +88,9 @@ void gui_cfg_init( void )
   {
     ESP_LOGE(TAG, "Failed to load image");
   }
+  // Menu related code can't be generated using Square Line Studio, this is written
+  // by me by referencing LVGL examples, and it starts from here
+  gui_menu_mng_init();  
   GUI_UNLOCK();
   ESP_LOGI( TAG, "UI Init. Ends" );
 }
@@ -183,7 +187,7 @@ static void gui_wifi_internet_connected( void *data )
   GUI_UNLOCK();
 
   // this will be used to post another event to load sensor screen
-  load_sensor_screen_timer = LOAD_SENSOR_SCREEN_TIMER;
+  // load_sensor_screen_timer = LOAD_SENSOR_SCREEN_TIMER;
   ESP_LOGI( TAG, "gui_wifi_internet_connected" );
   ESP_LOGW( TAG, "Time Starts to Load Next Screen ");
 }

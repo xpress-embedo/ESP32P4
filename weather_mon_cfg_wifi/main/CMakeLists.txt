@@ -7,6 +7,7 @@ idf_component_register(
     influxDB.c
     gui_mng.c
     gui_mng_cfg.c
+    gui_menu_mng.c
     data_config.c
     assets_mng.c
     # nvs_mng.c
@@ -19,6 +20,7 @@ idf_component_register(
     ui/images/ui_img_wifi_png.c
     ui/images/ui_img_wifi_disconnected_png.c
     ui/images/ui_img_wifi_connected_png.c
+    ui/images/ui_img_setting_50px_png.c
     ui/fonts/ui_font_Number120.c
     INCLUDE_DIRS        # optional, add here public include directories
     "." "ui" "ui/screens" ${LV_DEMO_DIR}

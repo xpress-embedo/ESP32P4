@@ -38,12 +38,14 @@ extern "C" {
 extern lv_obj_t * ui____initial_actions0;
 
 // IMAGES AND IMAGE SETS
+LV_IMG_DECLARE(ui_img_setting_50px_png);    // assets/setting_50px.png
 LV_IMG_DECLARE(ui_img_wifi_disconnected_png);    // assets/wifi_disconnected.png
 LV_IMG_DECLARE(ui_img_wifi_connected_png);    // assets/wifi_connected.png
 LV_IMG_DECLARE(ui_img_logo1_png);    // assets/logo1.png
 LV_IMG_DECLARE(ui_img_logo2_png);    // assets/logo2.png
 LV_IMG_DECLARE(ui_img_logo3_png);    // assets/logo3.png
 LV_IMG_DECLARE(ui_img_wifi_png);    // assets/wifi.png
+LV_IMG_DECLARE(ui_img_setting_100px_png);    // assets/setting_100px.png
 
 // FONTS
 LV_FONT_DECLARE(ui_font_Number120);
