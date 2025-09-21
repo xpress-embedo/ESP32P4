@@ -124,7 +124,7 @@
               {
                 "nid": 1020,
                 "strtype": "IMAGE/Asset",
-                "strval": "-",
+                "strval": "",
                 "InheritedType": 5
               },
               {
@@ -534,11 +534,11 @@
               },
               {
                 "nid": 60,
-                "flags": 34,
+                "flags": 18,
                 "strtype": "OBJECT/Size",
                 "intarray": [
                   100,
-                  10
+                  60
                 ],
                 "InheritedType": 7
               },
@@ -613,9 +613,9 @@
                         "nid": 10520,
                         "strtype": "_style/Bg_Color",
                         "intarray": [
-                          128,
-                          128,
-                          128,
+                          20,
+                          25,
+                          30,
                           255
                         ],
                         "InheritedType": 7
@@ -1132,11 +1132,11 @@
               },
               {
                 "nid": 60,
-                "flags": 34,
+                "flags": 18,
                 "strtype": "OBJECT/Size",
                 "intarray": [
                   100,
-                  10
+                  60
                 ],
                 "InheritedType": 7
               },
@@ -1211,9 +1211,9 @@
                         "nid": 10520,
                         "strtype": "_style/Bg_Color",
                         "intarray": [
-                          128,
-                          128,
-                          128,
+                          20,
+                          25,
+                          30,
                           255
                         ],
                         "InheritedType": 7
@@ -4492,7 +4492,7 @@
     "uiExportFolderPath": "D:\\Projects\\Embedded\\ESP32P4\\weather_mon_cfg_wifi\\main\\ui",
     "projectExportFolderPath": "",
     "custom_variable_prefix": "uic",
-    "backup_cnt": 142,
+    "backup_cnt": 152,
     "autosave_cnt": 0,
     "group_color_cnt": 1,
     "lvgl_version": "9.2.2",

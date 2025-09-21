@@ -196,6 +196,8 @@ static void create_menu_settings( void )
 
   // menu is hidden by default, and will be visible when setting icon is clicked
   lv_obj_add_flag( menu, LV_OBJ_FLAG_HIDDEN );
+  // in case we want to hide the page
+  // lv_obj_add_flag( main_page, LV_OBJ_FLAG_HIDDEN );
 }
 
 /**

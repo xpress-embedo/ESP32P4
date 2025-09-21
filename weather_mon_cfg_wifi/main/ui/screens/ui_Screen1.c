@@ -28,8 +28,8 @@ void ui_Screen1_screen_init(void)
     lv_obj_remove_flag(ui_imgLogo, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_panelHeaderScreen1 = lv_obj_create(ui_Screen1);
+    lv_obj_set_height(ui_panelHeaderScreen1, 60);
     lv_obj_set_width(ui_panelHeaderScreen1, lv_pct(100));
-    lv_obj_set_height(ui_panelHeaderScreen1, lv_pct(10));
     lv_obj_set_align(ui_panelHeaderScreen1, LV_ALIGN_TOP_MID);
     lv_obj_remove_flag(ui_panelHeaderScreen1, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
     lv_obj_set_style_radius(ui_panelHeaderScreen1, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -50,7 +50,7 @@ void ui_Screen1_screen_init(void)
     lv_image_set_src(ui_imgSetting, &ui_img_setting_50px_png);
     lv_obj_set_width(ui_imgSetting, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_imgSetting, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_imgSetting, LV_ALIGN_RIGHT_MID);
+    lv_obj_set_align(ui_imgSetting, LV_ALIGN_LEFT_MID);
     lv_obj_add_flag(ui_imgSetting, LV_OBJ_FLAG_CLICKABLE);     /// Flags
     lv_obj_remove_flag(ui_imgSetting, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 

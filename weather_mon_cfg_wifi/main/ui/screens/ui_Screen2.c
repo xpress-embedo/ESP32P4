@@ -40,8 +40,8 @@ void ui_Screen2_screen_init(void)
     lv_obj_set_style_border_opa(ui_Screen2, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_panelHeaderScreen2 = lv_obj_create(ui_Screen2);
+    lv_obj_set_height(ui_panelHeaderScreen2, 60);
     lv_obj_set_width(ui_panelHeaderScreen2, lv_pct(100));
-    lv_obj_set_height(ui_panelHeaderScreen2, lv_pct(10));
     lv_obj_set_align(ui_panelHeaderScreen2, LV_ALIGN_TOP_MID);
     lv_obj_remove_flag(ui_panelHeaderScreen2, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
     lv_obj_set_style_radius(ui_panelHeaderScreen2, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
