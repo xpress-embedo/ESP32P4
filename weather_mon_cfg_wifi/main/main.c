@@ -67,7 +67,7 @@ void app_main(void)
   cfg_init();
 
   // connect with WiFi (it will take some time)
-  wifi_sta_connect();
+  wifi_sta_connect_init();
   
   if( wifi_sta_is_connected() )
   {

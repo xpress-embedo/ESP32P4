@@ -12,16 +12,19 @@
 
 #include "esp_log.h"
 
+#include "wifi_sta_mng.h"
+
 // Private Macros
 // un-comment this macro to use Menu in sidebar
 #define GUI_MENU_AS_SIDEBAR
 
 // Private Variables
 static const char *TAG = "GUI_MENU";
-lv_obj_t * menu = NULL;                 // object pointer for the whole menu
-lv_obj_t * kb_wifi_pswd = NULL;         // object pointer for the keyboard
-lv_obj_t * txt_box_wifi_pswd = NULL;    // object pointer for the text area to enter WiFi password
-lv_obj_t * cb_wifi  = NULL;             // object pointer for drop down box
+static lv_obj_t * menu = NULL;                 // object pointer for the whole menu
+static lv_obj_t * kb_wifi_pswd = NULL;         // object pointer for the keyboard
+static lv_obj_t * txt_box_wifi_pswd = NULL;    // object pointer for the text area to enter WiFi password
+static lv_obj_t * cb_wifi  = NULL;             // object pointer for drop down box
+static char wifi_ssid[WIFI_SSID_MAX_LEN] = { 0 };
 
 // Enumerations
 typedef enum
@@ -423,6 +426,8 @@ static void btn_connect_event_cb( lv_event_t * e )
   {
     // lv_obj_t * btn = lv_event_get_target( e );
     ESP_LOGI( TAG, "Connect Button Clicked" );
+    lv_dropdown_get_selected_str( cb_wifi, wifi_ssid, WIFI_SSID_MAX_LEN );
+    wifi_sta_start_connect( wifi_ssid, lv_textarea_get_text(txt_box_wifi_pswd) );
     // handle connect button click
   }
 }

@@ -50,7 +50,7 @@ static void wifi_event_handler( void *arg, esp_event_base_t event_base, int32_t 
  * @note  in future this function can be moved to a commom place.
  * @param  none
  */
-void wifi_sta_connect( void )
+void wifi_sta_connect_init( void )
 {
   app_connect_wifi();
 }
@@ -73,6 +73,74 @@ void wifi_sta_get_mac_address( char *mac_address )
 {
   get_mac_address( mac_address );
 }
+
+/**
+ * @brief 
+ * @param  
+ */
+void wifi_sta_start_connect( char * ssid, char *pswd )
+{
+  wifi_config_t wifi_config =
+  {
+    .sta =
+    {
+      // SSID and Password are configurable
+      // .ssid = APP_WIFI_SSID,
+      // .password = APP_WIFI_PSWD,
+      .threshold.authmode = WIFI_AUTH_WPA2_PSK,
+    },
+  };
+
+  // copy ssid and password to wifi_config_t structure
+  strncpy( (char *)wifi_config.sta.ssid, ssid, WIFI_SSID_MAX_LEN );
+  strncpy( (char *)wifi_config.sta.password, pswd, WIFI_SSID_PSWD_LEN );
+
+  ESP_ERROR_CHECK( esp_wifi_set_config( WIFI_IF_STA, &wifi_config ) );
+
+  /*
+   * Wait until either the connection is established (WIFI_CONNECTED_BIT) or
+   * connection failed for the maximum number of re-tries (WIFI_FAIL_BIT).
+   * The bits are set by event_handler() (see above) */
+  EventBits_t bits = xEventGroupWaitBits( wifi_event_group,                   \
+                                          WIFI_CONNECTED_BIT | WIFI_FAIL_BIT, \
+                                          pdFALSE,                            \
+                                          pdFALSE,                            \
+                                          portMAX_DELAY);
+
+  /* xEventGroupWaitBits() returns the bits before the call returned, hence we
+   * can test which event actually happened. */
+  if( bits & WIFI_CONNECTED_BIT )
+  {
+    ESP_LOGI(TAG, "Connected to Access Point %s", APP_WIFI_SSID );
+  }
+  else if( bits & WIFI_FAIL_BIT )
+  {
+    ESP_LOGE(TAG, "Failed to Connect to Access Point %s", APP_WIFI_SSID );
+  }
+  else
+  {
+    ESP_LOGE(TAG, "Unexpected Event" );
+  }
+  vEventGroupDelete(wifi_event_group);
+}
+
+/**
+ * @brief 
+ * @param  
+ */
+void wifi_sta_start_disconnect( void )
+{
+
+}
+
+/**
+ * @brief 
+ * @param  
+ */
+void wifi_sta_start_rescan( void )
+{
+}
+
 
 
 // Private Function Definitions
@@ -190,6 +258,7 @@ static void app_connect_wifi( void )
   gui_send_event( GUI_MNG_EV_WIFI_AP_LIST_AVAILABLE, wifi_ap_list );
   ESP_LOGI( TAG, "WiFi AP Scanning Finished" );
 
+  #if 0
   wifi_config_t wifi_config =
   {
     .sta =
@@ -226,6 +295,7 @@ static void app_connect_wifi( void )
     ESP_LOGE(TAG, "Unexpected Event" );
   }
   vEventGroupDelete(wifi_event_group);
+  #endif
 }
 
 /**
