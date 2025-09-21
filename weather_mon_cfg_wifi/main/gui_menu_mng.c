@@ -21,6 +21,7 @@ static const char *TAG = "GUI_MENU";
 lv_obj_t * menu = NULL;                 // object pointer for the whole menu
 lv_obj_t * kb_wifi_pswd = NULL;         // object pointer for the keyboard
 lv_obj_t * txt_box_wifi_pswd = NULL;    // object pointer for the text area to enter WiFi password
+lv_obj_t * cb_wifi  = NULL;             // object pointer for drop down box
 
 // Enumerations
 typedef enum
@@ -56,6 +57,15 @@ void gui_menu_mng_init( void )
 
   // create menu
   create_menu_settings();
+}
+
+void gui_menu_mng_wifi_ap_available( char * wifi_ap_list )
+{
+  // ESP_LOGE( TAG, "%s", (char*)data );
+  // setting image should be visible only when this function is called
+  lv_obj_remove_flag( ui_imgSetting, LV_OBJ_FLAG_HIDDEN );
+  // updating the drop down list
+  lv_dropdown_set_options( cb_wifi, wifi_ap_list );
 }
 
 // Private Function Definitions
@@ -258,7 +268,7 @@ static void create_wifi_settings_page( lv_obj_t * parent )
   lv_label_set_text( lbl_wifi, "WiFi SSID" );
   lv_obj_set_style_text_font( lbl_wifi, &lv_font_montserrat_18, LV_PART_MAIN | LV_STATE_DEFAULT );
 
-  lv_obj_t * cb_wifi = lv_dropdown_create( cont_ssid );
+  cb_wifi = lv_dropdown_create( cont_ssid );
   lv_dropdown_set_options( cb_wifi, "FIRST\nSECOND\nGROUND\nFIRST_EXT\n" );
   lv_obj_set_width( cb_wifi, 250 );
   lv_obj_set_height( cb_wifi, 50 );

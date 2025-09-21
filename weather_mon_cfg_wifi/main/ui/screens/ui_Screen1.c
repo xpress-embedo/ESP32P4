@@ -51,7 +51,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_width(ui_imgSetting, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_imgSetting, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_align(ui_imgSetting, LV_ALIGN_LEFT_MID);
-    lv_obj_add_flag(ui_imgSetting, LV_OBJ_FLAG_CLICKABLE);     /// Flags
+    lv_obj_add_flag(ui_imgSetting, LV_OBJ_FLAG_HIDDEN | LV_OBJ_FLAG_CLICKABLE);     /// Flags
     lv_obj_remove_flag(ui_imgSetting, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_imgWiFiStatus1 = lv_image_create(ui_Screen1);

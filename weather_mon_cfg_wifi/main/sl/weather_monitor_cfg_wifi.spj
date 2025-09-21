@@ -395,9 +395,14 @@
                   },
                   {
                     "nid": 90,
-                    "flags": 1048576,
                     "strtype": "OBJECT/Flags",
                     "InheritedType": 1
+                  },
+                  {
+                    "nid": 100,
+                    "strtype": "OBJECT/Hidden",
+                    "strval": "True",
+                    "InheritedType": 2
                   },
                   {
                     "nid": 225,
@@ -4492,7 +4497,7 @@
     "uiExportFolderPath": "D:\\Projects\\Embedded\\ESP32P4\\weather_mon_cfg_wifi\\main\\ui",
     "projectExportFolderPath": "",
     "custom_variable_prefix": "uic",
-    "backup_cnt": 152,
+    "backup_cnt": 154,
     "autosave_cnt": 0,
     "group_color_cnt": 1,
     "lvgl_version": "9.2.2",

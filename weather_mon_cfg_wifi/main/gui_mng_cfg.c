@@ -166,9 +166,7 @@ static void gui_wifi_connecting( void *data )
  */
 static void gui_wifi_app_list_available( void *data )
 {
-  // Enable the Settings Icon
-  // Update the Drop Down List
-  ESP_LOGE( TAG, "%s", (char*)data );
+  gui_menu_mng_wifi_ap_available( (char*)data );  
 }
 
 /**
