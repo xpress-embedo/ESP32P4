@@ -127,16 +127,26 @@ void wifi_sta_start_connecting( const char * ssid, const char *pswd )
   {
     ESP_LOGE(TAG, "Unexpected Event" );
   }
-  vEventGroupDelete(wifi_event_group);
+  // don't delete the event group as this is needed for connecting and disconnecting again
+  // vEventGroupDelete( wifi_event_group );
 }
 
 /**
- * @brief 
+ * @brief Disconnect the WiFi
  * @param  
  */
 void wifi_sta_start_disconnecting( void )
 {
   ESP_LOGI( TAG, "Disconnecting WiFi" );
+
+  // reset the flags and counters
+  wifi_connect_status = false;
+  wifi_should_connect = false;
+  wifi_connect_retry = false;
+
+  // Clear event group bits manually
+  xEventGroupClearBits(wifi_event_group, WIFI_CONNECTED_BIT | WIFI_FAIL_BIT);
+
   ESP_ERROR_CHECK( esp_wifi_disconnect() );
 }
 
