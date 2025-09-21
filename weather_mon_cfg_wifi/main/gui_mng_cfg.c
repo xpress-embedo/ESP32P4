@@ -35,8 +35,8 @@ typedef struct _gui_mng_event_cb_t
 } gui_mng_event_cb_t;
 
 // Private Function Prototypes
-// Private Function Prototypes
 static void gui_wifi_connecting( void *data );
+static void gui_wifi_app_list_available( void *data );
 static void gui_wifi_connected( void *data );
 static void gui_wifi_internet_connected( void *data );
 static void gui_wifi_disconnected( void *data );
@@ -59,6 +59,7 @@ static lv_img_dsc_t img_logo_dsc;       // main logo image descriptor
 static const gui_mng_event_cb_t gui_mng_event_cb[] =
 {
   { GUI_MNG_EV_WIFI_CONNECTING,         gui_wifi_connecting           },
+  { GUI_MNG_EV_WIFI_AP_LIST_AVAILABLE,  gui_wifi_app_list_available   },
   { GUI_MNG_EV_WIFI_CONNECTED,          gui_wifi_connected            },
   { GUI_MNG_EV_WIFI_DISCONNECTED,       gui_wifi_disconnected         },
   { GUI_MNG_EV_WIFI_INTERNET_CONNECTED, gui_wifi_internet_connected   },
@@ -157,6 +158,17 @@ static void gui_wifi_connecting( void *data )
   lv_img_set_src( ui_imgWiFiStatus2,  &ui_img_wifi_disconnected_png );
   GUI_UNLOCK();
   ESP_LOGI( TAG, "gui_wifi_connecting" );
+}
+
+/**
+ * @brief Callback function when ESP32 has WiFi AP list available
+ * @param data 
+ */
+static void gui_wifi_app_list_available( void *data )
+{
+  // Enable the Settings Icon
+  // Update the Drop Down List
+  ESP_LOGE( TAG, "%s", (char*)data );
 }
 
 /**

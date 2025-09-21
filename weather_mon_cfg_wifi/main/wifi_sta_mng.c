@@ -15,6 +15,7 @@
 #include "esp_mac.h"
 
 #include "wifi_sta_mng.h"
+#include "gui_mng.h"
 
 // Private Macros
 #define APP_WIFI_SSID                       CONFIG_ESP_WIFI_SSID
@@ -28,6 +29,7 @@
 
 // Private Variables
 static const char *TAG = "WIFI_STA_MNG";
+static char wifi_ap_list[WIFI_SSID_MAX_LEN*WIFI_MAX_AP] = { 0 };
 
 /* WiFi Connection Related Variables */
 static EventGroupHandle_t wifi_event_group;           // FreeRTOS event group to signal when we are connected
@@ -133,6 +135,61 @@ static void app_connect_wifi( void )
                                                         NULL,                 \
                                                         &instance_got_ip) );
 
+  ESP_ERROR_CHECK( esp_wifi_set_mode(WIFI_MODE_STA) );
+  ESP_ERROR_CHECK( esp_wifi_start() );
+
+  ESP_LOGI( TAG, "WiFi AP Scanning Started" );
+
+  // Start scanning
+  wifi_scan_config_t scan_config = 
+  {
+    .ssid = NULL,         // SSID of AP
+    .bssid = NULL,        // MAC Address of the AP
+    .channel = 0,
+    .show_hidden = false  // don't scan hidden SSID
+  };
+  // The reason why .show_hidden is set to false because if set to true, hidden
+  // SSID are also included but without name, which doesn't make much sense at
+  // this stage of project
+
+  // Scanning for available WiFi networks
+  ESP_ERROR_CHECK( esp_wifi_scan_start( &scan_config, true) );  // true is blocking
+
+  uint16_t ap_num = WIFI_MAX_AP;
+  wifi_ap_record_t ap_records[WIFI_MAX_AP];
+  // get the access points records
+  ESP_ERROR_CHECK( esp_wifi_scan_get_ap_records( &ap_num, ap_records ) );
+
+  // clear the buffer before filling it up
+  memset( wifi_ap_list, 0, sizeof(wifi_ap_list) );
+  size_t offset = 0;
+
+  ESP_LOGI( TAG, "Found %d access points:", ap_num );
+  for ( uint16_t i = 0; i < ap_num; i++ )
+  {
+    // Don't process SSID with no name
+    if ( strlen( (char*)ap_records[i].ssid ) == 0 )
+    {
+      // skip the hidden or malinformed SSIDs
+      continue;
+    }
+    ESP_LOGI( TAG, "[%d] SSID: %s | RSSI: %d | Authmode: %d", (i + 1), (char *)ap_records[i].ssid, ap_records[i].rssi, ap_records[i].authmode );
+    
+    // ensure we don't overflow the buffer
+    int written = snprintf( wifi_ap_list + offset, sizeof(wifi_ap_list)-offset,
+                            "%s\n", (char *)ap_records[i].ssid );
+    
+    if ( (written < 0) || ( written >= (sizeof(wifi_ap_list) - offset) ) )
+    {
+      break; // Stop if buffer is full or error occurred
+    }
+    offset += written;
+  }
+
+  // inform GUI manager that we have an updated list of available wifi access points
+  gui_send_event( GUI_MNG_EV_WIFI_AP_LIST_AVAILABLE, wifi_ap_list );
+  ESP_LOGI( TAG, "WiFi AP Scanning Finished" );
+
   wifi_config_t wifi_config =
   {
     .sta =
@@ -142,12 +199,7 @@ static void app_connect_wifi( void )
       .threshold.authmode = WIFI_AUTH_WPA2_PSK,
     },
   };
-
-  ESP_ERROR_CHECK( esp_wifi_set_mode(WIFI_MODE_STA) );
   ESP_ERROR_CHECK( esp_wifi_set_config(WIFI_IF_STA, &wifi_config) );
-  ESP_ERROR_CHECK( esp_wifi_start() );
-
-  ESP_LOGI(TAG, "WiFi Initialized in Station Mode Finished.");
 
   /*
    * Wait until either the connection is established (WIFI_CONNECTED_BIT) or

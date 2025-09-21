@@ -10,7 +10,8 @@
 
 // Public Macros
 #define MAC_ADDR_SIZE                           (18u)
-
+#define WIFI_MAX_AP                             (10)      // Maximum Number of Access points
+#define WIFI_SSID_MAX_LEN                       (20)      // SSID Name Length
 
 // Public Function Prototypes
 void wifi_sta_connect( void );
