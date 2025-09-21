@@ -198,6 +198,25 @@ static void create_menu_settings( void )
   lv_obj_add_flag( menu, LV_OBJ_FLAG_HIDDEN );
   // in case we want to hide the page
   // lv_obj_add_flag( main_page, LV_OBJ_FLAG_HIDDEN );
+
+  /* TODO: Styling for future
+  static lv_style_t style_menu_dark;
+  lv_style_init(&style_menu_dark);
+  lv_style_set_bg_color(&style_menu_dark, lv_color_make(30, 30, 30));  // Dark gray
+  lv_style_set_bg_opa(&style_menu_dark, LV_OPA_COVER);
+  lv_style_set_border_width(&style_menu_dark, 0);
+  lv_style_set_pad_all(&style_menu_dark, 8);
+
+  lv_obj_add_style(menu, &style_menu_dark, LV_PART_MAIN | LV_STATE_DEFAULT);
+  header = lv_menu_get_main_header(menu);
+  lv_obj_add_style(header, &style_menu_dark, LV_PART_MAIN);
+  
+  lv_obj_t * sidebar = lv_menu_get_sidebar_header(menu);
+  lv_obj_add_style(sidebar, &style_menu_dark, LV_PART_MAIN);
+
+  lv_style_set_text_color(&style_menu_dark, lv_color_white());
+  lv_style_set_text_font(&style_menu_dark, &lv_font_montserrat_20);
+  */
 }
 
 /**
@@ -278,8 +297,8 @@ static void create_wifi_settings_page( lv_obj_t * parent )
   lv_obj_set_align( check_box_show_pswd, LV_ALIGN_CENTER );
   // we may need to tune this again, based on the display size
   #ifdef GUI_MENU_AS_SIDEBAR
-  lv_obj_set_x( check_box_show_pswd, 10 );
-  lv_obj_set_y( check_box_show_pswd, 50 );
+  lv_obj_set_x( check_box_show_pswd, 35 );
+  lv_obj_set_y( check_box_show_pswd, 35 );
   #else
   lv_obj_set_x( check_box_show_pswd, 10 );
   lv_obj_set_y( check_box_show_pswd, 35 );
@@ -324,7 +343,7 @@ static void create_wifi_settings_page( lv_obj_t * parent )
   lv_keyboard_set_textarea( kb_wifi_pswd, txt_box_wifi_pswd );
   lv_obj_add_event_cb( txt_box_wifi_pswd, txt_box_wifi_pswd_event_cb, LV_EVENT_ALL, NULL );
   // Hide the keyboard by default
-  lv_obj_add_flag( kb_wifi_pswd, LV_OBJ_FLAG_HIDDEN );
+  // lv_obj_add_flag( kb_wifi_pswd, LV_OBJ_FLAG_HIDDEN );     // I don't like the idea of hiding in my use-case so commented for now
 }
 
 /**
@@ -356,6 +375,9 @@ static void generic_slider_event_cb( lv_event_t * e )
  */
 static void txt_box_wifi_pswd_event_cb( lv_event_t * e )
 {
+  #if 0
+  NOTE: I did not liked the idea of hiding Keyboard in my use case, hence 
+  commenting this function for now
   lv_event_code_t code = lv_event_get_code( e );
   lv_obj_t * target = lv_event_get_target( e );
   switch ( code )
@@ -377,6 +399,7 @@ static void txt_box_wifi_pswd_event_cb( lv_event_t * e )
   default:
     break;
   }
+  #endif
 }
 
 /**

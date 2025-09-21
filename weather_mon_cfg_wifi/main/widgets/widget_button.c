@@ -24,7 +24,7 @@ w_button_t * w_button_create( lv_obj_t * parent, const char * label, w_button_cb
 
   // Create the button
   w_button->btn = lv_btn_create( parent );
-  lv_obj_set_size( w_button->btn, 100, 50 );
+  lv_obj_set_size( w_button->btn, 150, 50 );
   lv_obj_set_align( w_button->btn, LV_ALIGN_CENTER );
   lv_obj_add_flag( w_button->btn, LV_OBJ_FLAG_SCROLL_ON_FOCUS );
   lv_obj_clear_flag( w_button->btn, LV_OBJ_FLAG_SCROLLABLE );
@@ -37,6 +37,7 @@ w_button_t * w_button_create( lv_obj_t * parent, const char * label, w_button_cb
   w_button->btn_lbl = lv_label_create( w_button->btn );
   lv_label_set_text( w_button->btn_lbl, label );
   lv_obj_center( w_button->btn_lbl );
+  lv_obj_set_style_text_font( w_button->btn_lbl, &lv_font_montserrat_16, LV_PART_MAIN | LV_STATE_DEFAULT );
 
   return w_button;
 }
