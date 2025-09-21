@@ -35,7 +35,8 @@ static char wifi_ap_list[WIFI_SSID_MAX_LEN*WIFI_MAX_AP] = { 0 };
 static EventGroupHandle_t wifi_event_group;           // FreeRTOS event group to signal when we are connected
 static uint8_t wifi_connect_retry = 0;
 static bool wifi_connect_status = false;
-static uint8_t wifi_mac_address[6] = { 0 };              // {AA,BB,CC,DD,EE,FF} MAC Address Format
+static uint8_t wifi_mac_address[6] = { 0 };           // {AA,BB,CC,DD,EE,FF} MAC Address Format
+static bool wifi_should_connect = false;              // flag to trigger the connect
 
 // Private Function Declarations
 static void app_connect_wifi( void );
@@ -97,6 +98,11 @@ void wifi_sta_start_connect( char * ssid, char *pswd )
 
   ESP_ERROR_CHECK( esp_wifi_set_config( WIFI_IF_STA, &wifi_config ) );
 
+  wifi_should_connect = true;
+  esp_wifi_connect();
+  wifi_connect_retry = 0;
+  ESP_LOGI( TAG, "Starting WiFi Connect" );
+
   /*
    * Wait until either the connection is established (WIFI_CONNECTED_BIT) or
    * connection failed for the maximum number of re-tries (WIFI_FAIL_BIT).
@@ -111,11 +117,11 @@ void wifi_sta_start_connect( char * ssid, char *pswd )
    * can test which event actually happened. */
   if( bits & WIFI_CONNECTED_BIT )
   {
-    ESP_LOGI(TAG, "Connected to Access Point %s", APP_WIFI_SSID );
+    ESP_LOGI(TAG, "Connected to Access Point %s, with Password %s", ssid, pswd );
   }
   else if( bits & WIFI_FAIL_BIT )
   {
-    ESP_LOGE(TAG, "Failed to Connect to Access Point %s", APP_WIFI_SSID );
+    ESP_LOGE(TAG, "Failed to Connect to Access Point %s", ssid );
   }
   else
   {
@@ -258,6 +264,9 @@ static void app_connect_wifi( void )
   gui_send_event( GUI_MNG_EV_WIFI_AP_LIST_AVAILABLE, wifi_ap_list );
   ESP_LOGI( TAG, "WiFi AP Scanning Finished" );
 
+  // Disconnect WiFi to prevent auto-connect attempts
+  ESP_ERROR_CHECK( esp_wifi_disconnect() );
+
   #if 0
   wifi_config_t wifi_config =
   {
@@ -311,7 +320,15 @@ static void wifi_event_handler( void *arg, esp_event_base_t event_base, int32_t 
   {
     if( WIFI_EVENT_STA_START == event_id )
     {
-      esp_wifi_connect();
+      if ( wifi_should_connect == true )
+      {
+        esp_wifi_connect();
+        ESP_LOGI( TAG, "Starting WiFi Connect from Event Handler" );
+      }
+      else
+      {
+        ESP_LOGI( TAG, "WiFi STA started, scan only mode" );
+      }
     }
     else if( WIFI_EVENT_STA_DISCONNECTED == event_id )
     {
