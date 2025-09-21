@@ -390,7 +390,7 @@
                   {
                     "nid": 70,
                     "strtype": "OBJECT/Align",
-                    "strval": "RIGHT_MID",
+                    "strval": "LEFT_MID",
                     "InheritedType": 3
                   },
                   {
@@ -613,9 +613,9 @@
                         "nid": 10520,
                         "strtype": "_style/Bg_Color",
                         "intarray": [
-                          20,
-                          25,
-                          30,
+                          128,
+                          128,
+                          128,
                           255
                         ],
                         "InheritedType": 7
@@ -1211,9 +1211,9 @@
                         "nid": 10520,
                         "strtype": "_style/Bg_Color",
                         "intarray": [
-                          20,
-                          25,
-                          30,
+                          128,
+                          128,
+                          128,
                           255
                         ],
                         "InheritedType": 7
@@ -4492,7 +4492,7 @@
     "uiExportFolderPath": "D:\\Projects\\Embedded\\ESP32P4\\weather_mon_cfg_wifi\\main\\ui",
     "projectExportFolderPath": "",
     "custom_variable_prefix": "uic",
-    "backup_cnt": 139,
+    "backup_cnt": 142,
     "autosave_cnt": 0,
     "group_color_cnt": 1,
     "lvgl_version": "9.2.2",

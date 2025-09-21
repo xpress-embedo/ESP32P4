@@ -111,8 +111,6 @@ static void create_menu_settings( void )
   // TODO: I think it will be better to use main screen instead of lv_screen_active
   menu = lv_menu_create( lv_screen_active() );
   lv_menu_set_mode_root_back_button( menu, LV_MENU_ROOT_BACK_BUTTON_ENABLED );
-  // add callback for back button
-  lv_obj_add_event_cb( menu, menu_back_btn_event_cb, LV_EVENT_CLICKED, NULL );
   // configure back button event handler later
   lv_obj_set_size( menu, lv_display_get_horizontal_resolution(NULL), lv_display_get_vertical_resolution(NULL) );
   lv_obj_center( menu );
@@ -165,8 +163,35 @@ static void create_menu_settings( void )
   lv_obj_t * sidebar_header = lv_menu_get_sidebar_header( menu );
   lv_obj_t * sidebar_title_label = lv_obj_get_child_by_type( sidebar_header, 0, &lv_label_class );
   lv_obj_set_style_text_font( sidebar_title_label, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT );
+
+  lv_obj_t * sidebar_back_button = lv_obj_get_child_by_type( sidebar_header, 0, &lv_button_class );
+  if ( sidebar_back_button )
+  {
+    lv_obj_add_event_cb( sidebar_back_button, menu_back_btn_event_cb, LV_EVENT_CLICKED, NULL );
+    ESP_LOGI( TAG, "Button Found and Event Registered SIDEBAR" );
+    // Updating the image
+    lv_obj_t * sidebar_back_btn_img = lv_obj_get_child_by_type( sidebar_back_button, 0, &lv_image_class );
+    if ( sidebar_back_btn_img )
+    {
+      lv_image_set_src( sidebar_back_btn_img, &ui_img_setting_50px_png );
+    }
+  }
 #else
   lv_menu_set_page( menu, main_page);
+  // add callback for back button
+  // NOTE: the issue with the below statement is that it is attaching the callback
+  // to the entire menu object, including empty spaces, and this triggers the events
+  // lv_obj_add_event_cb( menu, menu_back_btn_event_cb, LV_EVENT_CLICKED, NULL );
+  // What I need to do is trigger callback event for "> Settings"
+  header = lv_menu_get_main_header( menu );
+  lv_obj_t * button = lv_obj_get_child_by_type( header, 0, &lv_button_class );
+  if ( button )
+  {
+    // Found the back button
+    lv_obj_add_event_cb( button, menu_back_btn_event_cb, LV_EVENT_CLICKED, NULL );
+    ESP_LOGI( TAG, "Button Found and Event Registered" );
+    break;
+  }
 #endif
 
   // menu is hidden by default, and will be visible when setting icon is clicked
@@ -250,8 +275,13 @@ static void create_wifi_settings_page( lv_obj_t * parent )
   lv_obj_set_height( check_box_show_pswd, LV_SIZE_CONTENT );
   lv_obj_set_align( check_box_show_pswd, LV_ALIGN_CENTER );
   // we may need to tune this again, based on the display size
+  #ifdef GUI_MENU_AS_SIDEBAR
+  lv_obj_set_x( check_box_show_pswd, 10 );
+  lv_obj_set_y( check_box_show_pswd, 50 );
+  #else
   lv_obj_set_x( check_box_show_pswd, 10 );
   lv_obj_set_y( check_box_show_pswd, 35 );
+  #endif
   // here the flag LV_OBJ_FLAG_IGNORE_LAYOUT is added to avoid the checkbox being squished in the flex layout
   // else whole layout will be broken
   lv_obj_add_flag( check_box_show_pswd, LV_OBJ_FLAG_IGNORE_LAYOUT | LV_OBJ_FLAG_OVERFLOW_VISIBLE | LV_OBJ_FLAG_SCROLL_ON_FOCUS );
