@@ -427,7 +427,7 @@ static void btn_connect_event_cb( lv_event_t * e )
     // lv_obj_t * btn = lv_event_get_target( e );
     ESP_LOGI( TAG, "Connect Button Clicked" );
     lv_dropdown_get_selected_str( cb_wifi, wifi_ssid, WIFI_SSID_MAX_LEN );
-    wifi_sta_start_connect( wifi_ssid, lv_textarea_get_text(txt_box_wifi_pswd) );
+    wifi_sta_start_connecting( wifi_ssid, lv_textarea_get_text(txt_box_wifi_pswd) );
     // handle connect button click
   }
 }
@@ -443,6 +443,7 @@ static void btn_disconnect_event_cb( lv_event_t * e )
   {
     // lv_obj_t * btn = lv_event_get_target( e );
     ESP_LOGI( TAG, "Disconnect Button Clicked" );
+    wifi_sta_start_disconnecting();
     // handle disconnect button click
   }
 }

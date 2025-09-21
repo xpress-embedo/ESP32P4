@@ -79,7 +79,7 @@ void wifi_sta_get_mac_address( char *mac_address )
  * @brief 
  * @param  
  */
-void wifi_sta_start_connect( char * ssid, char *pswd )
+void wifi_sta_start_connecting( const char * ssid, const char *pswd )
 {
   wifi_config_t wifi_config =
   {
@@ -134,9 +134,10 @@ void wifi_sta_start_connect( char * ssid, char *pswd )
  * @brief 
  * @param  
  */
-void wifi_sta_start_disconnect( void )
+void wifi_sta_start_disconnecting( void )
 {
-
+  ESP_LOGI( TAG, "Disconnecting WiFi" );
+  ESP_ERROR_CHECK( esp_wifi_disconnect() );
 }
 
 /**

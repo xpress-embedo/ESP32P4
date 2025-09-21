@@ -18,8 +18,8 @@
 void wifi_sta_connect_init( void );
 bool wifi_sta_is_connected( void );
 void wifi_sta_get_mac_address( char *mac_address );
-void wifi_sta_start_connect( char * ssid, char *pswd );
-void wifi_sta_start_disconnect( void );
+void wifi_sta_start_connecting( const char * ssid, const char *pswd );
+void wifi_sta_start_disconnecting( void );
 void wifi_sta_start_rescan( void );
 
 #endif /* WIFI_STA_MNG_H_ */
