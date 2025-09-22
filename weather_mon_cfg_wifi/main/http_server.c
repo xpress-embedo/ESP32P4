@@ -442,6 +442,14 @@ static esp_err_t http_server_wifi_connect_handler(httpd_req_t *req)
 
   // Update the WiFi Network Configuration and let the WiFi Application Know
   wifi_config_t * wifi_config = wifi_app_get_wifi_config();
+
+  // If no memory is allocated to wifi_config then we can Store Access Fault
+  if ( !wifi_config )
+  {
+    ESP_LOGE(TAG, "wifi_config is NULL!");
+    return ESP_FAIL;
+  }
+
   memset( wifi_config, 0x00, sizeof(wifi_config_t));
   memcpy( wifi_config->sta.ssid, ssid_str, len_ssid );
   memcpy( wifi_config->sta.password, password_str, len_password );

@@ -93,8 +93,8 @@ void wifi_app_start( void )
   esp_log_level_set("wifi", ESP_LOG_NONE);
 
   // Allocate memory for the WiFi Configuration
-  // wifi_config = (wifi_config_t*)malloc( sizeof(wifi_config_t) );
-  // memset( wifi_config, 0x00, sizeof(wifi_config_t) );
+  wifi_config = (wifi_config_t*)malloc( sizeof(wifi_config_t) );
+  memset( wifi_config, 0x00, sizeof(wifi_config_t) );
 
   // create a message queue
   wifi_app_q_handle = xQueueCreate( WIFI_APP_QUEUE_SIZE, sizeof(wifi_app_queue_msg_t) );
