@@ -432,23 +432,23 @@ static void wifi_app_event_handler( void *arg, esp_event_base_t event_base, int3
     {
       case IP_EVENT_STA_GOT_IP:
         ESP_LOGI( TAG, "IP_EVENT_STA_GOT_IP");
-        // /*
-        //  * Need to change DNS because MQTT was not working, i.e. not able to connect
-        //  * Some points/reasons:
-        //  * - Router DNS works for some devices, not all
-        //  * - ESP32's DNS Query Format or Timing wasn't compatible
-        //  * - No Fallback DNS behavior
-        //  */
-        // // log_dns_info();
-        // esp_netif_dns_info_t new_dns =
-        // {
-        //     .ip.u_addr.ip4.addr = ipaddr_addr("8.8.8.8"),
-        //     .ip.type = IPADDR_TYPE_V4,
-        // };
+        /*
+         * Need to change DNS because MQTT was not working, i.e. not able to connect
+         * Some points/reasons:
+         * - Router DNS works for some devices, not all
+         * - ESP32's DNS Query Format or Timing wasn't compatible
+         * - No Fallback DNS behavior
+         */
+        // log_dns_info();
+        esp_netif_dns_info_t new_dns =
+        {
+            .ip.u_addr.ip4.addr = ipaddr_addr("8.8.8.8"),
+            .ip.type = IPADDR_TYPE_V4,
+        };
 
-        // esp_netif_t *netif = esp_netif_get_handle_from_ifkey("WIFI_STA_DEF");
-        // esp_netif_set_dns_info(netif, ESP_NETIF_DNS_MAIN, &new_dns);
-        // ESP_LOGI(TAG, "DNS manually set to 8.8.8.8");
+        esp_netif_t *netif = esp_netif_get_handle_from_ifkey("WIFI_STA_DEF");
+        esp_netif_set_dns_info(netif, ESP_NETIF_DNS_MAIN, &new_dns);
+        ESP_LOGI(TAG, "DNS manually set to 8.8.8.8");
 
         wifi_app_send_msg( WIFI_APP_MSG_STA_CONNECTED_GOT_IP );
         break;
