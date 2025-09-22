@@ -190,8 +190,8 @@ static void wifi_app_task(void *pvParameter)
   ESP_ERROR_CHECK( esp_wifi_start() );
 
   // send the first message
-  // wifi_app_send_msg( WIFI_APP_MSG_LOAD_SAVED_CREDENTIALS );
-  wifi_app_send_msg( WIFI_APP_MSG_START_HTTP_SERVER );
+  wifi_app_send_msg( WIFI_APP_MSG_LOAD_SAVED_CREDENTIALS );
+  // wifi_app_send_msg( WIFI_APP_MSG_START_HTTP_SERVER );
 
   for( ;; )
   {
@@ -319,11 +319,13 @@ static void wifi_app_task(void *pvParameter)
           {
             ESP_LOGI(TAG, "Loaded Station Credentials");
             wifi_app_connect_sta();
-            xEventGroupSetBits(wifi_app_event_group, WIFI_APP_CONNECTING_USING_SAVED_CREDS_BIT);
+            xEventGroupSetBits( wifi_app_event_group, WIFI_APP_CONNECTING_USING_SAVED_CREDS_BIT );
           }
           else
           {
-            ESP_LOGI( TAG, "Unable to Load the Saved Credential" );
+            ESP_LOGW( TAG, "Unable to Load the Saved Credential" );
+            // don't attempt further connections
+            ESP_ERROR_CHECK( esp_wifi_disconnect() );
           }
           // Next step is to start the http web server
           // earlier this msg was sent first but now, it is triggered after checking the saved credentials
@@ -366,13 +368,14 @@ static void wifi_app_default_wifi_init( void )
   wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
 
   ESP_ERROR_CHECK( esp_wifi_init(&cfg) );
-  ESP_ERROR_CHECK( esp_wifi_set_storage( WIFI_STORAGE_RAM) );
+  // NOTE: I am not sure if this is really needed
+  // ESP_ERROR_CHECK( esp_wifi_set_storage( WIFI_STORAGE_RAM) );
 
   esp_netif_sta = esp_netif_create_default_wifi_sta();
   esp_netif_ap = esp_netif_create_default_wifi_ap();
 
   // logic for setting MAC address as hostname (starts)
-  
+
   // This is an ESP32P4 device which doesn't have EFUSE, so esp_read_mac 
   // function will not work while esp_wifi_get_mac function will work because 
   // it will query the MAC programmed in the ESP32C6 WiFi chip
@@ -441,10 +444,17 @@ static void wifi_app_soft_ap_config( void )
  */
 static void wifi_app_connect_sta(void)
 {
-  ESP_ERROR_CHECK( esp_wifi_set_config(ESP_IF_WIFI_STA, wifi_app_get_wifi_config()) );
+  wifi_config_t * wifi_config_ptr = wifi_app_get_wifi_config();
+  if ( !wifi_config_ptr )
+  {
+    ESP_LOGE( TAG, "STA Connection Failed, as wifi_config is NULL!" );
+    return;
+  }
+  
+  ESP_LOGI( TAG, "STA Connection Starting" );
+  ESP_ERROR_CHECK( esp_wifi_set_config(ESP_IF_WIFI_STA, wifi_config_ptr ) );
   ESP_ERROR_CHECK( esp_wifi_connect() );
 }
-
 
 /**
  * @brief WiFi Event Handler Function
