@@ -35,6 +35,7 @@ static char wifi_ap_list[WIFI_SSID_MAX_LEN*WIFI_MAX_AP] = { 0 };
 static EventGroupHandle_t wifi_event_group;           // FreeRTOS event group to signal when we are connected
 static uint8_t wifi_connect_retry = 0;
 static bool wifi_connect_status = false;
+static bool wifi_manual_disconnect = false;
 static uint8_t wifi_mac_address[6] = { 0 };           // {AA,BB,CC,DD,EE,FF} MAC Address Format
 static bool wifi_should_connect = false;              // flag to trigger the connect
 
@@ -81,6 +82,20 @@ void wifi_sta_get_mac_address( char *mac_address )
  */
 void wifi_sta_start_connecting( const char * ssid, const char *pswd )
 {
+  ESP_LOGI( TAG, "Starting WiFi Connect" );
+
+  // reset flags and counters
+  wifi_should_connect = true;
+  wifi_manual_disconnect = false;
+  wifi_connect_retry = 0;
+
+  // Optional: recreate event group if deleted earlier (anyways I am not deleting)
+  if ( wifi_event_group == NULL )
+  {
+    wifi_event_group = xEventGroupCreate();
+  }
+
+  // Prepare WiFi Configuration
   wifi_config_t wifi_config =
   {
     .sta =
@@ -98,10 +113,10 @@ void wifi_sta_start_connecting( const char * ssid, const char *pswd )
 
   ESP_ERROR_CHECK( esp_wifi_set_config( WIFI_IF_STA, &wifi_config ) );
 
-  wifi_should_connect = true;
-  esp_wifi_connect();
-  wifi_connect_retry = 0;
-  ESP_LOGI( TAG, "Starting WiFi Connect" );
+  // start WiFi if not already started (safe to call multiple times)
+  esp_wifi_start();
+  // connect
+  ESP_ERROR_CHECK( esp_wifi_connect() );
 
   /*
    * Wait until either the connection is established (WIFI_CONNECTED_BIT) or
@@ -133,7 +148,7 @@ void wifi_sta_start_connecting( const char * ssid, const char *pswd )
 
 /**
  * @brief Disconnect the WiFi
- * @param  
+ * @param  none
  */
 void wifi_sta_start_disconnecting( void )
 {
@@ -142,12 +157,31 @@ void wifi_sta_start_disconnecting( void )
   // reset the flags and counters
   wifi_connect_status = false;
   wifi_should_connect = false;
-  wifi_connect_retry = false;
+  wifi_manual_disconnect = true;
+  wifi_connect_retry = 0;
 
   // Clear event group bits manually
-  xEventGroupClearBits(wifi_event_group, WIFI_CONNECTED_BIT | WIFI_FAIL_BIT);
+  if ( wifi_event_group ) 
+  {
+    xEventGroupClearBits(wifi_event_group, WIFI_CONNECTED_BIT | WIFI_FAIL_BIT);
+  }
 
-  ESP_ERROR_CHECK( esp_wifi_disconnect() );
+  /* NOTE: earlier for disconnection I was just calling the function esp_wifi_diconnect()
+  but it was observed that this function calls causes small heap leaks over time
+  so changing the approach to use esp_wifi_stop function instead */
+  // ESP_ERROR_CHECK( esp_wifi_disconnect() );
+  esp_err_t err = esp_wifi_stop();
+  if ( ESP_OK == err )
+  {
+    ESP_LOGI( TAG, "WiFi Stopped Successfully" );
+  }
+  else
+  {
+    ESP_LOGW( TAG, "WiFi stop failed: %s", esp_err_to_name( err ) );
+  }
+
+  // DO NOT call esp_wifi_deinit() unless you're tearing down everything
+  // ESP_ERROR_CHECK( esp_wifi_deinit() );
 }
 
 /**
@@ -331,7 +365,7 @@ static void wifi_event_handler( void *arg, esp_event_base_t event_base, int32_t 
   {
     if( WIFI_EVENT_STA_START == event_id )
     {
-      if ( wifi_should_connect == true )
+      if ( wifi_should_connect )
       {
         esp_wifi_connect();
         ESP_LOGI( TAG, "Starting WiFi Connect from Event Handler" );
@@ -343,21 +377,34 @@ static void wifi_event_handler( void *arg, esp_event_base_t event_base, int32_t 
     }
     else if( WIFI_EVENT_STA_DISCONNECTED == event_id )
     {
-      if( wifi_connect_retry < WIFI_MAX_RETRY )
+      /* NOTE: WIFI_EVENT_STA_DISCONNECT event occurred when we manually disconnect
+      and call esp_wifi_disconnect() function and also when WiFi Router is not available
+      for sometime, so added a check using variable wifi_manual_disconnect to not
+      retry when manually disconnected by pressing the "Disconnect" button */
+      if ( wifi_manual_disconnect )
       {
-        uint32_t delay = (1 << wifi_connect_retry) * WIFI_CONNECT_DELAY;
-        delay = (delay > WIFI_MAX_DELAY) ? WIFI_MAX_DELAY : delay;
-        // waiting for some time before retrying again
-        vTaskDelay(delay / portTICK_PERIOD_MS);
-        esp_wifi_connect();
-        wifi_connect_retry++;
-        ESP_LOGI(TAG, "Retry Wi-Fi connection (%d/%d)...", wifi_connect_retry, WIFI_MAX_RETRY);
+        ESP_LOGI( TAG, "Manual Disconnect, no retry" );
+        wifi_manual_disconnect = false;
       }
       else
       {
-        wifi_connect_status = false;
-        xEventGroupSetBits(wifi_event_group, WIFI_FAIL_BIT);
-        ESP_LOGE(TAG, "Failed to connect to Access Point.");
+        // disconnected due to some other reasons, we should keep retrying
+        if( wifi_connect_retry < WIFI_MAX_RETRY )
+        {
+          uint32_t delay = (1 << wifi_connect_retry) * WIFI_CONNECT_DELAY;
+          delay = (delay > WIFI_MAX_DELAY) ? WIFI_MAX_DELAY : delay;
+          // waiting for some time before retrying again
+          vTaskDelay(delay / portTICK_PERIOD_MS);
+          esp_wifi_connect();
+          wifi_connect_retry++;
+          ESP_LOGI(TAG, "Retry Wi-Fi connection (%d/%d)...", wifi_connect_retry, WIFI_MAX_RETRY);
+        }
+        else
+        {
+          wifi_connect_status = false;
+          xEventGroupSetBits(wifi_event_group, WIFI_FAIL_BIT);
+          ESP_LOGE(TAG, "Failed to connect to Access Point.");
+        }
       }
     }
   } // if( WIFI_EVENT = event_base )
