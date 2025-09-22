@@ -36,7 +36,7 @@ static TaskHandle_t task_http_server_monitor = NULL;
 static QueueHandle_t http_server_monitor_q_handle;
 
 // WiFi Connect Status
-static http_server_wifi_connect_status_e g_wifi_connect_status = HTTP_WIFI_STATUS_CONNECT_NONE;
+static http_server_wifi_connect_status_e wifi_connect_status = HTTP_WIFI_STATUS_CONNECT_NONE;
 
 // Embedded Files: JQuery, index.html, app.css, app.js, and favicon.ico files
 extern const uint8_t jquery_3_3_1_min_js_start[]      asm("_binary_jquery_3_3_1_min_js_start");
@@ -123,19 +123,19 @@ static void http_server_monitor(void *pvParameter)
       {
       case HTTP_MSG_WIFI_CONNECT_INIT:
         ESP_LOGI( TAG, "HTTP_MSG_WIFI_CONNECT_INIT");
-        g_wifi_connect_status = HTTP_WIFI_STATUS_CONNECTING;
+        wifi_connect_status = HTTP_WIFI_STATUS_CONNECTING;
         break;
       case HTTP_MSG_WIFI_CONNECT_SUCCESS:
         ESP_LOGI( TAG, "HTTP_MSG_WIFI_CONNECT_SUCCESS");
-        g_wifi_connect_status = HTTP_WIFI_STATUS_CONNECT_SUCCESS;
+        wifi_connect_status = HTTP_WIFI_STATUS_CONNECT_SUCCESS;
         break;
       case HTTP_MSG_WIFI_CONNECT_FAIL:
         ESP_LOGI( TAG, "HTTP_MSG_WIFI_CONNECT_FAIL");
-        g_wifi_connect_status = HTTP_WIFI_STATUS_CONNECT_FAILED;
+        wifi_connect_status = HTTP_WIFI_STATUS_CONNECT_FAILED;
         break;
       case HTTP_MSG_WIFI_USER_DISCONNECT:
         ESP_LOGI( TAG, "HTTP_MSG_WIFI_USER_DISCONNECT");
-        g_wifi_connect_status = HTTP_WIFI_STATUS_DISCONNECTED;
+        wifi_connect_status = HTTP_WIFI_STATUS_DISCONNECTED;
         break;
       case HTTP_MSG_WIFI_OTA_UPDATE_SUCCESSFUL:
         ESP_LOGI( TAG, "HTTP_MSG_OTA_UPDATE_SUCCESSFUL");
@@ -473,7 +473,7 @@ static esp_err_t http_server_wifi_connect_status_handler(httpd_req_t *req)
   ESP_LOGI(TAG, "/wifiConnectStatus requested");
   char status_JSON[100];
 
-  sprintf( status_JSON, "{\"wifi_connect_status\":%d}", g_wifi_connect_status );
+  sprintf( status_JSON, "{\"wifi_connect_status\":%d}", wifi_connect_status );
 
   httpd_resp_set_type(req, "application/json" );
   httpd_resp_send(req, status_JSON, strlen(status_JSON) );
@@ -499,7 +499,7 @@ static esp_err_t http_server_get_wifi_connect_info_handler(httpd_req_t *req)
   char netmask[IP4ADDR_STRLEN_MAX];
   char gateway[IP4ADDR_STRLEN_MAX];
 
-  if( g_wifi_connect_status == HTTP_WIFI_STATUS_CONNECT_SUCCESS )
+  if( wifi_connect_status == HTTP_WIFI_STATUS_CONNECT_SUCCESS )
   {
     wifi_ap_record_t wifi_data;
     ESP_ERROR_CHECK( esp_wifi_sta_get_ap_info(&wifi_data) );
