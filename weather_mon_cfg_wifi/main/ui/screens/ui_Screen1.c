@@ -12,6 +12,15 @@ lv_obj_t * ui_lblProjectNameMainScreen1 = NULL;
 lv_obj_t * ui_imgSetting = NULL;
 lv_obj_t * ui_imgWiFiStatus1 = NULL;
 // event funtions
+void ui_event_Screen1(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_GESTURE &&  lv_indev_get_gesture_dir(lv_indev_active()) == LV_DIR_LEFT) {
+        lv_indev_wait_release(lv_indev_active());
+        _ui_screen_change(&ui_Screen2, LV_SCR_LOAD_ANIM_MOVE_LEFT, 500, 0, &ui_Screen2_screen_init);
+    }
+}
 
 // build funtions
 
@@ -63,6 +72,8 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_align(ui_imgWiFiStatus1, LV_ALIGN_BOTTOM_RIGHT);
     lv_obj_add_flag(ui_imgWiFiStatus1, LV_OBJ_FLAG_CLICKABLE);     /// Flags
     lv_obj_remove_flag(ui_imgWiFiStatus1, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    lv_obj_add_event_cb(ui_Screen1, ui_event_Screen1, LV_EVENT_ALL, NULL);
 
 }
 

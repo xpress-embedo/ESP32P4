@@ -198,7 +198,7 @@ static void gui_wifi_internet_connected( void *data )
   GUI_UNLOCK();
 
   // this will be used to post another event to load sensor screen
-  // load_sensor_screen_timer = LOAD_SENSOR_SCREEN_TIMER;
+  load_sensor_screen_timer = LOAD_SENSOR_SCREEN_TIMER;
   ESP_LOGI( TAG, "gui_wifi_internet_connected" );
   ESP_LOGW( TAG, "Time Starts to Load Next Screen ");
 }

@@ -26,6 +26,15 @@ lv_obj_t * ui_lblSensor2 = NULL;
 lv_obj_t * ui_lblHumidity = NULL;
 lv_obj_t * ui_imgWiFiStatus2 = NULL;
 // event funtions
+void ui_event_Screen2(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_GESTURE &&  lv_indev_get_gesture_dir(lv_indev_active()) == LV_DIR_RIGHT) {
+        lv_indev_wait_release(lv_indev_active());
+        _ui_screen_change(&ui_Screen1, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 500, 0, &ui_Screen1_screen_init);
+    }
+}
 
 // build funtions
 
@@ -276,6 +285,8 @@ void ui_Screen2_screen_init(void)
     lv_obj_set_align(ui_imgWiFiStatus2, LV_ALIGN_BOTTOM_RIGHT);
     lv_obj_add_flag(ui_imgWiFiStatus2, LV_OBJ_FLAG_CLICKABLE);     /// Flags
     lv_obj_remove_flag(ui_imgWiFiStatus2, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    lv_obj_add_event_cb(ui_Screen2, ui_event_Screen2, LV_EVENT_ALL, NULL);
 
 }
 
