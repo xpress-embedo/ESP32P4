@@ -18,8 +18,8 @@
 #include "wifi_app.h"
 #include "http_server.h"
 #include "nvs_app.h"
+#include "main.h"
 // #include "mqtt_app.h"
-#include "gui_mng.h"
 
 // Private Macros
 #define WIFI_APP_QUEUE_SIZE                           (5)
@@ -202,8 +202,7 @@ static void wifi_app_task(void *pvParameter)
         case WIFI_APP_MSG_START_HTTP_SERVER:
           ESP_LOGI( TAG, "WIFI_APP_MSG_START_HTTP_SERVER" );
           http_server_start();
-          // send event to gui manager
-          gui_send_event( GUI_MNG_EV_WIFI_CONNECTING, NULL );
+          main_send_event( MAIN_EV_HTTP_SERVER_STARTED, NULL );
           break;
         case WIFI_APP_MSG_CONNECTING_FROM_HTTP_SERVER:
           ESP_LOGI( TAG, "WIFI_APP_MSG_CONNECTING_FROM_HTTP_SERVER" );
@@ -231,7 +230,10 @@ static void wifi_app_task(void *pvParameter)
           // mqtt_app_send_msg( MQTT_APP_MSG_START_CONNECTION );
 
           // send message to gui manager that mqtt is starting
-          gui_send_event( GUI_MNG_EV_MQTT_CONNECTING, NULL );
+          // gui_send_event( GUI_MNG_EV_MQTT_CONNECTING, NULL );
+
+          // Send the event to main module, mentioning that connected to STA
+          main_send_event( MAIN_EV_STA_CONNECTED, NULL );
 
           // here we got the IP and hence we need to save the credentials in the flash
           event_bits = xEventGroupGetBits( wifi_app_event_group );
@@ -303,7 +305,7 @@ static void wifi_app_task(void *pvParameter)
             // send message to http server that esp32 is disconnected as station
             http_server_monitor_send_msg( HTTP_MSG_WIFI_USER_DISCONNECT );
             // send message to gui manager to update the icons
-            gui_send_event( GUI_MNG_EV_WIFI_DISCONNECTED, NULL );
+            // gui_send_event( GUI_MNG_EV_WIFI_DISCONNECTED, NULL );
           }
           else
           {

@@ -21,22 +21,27 @@
 #include "esp_random.h"
 
 // Private Macros
-#define MAIN_TASK_PERIOD                    (10000)
+#define MAIN_TASK_PERIOD                    (1000)
 #define DHT11_PIN                           (GPIO_NUM_17)
+#define MAIN_EVENT_QUEUE_LEN                (5)
 
 // Private Variables
 static const char *TAG = "MAIN";
 static sensor_data_t sensor_data = { .sensor_idx = 0 };
 static bool sntp_connect_status = false;
+static QueueHandle_t main_q_event = NULL;
 
 // Private Function Declarations
 static void log_app_heap( void );
+static void measure_temp_humidity( void );
 static void app_sntp_init( void );
 static bool app_sntp_get_time( void );
 
 // Application Main Entry Point
 void app_main(void)
 {
+  main_q_msg_t main_msg;
+
   // Disable default gpio logging messages
   esp_log_level_set("gpio", ESP_LOG_NONE);
   // disable default wifi logging messages
@@ -59,12 +64,18 @@ void app_main(void)
   log_app_heap();
   ESP_LOGI( TAG, "IDF version: %s", esp_get_idf_version() );
 
+  // create message queue with the length MAIN_EVENT_QUEUE_LEN
+  main_q_event = xQueueCreate( MAIN_EVENT_QUEUE_LEN, sizeof(main_q_msg_t) );
+  if( main_q_event == NULL )
+  {
+    ESP_LOGE(TAG, "Unable to Create Main Event Queue");
+  }
+
   // initialize the configuration data
   cfg_init();
 
   // start the gui task
   gui_start();
-  gui_send_event( GUI_MNG_EV_WIFI_CONNECTING, NULL );
 
   // start wifi application (soft access point and HTTP web server)
   wifi_app_start();
@@ -92,51 +103,49 @@ void app_main(void)
     
   while(1)
   {
-    // Get DHT11 Temperature and Humidity Values
-    // if( dht11_read().status == DHT11_OK )
-    if ( 1 )
+    static uint8_t measure_counter = 0;
+    measure_counter++;
+    // 1 min per measurement
+    if ( measure_counter >= 60u )
     {
-      // uint8_t temp = (uint8_t)dht11_read().humidity;
-      uint8_t temp = 50 + (uint8_t)(esp_random() % 10);
-      // humidity can't be greater than 100%, that means invalid data
-      if( temp < 100 )
+      // Get DHT11 Temperature and Humidity Values
+      measure_temp_humidity();
+      // print available heap
+      log_app_heap();
+      measure_counter = 0u;
+    }
+    // Wait for events posted in Queue
+    if( xQueueReceive( main_q_event, &main_msg, portMAX_DELAY) )
+    {
+      // below is the code to handle the state machine
+      switch ( main_msg.event_id )
       {
-        if( sensor_data.sensor_idx < SENSOR_BUFF_SIZE )
-        {
-          sensor_data.humidity[sensor_data.sensor_idx] = temp;
-          sensor_data.humidity_current = temp;
-          // temp = (uint8_t)dht11_read().temperature;
-          temp = 20 + (uint8_t)(esp_random() % 5);
-          sensor_data.temperature[sensor_data.sensor_idx] = temp;
-          sensor_data.temperature_current = temp;
-          ESP_LOGI(TAG, "Temperature: %d", sensor_data.temperature_current);
-          ESP_LOGI(TAG, "Humidity: %d", sensor_data.humidity_current);
-          sensor_data.sensor_idx++;
-          // trigger event to display temperature and humidity
-          gui_send_event(GUI_MNG_EV_TEMP_HUMID, (void*)(&sensor_data) );
-          // if wifi is connected, trigger event to send data to ThingSpeak
-          // if( wifi_sta_is_connected() && sntp_connect_status )
-          // {
-          //   influxdb_send_event(INFLUXDB_EV_TEMP_HUMID, NULL);
-          // }
-          // reset the index
-          if( sensor_data.sensor_idx >= SENSOR_BUFF_SIZE )
+        case MAIN_EV_HTTP_SERVER_STARTED:
+          // send event to gui manager
+          gui_send_event( GUI_MNG_EV_WIFI_CONNECTING, NULL );
+          break;
+        case MAIN_EV_STA_CONNECTED:
+          ESP_LOGI( TAG, "WiFi Connected, now synchronizing with NTP server." );
+          gui_send_event( GUI_MNG_EV_WIFI_CONNECTED, NULL );
+          app_sntp_init();
+          sntp_connect_status = app_sntp_get_time();
+          // if time fetched then only start the influxDB server
+          if ( sntp_connect_status )
           {
-            sensor_data.sensor_idx = 0;
+            // now send the influxDB task
+            main_send_event( MAIN_EV_START_INFLUXDB, NULL );
+            gui_send_event( GUI_MNG_EV_WIFI_INTERNET_CONNECTED, NULL );
           }
-        }
-      }
-      else
-      {
-        ESP_LOGE(TAG, "In-correct data received from DHT11 -> %u", temp);
+          break;
+        case MAIN_EV_START_INFLUXDB:
+          // need to add a check inside the module, to not start again if already started
+          influxdb_start();
+          break;
+        default:
+          ESP_LOGE( TAG, "Invalid Event Received" );
+          break;
       }
     }
-    else
-    {
-      ESP_LOGE(TAG, "Unable to Read DHT11 Status");
-    }
-    // print available heap
-    log_app_heap();
     // Wait before next measurement
     vTaskDelay(MAIN_TASK_PERIOD / portTICK_PERIOD_MS);
   }
@@ -168,6 +177,20 @@ long long get_time_ns( void )
   return time_ns;
 }
 
+BaseType_t main_send_event( main_event_t event, void *ptr_data )
+{
+  BaseType_t status = pdFALSE;
+  main_q_msg_t msg;
+
+  if( event < MAIN_EV_MAX )
+  {
+    msg.event_id  = event;
+    msg.data      = ptr_data;
+    status = xQueueSend( main_q_event, &msg, portMAX_DELAY );
+  }
+  return status;
+}
+
 // Private Function Definitions
 
 /**
@@ -181,7 +204,52 @@ static void log_app_heap( void )
   // ESP_LOGW(TAG, "Free heap: %d bytes", free_heap);
 }
 
-// Private Function Definitions
+static void measure_temp_humidity( void )
+{
+  // if( dht11_read().status == DHT11_OK )
+  if ( 1 )
+  {
+    // uint8_t temp = (uint8_t)dht11_read().humidity;
+    uint8_t temp = 50 + (uint8_t)(esp_random() % 10);
+    // humidity can't be greater than 100%, that means invalid data
+    if( temp < 100 )
+    {
+      if( sensor_data.sensor_idx < SENSOR_BUFF_SIZE )
+      {
+        sensor_data.humidity[sensor_data.sensor_idx] = temp;
+        sensor_data.humidity_current = temp;
+        // temp = (uint8_t)dht11_read().temperature;
+        temp = 20 + (uint8_t)(esp_random() % 5);
+        sensor_data.temperature[sensor_data.sensor_idx] = temp;
+        sensor_data.temperature_current = temp;
+        ESP_LOGI(TAG, "Temperature: %d", sensor_data.temperature_current);
+        ESP_LOGI(TAG, "Humidity: %d", sensor_data.humidity_current);
+        sensor_data.sensor_idx++;
+        // trigger event to display temperature and humidity
+        gui_send_event(GUI_MNG_EV_TEMP_HUMID, (void*)(&sensor_data) );
+        // if wifi is connected, trigger event to send data to ThingSpeak
+        // if( wifi_sta_is_connected() && sntp_connect_status )
+        // {
+        //   influxdb_send_event(INFLUXDB_EV_TEMP_HUMID, NULL);
+        // }
+        // reset the index
+        if( sensor_data.sensor_idx >= SENSOR_BUFF_SIZE )
+        {
+          sensor_data.sensor_idx = 0;
+        }
+      }
+    }
+    else
+    {
+      ESP_LOGE(TAG, "In-correct data received from DHT11 -> %u", temp);
+    }
+  }
+  else
+  {
+    ESP_LOGE(TAG, "Unable to Read DHT11 Status");
+  }
+}
+
 /**
  * @brief Initialize the SNTP
  * @param  None

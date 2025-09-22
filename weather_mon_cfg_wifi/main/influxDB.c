@@ -13,7 +13,7 @@
 #include "esp_http_client.h"
 
 #include "main.h"
-#include "wifi_sta_mng.h"
+#include "wifi_app.h"
 #include "influxDB.h"
 
 
@@ -111,12 +111,12 @@ static void influxdb_send_temp_humidity( void )
   uint8_t humidity = 0;
   char data[150];
   char influxdb_full_url[200];
-  char mac_addr[MAC_ADDR_SIZE] = { 0 };
+  char mac_addr[WIFI_MAC_ADDR_SIZE] = { 0 };
 
   sensor_data_t *sensor_data = get_temperature_humidity();
   temperature = sensor_data->temperature_current;
   humidity = sensor_data->humidity_current;
-  wifi_sta_get_mac_address( mac_addr );
+  wifi_app_get_mac_address( mac_addr );
 
   snprintf( data, sizeof(data), \
             "weather,device_id=%s temperature=%d,humidity=%d %lld", \

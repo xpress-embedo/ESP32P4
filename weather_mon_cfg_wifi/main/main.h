@@ -32,9 +32,26 @@ typedef struct _sensor_data_t
   size_t  sensor_idx;
 } sensor_data_t;
 
+// Enumeration
+typedef enum 
+{
+  MAIN_EV_HTTP_SERVER_STARTED = 0,
+  MAIN_EV_STA_CONNECTED,            // Connected to WiFi Router
+  MAIN_EV_START_INFLUXDB,
+  MAIN_EV_MAX,
+} main_event_t;
+
+// queue data structure
+typedef struct _main_q_msg_t
+{
+  main_event_t  event_id;
+  void          *data;
+} main_q_msg_t;
+
 // Public Function Definition
 sensor_data_t * get_temperature_humidity( void );
 long long get_time_ns( void );
+BaseType_t main_send_event( main_event_t event, void *ptr_data );
 
 #ifdef __cplusplus
 }
