@@ -161,16 +161,19 @@ static httpd_handle_t http_server_configure(void)
   // Generate the default configuration
   httpd_config_t config = HTTPD_DEFAULT_CONFIG();
 
-  #if 0
-  // create HTTP Server Monitor Task
-  xTaskCreate(&http_server_monitor, "http_server_monitor", \
-              HTTP_SERVER_MONITOR_TASK_SIZE, NULL, \
-              HTTP_SERVER_MONITOR_TASK_PRIORITY, &task_http_server_monitor);
-
   // create a message queue
   http_server_monitor_q_handle = xQueueCreate(HTTP_SERVER_MONITOR_QUEUE_SIZE,\
                                               sizeof(http_server_q_msg_t));
-  #endif
+  if ( http_server_monitor_q_handle == NULL ) 
+  {
+    ESP_LOGE(TAG, "Failed to create http_server_monitor_q_handle");
+    return NULL;
+  }
+
+  // create HTTP Server Monitor Task
+  xTaskCreate(&http_server_monitor, "http_server_monitor", \
+              HTTP_SERVER_MONITOR_TASK_SIZE, NULL, \
+              HTTP_SERVER_MONITOR_TASK_PRIORITY, &task_http_server_monitor);  
 
   // want to specify core id where the task should run, then use config.code_id
   // note ESP32-S2 has single core only, so this will not work on there
