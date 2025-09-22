@@ -115,7 +115,7 @@ void app_main(void)
       measure_counter = 0u;
     }
     // Wait for events posted in Queue
-    if( xQueueReceive( main_q_event, &main_msg, portMAX_DELAY) )
+    if( xQueueReceive( main_q_event, &main_msg, pdMS_TO_TICKS(MAIN_TASK_PERIOD) ) )
     {
       // below is the code to handle the state machine
       switch ( main_msg.event_id )
@@ -123,6 +123,9 @@ void app_main(void)
         case MAIN_EV_HTTP_SERVER_STARTED:
           // send event to gui manager
           gui_send_event( GUI_MNG_EV_WIFI_CONNECTING, NULL );
+          break;
+        case MAIN_EV_AP_LIST_AVAILABLE:
+          gui_send_event( GUI_MNG_EV_WIFI_AP_LIST_AVAILABLE, main_msg.data );
           break;
         case MAIN_EV_STA_CONNECTED:
           ESP_LOGI( TAG, "WiFi Connected, now synchronizing with NTP server." );
@@ -146,8 +149,6 @@ void app_main(void)
           break;
       }
     }
-    // Wait before next measurement
-    vTaskDelay(MAIN_TASK_PERIOD / portTICK_PERIOD_MS);
   }
 }
 

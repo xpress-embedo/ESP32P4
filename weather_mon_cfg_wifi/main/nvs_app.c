@@ -40,7 +40,7 @@ esp_err_t nvs_app_save_sta_creds( void )
     }
 
     // Set SSID
-    esp_err = nvs_set_blob(handle, "ssid", wifi_sta_config->sta.ssid, WIFI_MAX_SSID_LENGTH);
+    esp_err = nvs_set_blob(handle, "ssid", wifi_sta_config->sta.ssid, WIFI_MAX_SSID_LEN);
     if( esp_err != ESP_OK )
     {
       ESP_LOGI(TAG, "app_nvs_save_sta_creds: Error (%s) setting SSID to NVS.", esp_err_to_name(esp_err));
@@ -48,7 +48,7 @@ esp_err_t nvs_app_save_sta_creds( void )
     }
 
     // Set Password
-    esp_err = nvs_set_blob(handle, "password", wifi_sta_config->sta.password, WIFI_MAX_PASSWORD_LENGTH);
+    esp_err = nvs_set_blob(handle, "password", wifi_sta_config->sta.password, WIFI_MAX_PSWD_LEN);
     if( esp_err != ESP_OK )
     {
       ESP_LOGI(TAG, "app_nvs_save_sta_creds: Error (%s) setting Password to NVS.", esp_err_to_name(esp_err));

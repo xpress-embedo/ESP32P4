@@ -167,7 +167,9 @@ static void gui_wifi_connecting( void *data )
  */
 static void gui_wifi_app_list_available( void *data )
 {
-  gui_menu_mng_wifi_ap_available( (char*)data );  
+  GUI_LOCK();
+  gui_menu_mng_wifi_ap_available( (char*)data );
+  GUI_UNLOCK();
 }
 
 /**

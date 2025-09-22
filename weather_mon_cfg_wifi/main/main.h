@@ -36,6 +36,7 @@ typedef struct _sensor_data_t
 typedef enum 
 {
   MAIN_EV_HTTP_SERVER_STARTED = 0,
+  MAIN_EV_AP_LIST_AVAILABLE,
   MAIN_EV_STA_CONNECTED,            // Connected to WiFi Router
   MAIN_EV_START_INFLUXDB,
   MAIN_EV_MAX,

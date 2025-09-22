@@ -37,6 +37,7 @@ static wifi_config_t * wifi_config = NULL;
 // used to track the number of retries when a connection attempt fails
 static uint8_t wifi_connect_retry = 0;
 static uint8_t wifi_mac_address[6] = { 0 };           // {AA,BB,CC,DD,EE,FF} MAC Address Format
+static char wifi_ap_list[WIFI_MAX_SSID_LEN*WIFI_MAX_AP] = { 0 };
 
 // WiFi application Event group handle and status bits
 static EventGroupHandle_t wifi_app_event_group;
@@ -55,7 +56,8 @@ static void wifi_app_task(void *pvParameter);
 static void wifi_app_event_handler_init( void );
 static void wifi_app_default_wifi_init( void );
 static void wifi_app_soft_ap_config( void );
-static void wifi_app_connect_sta(void);
+static void wifi_app_connect_sta( void );
+static void wifi_app_scan_ap_list( void );
 static void wifi_app_event_handler( void *arg, esp_event_base_t event_base, int32_t event_id, void * event_data );
 
 #if 0
@@ -188,6 +190,9 @@ static void wifi_app_task(void *pvParameter)
 
   // start wifi
   ESP_ERROR_CHECK( esp_wifi_start() );
+
+  // scan for the available list of access points
+  wifi_app_scan_ap_list();
 
   // send the first message
   wifi_app_send_msg( WIFI_APP_MSG_LOAD_SAVED_CREDENTIALS );
@@ -461,6 +466,62 @@ static void wifi_app_connect_sta(void)
   {
     ESP_LOGE( TAG, "esp_wifi_connect: Failed" );
   }
+}
+
+static void wifi_app_scan_ap_list( void )
+{
+  // Start scanning
+  wifi_scan_config_t scan_config = 
+  {
+    .ssid = NULL,         // SSID of AP
+    .bssid = NULL,        // MAC Address of the AP
+    .channel = 0,
+    .show_hidden = false  // don't scan hidden SSID
+  };
+  // The reason why .show_hidden is set to false because if set to true, hidden
+  // SSID are also included but without name, which doesn't make much sense at
+  // this stage of project
+
+  // Scanning for available WiFi networks
+  ESP_ERROR_CHECK( esp_wifi_scan_start( &scan_config, true) );  // true is blocking
+  
+  uint16_t ap_num = WIFI_MAX_AP;
+  wifi_ap_record_t ap_records[WIFI_MAX_AP];
+  // get the access points records
+  ESP_ERROR_CHECK( esp_wifi_scan_get_ap_records( &ap_num, ap_records ) );
+
+  // clear the buffer before filling it up
+  memset( wifi_ap_list, 0, sizeof(wifi_ap_list) );
+  size_t offset = 0;
+
+  ESP_LOGI( TAG, "Found %d access points:", ap_num );
+  for ( uint16_t i = 0; i < ap_num; i++ )
+  {
+    // Don't process SSID with no name
+    if ( strlen( (char*)ap_records[i].ssid ) == 0 )
+    {
+      // skip the hidden or malinformed SSIDs
+      continue;
+    }
+    ESP_LOGW( TAG, "[%d] SSID: %s | RSSI: %d | Authmode: %d", (i + 1), (char *)ap_records[i].ssid, ap_records[i].rssi, ap_records[i].authmode );
+    
+    // ensure we don't overflow the buffer
+    int written = snprintf( wifi_ap_list + offset, sizeof(wifi_ap_list)-offset,
+                            "%s\n", (char *)ap_records[i].ssid );
+    
+    if ( (written < 0) || ( written >= (sizeof(wifi_ap_list) - offset) ) )
+    {
+      break; // Stop if buffer is full or error occurred
+    }
+    offset += written;
+  }
+
+  // inform main module that we have an updated list of available wifi access points
+  main_send_event( MAIN_EV_AP_LIST_AVAILABLE, wifi_ap_list );
+  ESP_LOGI( TAG, "WiFi AP Scanning Finished" );
+
+  // Disconnect WiFi to prevent auto-connect attempts
+  ESP_ERROR_CHECK( esp_wifi_disconnect() );
 }
 
 /**
