@@ -4,7 +4,7 @@
 idf_component_register(
     SRCS main.c         # list the source files of this component
     wifi_app.c
-    # http_server.c
+    http_server.c
     nvs_app.c
     dht11.c
     influxDB.c

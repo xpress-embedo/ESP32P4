@@ -17,7 +17,7 @@
 #include <string.h>
 
 #include "wifi_app.h"
-// #include "http_server.h"
+#include "http_server.h"
 #include "nvs_app.h"
 // #include "mqtt_app.h"
 // #include "gui_mng.h"
@@ -151,7 +151,7 @@ static void wifi_app_task(void *pvParameter)
       {
         case WIFI_APP_MSG_START_HTTP_SERVER:
           ESP_LOGI( TAG, "WIFI_APP_MSG_START_HTTP_SERVER" );
-          // http_server_start();
+          http_server_start();
           // send event to gui manager
           // gui_send_event( GUI_MNG_EV_WIFI_CONNECTING, NULL );
           break;
