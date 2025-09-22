@@ -14,9 +14,9 @@
 // Public Macros
 #define WIFI_AP_SSID                    "ESP32_AP"
 #define WIFI_AP_PASSWORD                "1122334455"
-#define WIFI_AP_CHANNEL                 1
-#define WIFI_AP_SSID_HIDDEN             0               // Access Point Visibility
-#define WIFI_AP_MAX_CONNECTIONS         5               // Access Point Max. Connection
+#define WIFI_AP_CHANNEL                 (1)
+#define WIFI_AP_SSID_HIDDEN             (0)             // Access Point Visibility
+#define WIFI_AP_MAX_CONNECTIONS         (5)             // Access Point Max. Connection
 /* Beacon Broadcast interval is the time lag between each of the beacons sent by
  * your router or access points (ESP32 in our case). By Definition the lower the
  * value, the smaller the time lag which means beacon is sent more frequently.
@@ -25,15 +25,18 @@
  * The beacon is need for your devices or clients to receive information about
  * the particular router information such as SSID, Timestamp & various parameters
  */
-#define WIFI_AP_BEACON_INTERVAL         100             // 100ms which is by default also
+#define WIFI_AP_BEACON_INTERVAL         (100)           // 100ms which is by default also
 #define WIFI_AP_IP                      "192.168.0.1"   // default IP address
 #define WIFI_AP_GATEWAY                 "192.168.0.1"
 #define WIFI_AP_NETMASK                 "255.255.255.0"
 #define WIFI_AP_BANDWIDTH               WIFI_BW_HT20    // AP Bandwidth 20MHz (40MHz is other option)
 #define WIFI_STA_POWER_SAVE             WIFI_PS_NONE    // No Power Save
-#define WIFI_MAX_SSID_LENGTH            32
-#define WIFI_MAX_PASSWORD_LENGTH        64
-#define WIFI_MAX_CONNECTION_RETRIES     5
+#define WIFI_MAX_SSID_LENGTH            (20)            // Default is 32 but I am restricting to 20
+#define WIFI_MAX_PASSWORD_LENGTH        (20)            // Default is 64 but I am restricting to 20
+#define WIFI_MAX_CONNECTION_RETRIES     (5)
+#define WIFI_MAC_ADDR_SIZE              (18u)
+#define WIFI_MAX_AP                     (10)            // Maximum Number of Access points
+
 
 /*
  * Message IDs for the WiFi Application Task
@@ -66,5 +69,8 @@ extern esp_netif_t* esp_netif_ap;
 void wifi_app_start( void );
 BaseType_t wifi_app_send_msg( wifi_app_msg_e msg_id );
 wifi_config_t * wifi_app_get_wifi_config( void );
+bool wifi_app_is_connected( void );
+void wifi_app_set_mac_address( void );
+void wifi_app_get_mac_address( char *mac_address );
 
 #endif /* MAIN_WIFI_APP_H_ */

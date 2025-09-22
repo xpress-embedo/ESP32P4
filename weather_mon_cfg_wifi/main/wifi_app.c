@@ -5,16 +5,15 @@
  *      Author: xpress_embedo
  */
 
+ #include <string.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/event_groups.h"
 #include "freertos/task.h"
 
 #include "esp_err.h"
 #include "esp_log.h"
-
+#include "esp_mac.h"
 #include "lwip/netdb.h"
-
-#include <string.h>
 
 #include "wifi_app.h"
 #include "http_server.h"
@@ -36,7 +35,8 @@ static QueueHandle_t wifi_app_q_handle;
 // used for returning the WiFi configuration
 static wifi_config_t * wifi_config = NULL;
 // used to track the number of retries when a connection attempt fails
-static int g_retry_number;
+static uint8_t wifi_connect_retry = 0;
+static uint8_t wifi_mac_address[6] = { 0 };           // {AA,BB,CC,DD,EE,FF} MAC Address Format
 
 // WiFi application Event group handle and status bits
 static EventGroupHandle_t wifi_app_event_group;
@@ -121,6 +121,56 @@ wifi_config_t * wifi_app_get_wifi_config( void )
   return wifi_config;
 }
 
+bool wifi_app_is_connected( void )
+{
+  // todo
+  return true;
+}
+
+/**
+ * @brief Get the MAC Address of the device and set it to wifi_mac_address variable
+ *        esp_read_mac function will not work for ESP32P4 because it doesn't have EFUSE
+ *        and will not read anything from there, while this function will work because it
+ *        will query the MAC programmed in the ESP32C6 WiFi chip.
+ *        But make sure to call this function after esp_wifi_init function
+ *        This function stores the MAC address in wifi_mac_address variable, so
+ *        we have to not query again and again.
+ * @param  none
+ */
+void wifi_app_set_mac_address( void )
+{
+  // For ESP32P4 this function will work because it will query the MAC programmed in the ESP32C6 WiFi chip  
+  esp_wifi_get_mac( WIFI_IF_STA, wifi_mac_address );
+}
+
+/**
+ * @brief Get the MAC Address of the device
+ * @param mac_str used to return the mac address as string
+ */
+void wifi_app_get_mac_address( char *mac_address )
+{
+  #if 0
+  // This function will not work for ESP32P4 because it doesn't have EFUSE and will not read anything from there
+  uint8_t mac[6];
+  /* NOTE: there is an another function named esp_wifi_get_mac and the below function.
+  Both function are used to get the mac address but there is a difference.
+  esp_wifi_get_mac: Returns the currently MAC used by WiFi, i.e. after calling function esp_wifi_init
+  This function may reflect the overridden MAC is esp_wifi_set_mac function was used
+  while esp_read_mac returns the Factory Programmed MAC directly from EFUSE, doesn't
+  require WiFi drivers to be running */
+  // esp_read_mac( mac, ESP_MAC_WIFI_STA );
+  snprintf( mac_str, WIFI_MAC_ADDR_SIZE, "%02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5] );
+  ESP_LOGI( TAG, "MAC Address: %s", mac_str );
+  #else
+  // Call this function after set_mac_address function
+  // because set_mac_address function will store the MAC address in wifi_mac_address variable
+  snprintf( mac_address, WIFI_MAC_ADDR_SIZE, "%02X:%02X:%02X:%02X:%02X:%02X", \
+            wifi_mac_address[0], wifi_mac_address[1], wifi_mac_address[2], \
+            wifi_mac_address[3], wifi_mac_address[4], wifi_mac_address[5] );
+  ESP_LOGI( TAG, "MAC Address: %s", mac_address );
+  #endif
+}
+
 // Private Function Definitions
 static void wifi_app_task(void *pvParameter)
 {
@@ -164,7 +214,7 @@ static void wifi_app_task(void *pvParameter)
           wifi_app_connect_sta();
 
           // set the current number of retries to zero
-          g_retry_number = 0;
+          wifi_connect_retry = 0;
 
           // Let the HTTP Server knows about the connection attempt
           http_server_monitor_send_msg( HTTP_MSG_WIFI_CONNECT_INIT );
@@ -215,7 +265,7 @@ static void wifi_app_task(void *pvParameter)
           {
             xEventGroupSetBits(wifi_app_event_group, WIFI_APP_USER_REQUESTED_STA_DISCONNECT_BIT);
 
-            g_retry_number = WIFI_MAX_CONNECTION_RETRIES;
+            wifi_connect_retry = WIFI_MAX_CONNECTION_RETRIES;
             ESP_ERROR_CHECK( esp_wifi_disconnect() );
 
             // since user requested the disconnection, it's better to clear the credentials
@@ -320,6 +370,25 @@ static void wifi_app_default_wifi_init( void )
 
   esp_netif_sta = esp_netif_create_default_wifi_sta();
   esp_netif_ap = esp_netif_create_default_wifi_ap();
+
+  // logic for setting MAC address as hostname (starts)
+  
+  // This is an ESP32P4 device which doesn't have EFUSE, so esp_read_mac 
+  // function will not work while esp_wifi_get_mac function will work because 
+  // it will query the MAC programmed in the ESP32C6 WiFi chip
+  // so call this function to get the MAC address programmed in the WiFi chip
+  // and store it in wifi_mac_address variable, as we don't want to query again and again
+  // make sure to call this after esp_wifi_init function and only once
+  wifi_app_set_mac_address();
+
+  esp_netif_t *netif = esp_netif_get_handle_from_ifkey("WIFI_STA_DEF");
+  char mac_str[WIFI_MAC_ADDR_SIZE];
+  char hostname[32];
+  wifi_app_get_mac_address( mac_str );
+  snprintf(hostname, sizeof(hostname), "E_%s", mac_str);
+  ESP_ERROR_CHECK( esp_netif_set_hostname(netif, hostname) );
+  ESP_LOGW( TAG, "Hostname set to MAC: %s", hostname );
+  // logic for setting MAC address as hostname (ends)
 }
 
 static void wifi_app_soft_ap_config( void )
@@ -414,10 +483,10 @@ static void wifi_app_event_handler( void *arg, esp_event_base_t event_base, int3
         *event = *((wifi_event_sta_disconnected_t*)event_data);
         ESP_LOGI(TAG, "WIFI_EVENT_STA_DISCONNECTED, Reason Code %d", event->reason);
 
-        if( g_retry_number < WIFI_MAX_CONNECTION_RETRIES )
+        if( wifi_connect_retry < WIFI_MAX_CONNECTION_RETRIES )
         {
           esp_wifi_connect();
-          g_retry_number++;
+          wifi_connect_retry++;
         }
         else
         {
