@@ -3,6 +3,9 @@
 
 idf_component_register(
     SRCS main.c         # list the source files of this component
+    wifi_app.c
+    # http_server.c
+    nvs_app.c
     dht11.c
     influxDB.c
     gui_mng.c
@@ -13,8 +16,7 @@ idf_component_register(
     widgets/widgets.c
     widgets/widget_button.c
     widgets/widget_slider.c
-    # nvs_mng.c
-    wifi_sta_mng.c
+    # wifi_sta_mng.c
     ui/screens/ui_Screen1.c
     ui/screens/ui_Screen2.c
     ui/ui.c
@@ -30,6 +32,12 @@ idf_component_register(
     PRIV_INCLUDE_DIRS   # optional, add here private include directories
     REQUIRES            # optional, list the public requirements (component names)
     PRIV_REQUIRES       # optional, list the private requirements
+    EMBED_FILES
+    webpage/app.css
+    webpage/app.js
+    webpage/favicon.ico
+    webpage/index.html
+    webpage/jquery-3.3.1.min.js
 )
 
 # Add the macro definition for this component

@@ -19,6 +19,7 @@ typedef enum {
   GUI_MNG_EV_WIFI_CONNECTING,       	// Event for device connecting with WiFi
   GUI_MNG_EV_WIFI_AP_LIST_AVAILABLE,  // Event for LVGL that Access Point List is available
   GUI_MNG_EV_WIFI_CONNECTED,       		// Event for ESP32 is connected with Router
+  GUI_MNG_EV_MQTT_CONNECTING,         // to be managed later
   GUI_MNG_EV_WIFI_DISCONNECTED,     	// Event for WiFi Disconnected
   GUI_MNG_EV_WIFI_INTERNET_CONNECTED, // Event for ESP32 has internet access as it can connect with SNTP server
   GUI_MNG_EV_LOAD_SENSOR_SCREEN,			// Event for loading sensor screen

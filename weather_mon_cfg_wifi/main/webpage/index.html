@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <script src='jquery-3.3.1.min.js'></script>
+    <link rel="stylesheet" href="app.css">
+    <script async src="app.js"></script>
+    <title>Weather Monitoring System</title>
+  </head>
+  <body>
+<header>
+  <h1>Weather Monitoring System</h1>
+  <p class="info-text">Use this page to connect the device to WiFi Access Point.</p>
+  <!-- <p class="info-text">If not connected, data processing will be done using commands received from Serial port.</p> -->
+</header>
+    
+  <div id="WiFiConnect">
+    <h2>WiFi Connect</h2>
+    <section>
+      <input id="connect_ssid" type="text" maxlength="32" placeholder="SSID" value="">
+      <input id="connect_pswd" type="password" maxlength="64" placeholder="Password" value="">
+      <input type="checkbox" onclick="showPassword()">Show Password
+    </section>
+
+    <div class="buttons">
+      <input id="connect_wifi" type="button" value="Connect"/>
+      <input id="disconnect_wifi" type="button" value="Disconnect" />
+    </div>
+  <div id="wifi_connect_credentials_errors"></div>
+  <h4 id="wifi_connect_status"></h4>
+  </div>
+
+  <div id="ConnectInfo">
+    <section>
+      <div class="info-pair">
+        <div id="connected_ap_label"></div>
+        <div id="connected_ap"></div>
+      </div>
+    </section>
+    <div class="info-pair">
+      <div id="ip_address_label"></div>
+      <div id="wifi_connect_ip"></div>
+    </div>
+    <div class="info-pair">
+      <div id="netmask_label"></div>
+      <div id="wifi_connect_netmask"></div>
+    </div>
+    <div class="info-pair">
+      <div id="gateway_label"></div>
+      <div id="wifi_connect_gateway"></div>
+    </div>
+  </div>
+  
+  </body>
+<html>

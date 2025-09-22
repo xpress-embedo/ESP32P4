@@ -61,6 +61,7 @@ static const gui_mng_event_cb_t gui_mng_event_cb[] =
   { GUI_MNG_EV_WIFI_CONNECTING,         gui_wifi_connecting           },
   { GUI_MNG_EV_WIFI_AP_LIST_AVAILABLE,  gui_wifi_app_list_available   },
   { GUI_MNG_EV_WIFI_CONNECTED,          gui_wifi_connected            },
+  { GUI_MNG_EV_MQTT_CONNECTING,         NULL                          },
   { GUI_MNG_EV_WIFI_DISCONNECTED,       gui_wifi_disconnected         },
   { GUI_MNG_EV_WIFI_INTERNET_CONNECTED, gui_wifi_internet_connected   },
   { GUI_MNG_EV_LOAD_SENSOR_SCREEN,      gui_load_sensor_screen        },

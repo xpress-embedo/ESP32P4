@@ -1,5 +1,5 @@
 /*
- * nvs_mng.c
+ * nvs_app.c
  *
  *  Created on: Aug 8, 2025
  *      Author: abc@xyz
@@ -9,7 +9,7 @@
 #include "esp_log.h"
 #include "nvs_flash.h"
 
-#include "nvs_mng.h"
+#include "nvs_app.h"
 #include "wifi_app.h"
 
 // Tag for logging to the monitor
@@ -23,7 +23,7 @@ const char app_nvs_sta_creds_namespace[] = "stacreds";
  * Saves Station Mode WiFi Credentials to NVS
  * @return ESP_OK if successful
  */
-esp_err_t nvs_save_sta_creds( void )
+esp_err_t nvs_app_save_sta_creds( void )
 {
   nvs_handle handle;
   esp_err_t esp_err;
@@ -75,7 +75,7 @@ esp_err_t nvs_save_sta_creds( void )
  * Loads Previously Saved Credentials from the NVS
  * @return true if previously saved credentials were found.
  */
-bool nvs_load_sta_creds( void )
+bool nvs_app_load_sta_creds( void )
 {
   nvs_handle handle;
   esp_err_t esp_err;
@@ -148,7 +148,7 @@ bool nvs_load_sta_creds( void )
  * Clears the Station Mode Credentials from NVS
  * @return ESP_OK if successful
  */
-esp_err_t nvs_clear_sta_creds( void )
+esp_err_t nvs_app_clear_sta_creds( void )
 {
   nvs_handle handle;
   esp_err_t esp_err;
