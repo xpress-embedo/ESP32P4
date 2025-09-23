@@ -30,6 +30,8 @@ static const char *influxdb_url = INFLUXDB_URL;
 static const char *influxdb_org = INFLUXDB_ORG;
 static const char *influxdb_bucket = INFLUXDB_BUCKET;
 static QueueHandle_t influxdb_event = NULL;
+static bool influxdb_init = false;
+static esp_http_client_handle_t client = NULL;
 
 // Private Function Declaration
 static void influxdb_task( void *pvParameters );
@@ -38,14 +40,22 @@ static void influxdb_send_temp_humidity( void );
 // Public Function Definition
 void influxdb_start( void )
 {
-  ESP_LOGI( TAG, "Starting InfluxDB Task" );
-  // create message queue with the length THINGSPEAK_EVENT_QUEUE_LEN
-  influxdb_event = xQueueCreate( INFLUXDB_EVENT_QUEUE_LEN, sizeof(influxdb_q_msg_t) );
-  if( influxdb_event == NULL )
+  if ( false == influxdb_init )
   {
-    ESP_LOGE(TAG, "Unable to Create Queue");
+    ESP_LOGI( TAG, "Starting InfluxDB Task" );
+    // create message queue with the length THINGSPEAK_EVENT_QUEUE_LEN
+    influxdb_event = xQueueCreate( INFLUXDB_EVENT_QUEUE_LEN, sizeof(influxdb_q_msg_t) );
+    if( influxdb_event == NULL )
+    {
+      ESP_LOGE(TAG, "Unable to Create Queue");
+    }
+    xTaskCreate(&influxdb_task, "InfluxDB Task", 4096*2, NULL, 6, NULL);
+    influxdb_init = true;
   }
-  xTaskCreate(&influxdb_task, "InfluxDB Task", 4096*2, NULL, 6, NULL);
+  else
+  {
+    ESP_LOGW( TAG, "InfludxDB was already initialized" );
+  }
 }
 
 /**
@@ -126,22 +136,25 @@ static void influxdb_send_temp_humidity( void )
             "%s/api/v2/write?org=%s&bucket=%s&precision=ns",\
             influxdb_url, influxdb_org, influxdb_bucket );
 
-  esp_http_client_config_t config =
+  
+  if ( client == NULL )
   {
-    .url = influxdb_full_url,
-    .method = HTTP_METHOD_POST,
-    .timeout_ms = 5000,
-    // todo: maybe for future
-    // .transport_type = HTTP_TRANSPORT_OVER_SSL,   // Specify transport type
-    // .crt_bundle_attach = esp_crt_bundle_attach,  // Attach the certificate bundle
-  };
+    esp_http_client_config_t config =
+    {
+      .url = influxdb_full_url,
+      .method = HTTP_METHOD_POST,
+      .timeout_ms = 5000,
+      .transport_type = HTTP_TRANSPORT_OVER_SSL,   // Specify transport type
+      // todo: maybe for future
+      // .crt_bundle_attach = esp_crt_bundle_attach,  // Attach the certificate bundle
+    };
+    client = esp_http_client_init( &config );
+    // set header
+    esp_http_client_set_header( client, "Authorization", "Token " INFLUXDB_TOKEN );
+    esp_http_client_set_header( client, "Content-Type", "text/plain" );
+  }
 
-  esp_http_client_handle_t client = esp_http_client_init( &config );
-  // set header
-  esp_http_client_set_header( client, "Authorization", "Token " INFLUXDB_TOKEN );
-  esp_http_client_set_header( client, "Content-Type", "text/plain" );
   esp_http_client_set_post_field( client, data, strlen(data) );
-
   esp_err_t err = esp_http_client_perform(client);
 
   if (err == ESP_OK)
@@ -154,5 +167,7 @@ static void influxdb_send_temp_humidity( void )
     ESP_LOGE(TAG, "HTTP POST request failed: %s", esp_err_to_name(err));
   }
 
-  esp_http_client_cleanup(client);
+  // If you want to cleanup the client after each request, uncomment the below line
+  // but it is better to keep the client initialized and reuse it for next request
+  // esp_http_client_cleanup(client);
 }

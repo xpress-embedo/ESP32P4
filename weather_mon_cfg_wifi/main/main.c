@@ -80,24 +80,6 @@ void app_main(void)
   // start wifi application (soft access point and HTTP web server)
   wifi_app_start();
 
-  // connect with WiFi (it will take some time) (will be controlled using wifi_app.c module)
-  // wifi_sta_connect_init();
-  
-  // if( wifi_sta_is_connected() )
-  // {
-  //   ESP_LOGI( TAG, "WiFi Connected, now synchronizing with NTP server." );
-  //   gui_send_event( GUI_MNG_EV_WIFI_CONNECTED, NULL );
-  //   app_sntp_init();
-  //   sntp_connect_status = app_sntp_get_time();
-  //   // if time fetched then only start the influxDB server
-  //   if( sntp_connect_status )
-  //   {
-  //     // now start the influxDB task
-  //     influxdb_start();
-  //     // gui_send_event( GUI_MNG_EV_WIFI_INTERNET_CONNECTED, NULL );
-  //   }
-  // }
-
   // initialize dht sensor library
   // dht11_init(DHT11_PIN, true);
     
@@ -106,7 +88,7 @@ void app_main(void)
     static uint8_t measure_counter = 0;
     measure_counter++;
     // 1 min per measurement
-    if ( measure_counter >= 60u )
+    if ( measure_counter >= 10u )
     {
       // Get DHT11 Temperature and Humidity Values
       measure_temp_humidity();
@@ -200,9 +182,14 @@ BaseType_t main_send_event( main_event_t event, void *ptr_data )
  */
 static void log_app_heap( void )
 {
-  ESP_LOGW( TAG, "Free memory: %" PRIu32 " bytes", esp_get_free_heap_size() );
-  // size_t free_heap = heap_caps_get_free_size(MALLOC_CAP_DEFAULT);
-  // ESP_LOGW(TAG, "Free heap: %d bytes", free_heap);
+  // ESP_LOGW( TAG, "Free memory: %" PRIu32 " bytes", esp_get_free_heap_size() );
+  size_t internal_free = heap_caps_get_free_size( MALLOC_CAP_INTERNAL );
+  size_t external_free = heap_caps_get_free_size( MALLOC_CAP_SPIRAM );
+  size_t largest_internal = heap_caps_get_largest_free_block( MALLOC_CAP_INTERNAL );
+  size_t largest_external = heap_caps_get_largest_free_block( MALLOC_CAP_SPIRAM );
+
+  ESP_LOGW( TAG, "Internal RAM: Free = %u bytes, Largest block = %u bytes", internal_free, largest_internal );
+  ESP_LOGW( TAG, "External PSRAM: Free = %u bytes, Largest block = %u bytes", external_free, largest_external );
 }
 
 static void measure_temp_humidity( void )
@@ -229,10 +216,10 @@ static void measure_temp_humidity( void )
         // trigger event to display temperature and humidity
         gui_send_event(GUI_MNG_EV_TEMP_HUMID, (void*)(&sensor_data) );
         // if wifi is connected, trigger event to send data to ThingSpeak
-        // if( wifi_sta_is_connected() && sntp_connect_status )
-        // {
-        //   influxdb_send_event(INFLUXDB_EV_TEMP_HUMID, NULL);
-        // }
+        if( wifi_app_is_connected() && sntp_connect_status )
+        {
+          influxdb_send_event(INFLUXDB_EV_TEMP_HUMID, NULL);
+        }
         // reset the index
         if( sensor_data.sensor_idx >= SENSOR_BUFF_SIZE )
         {

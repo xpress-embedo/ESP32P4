@@ -38,6 +38,7 @@ static wifi_config_t * wifi_config = NULL;
 static uint8_t wifi_connect_retry = 0;
 static uint8_t wifi_mac_address[6] = { 0 };           // {AA,BB,CC,DD,EE,FF} MAC Address Format
 static char wifi_ap_list[WIFI_MAX_SSID_LEN*WIFI_MAX_AP] = { 0 };
+static bool wifi_connection_status = false;
 
 // WiFi application Event group handle and status bits
 static EventGroupHandle_t wifi_app_event_group;
@@ -123,10 +124,13 @@ wifi_config_t * wifi_app_get_wifi_config( void )
   return wifi_config;
 }
 
+/**
+ * @brief Return if the WiFi is connected or not
+ * @return wifi connection status
+ */
 bool wifi_app_is_connected( void )
 {
-  // todo
-  return true;
+  return wifi_connection_status;
 }
 
 /**
@@ -169,7 +173,7 @@ void wifi_app_get_mac_address( char *mac_address )
   snprintf( mac_address, WIFI_MAC_ADDR_SIZE, "%02X:%02X:%02X:%02X:%02X:%02X", \
             wifi_mac_address[0], wifi_mac_address[1], wifi_mac_address[2], \
             wifi_mac_address[3], wifi_mac_address[4], wifi_mac_address[5] );
-  ESP_LOGI( TAG, "MAC Address: %s", mac_address );
+  // ESP_LOGI( TAG, "MAC Address: %s", mac_address );
   #endif
 }
 
@@ -222,6 +226,7 @@ static void wifi_app_task(void *pvParameter)
 
           // Let the HTTP Server knows about the connection attempt
           http_server_monitor_send_msg( HTTP_MSG_WIFI_CONNECT_INIT );
+          wifi_connection_status = false;
           break;
         case WIFI_APP_MSG_STA_CONNECTED_GOT_IP:
           ESP_LOGI( TAG, "WIFI_APP_MSG_STA_CONNECTED_GOT_IP" );
@@ -230,6 +235,7 @@ static void wifi_app_task(void *pvParameter)
 
           // send message to http server that esp32 is connected as station
           http_server_monitor_send_msg( HTTP_MSG_WIFI_CONNECT_SUCCESS );
+          wifi_connection_status = true;
 
           // send message to mqtt application that esp32 is connected and u can connect with mqtt server
           // mqtt_app_send_msg( MQTT_APP_MSG_START_CONNECTION );
@@ -302,6 +308,7 @@ static void wifi_app_task(void *pvParameter)
             xEventGroupClearBits(wifi_app_event_group, WIFI_APP_CONNECTING_FROM_HTTP_SERVER_BIT);
             // send message to http server that esp32 is disconnected as station
             http_server_monitor_send_msg( HTTP_MSG_WIFI_CONNECT_FAIL );
+            wifi_connection_status = false;
           }
           else if( event_bits & WIFI_APP_USER_REQUESTED_STA_DISCONNECT_BIT )
           {
@@ -309,6 +316,7 @@ static void wifi_app_task(void *pvParameter)
             xEventGroupClearBits(wifi_app_event_group, WIFI_APP_USER_REQUESTED_STA_DISCONNECT_BIT);
             // send message to http server that esp32 is disconnected as station
             http_server_monitor_send_msg( HTTP_MSG_WIFI_USER_DISCONNECT );
+            wifi_connection_status = false;
             // send message to gui manager to update the icons
             // gui_send_event( GUI_MNG_EV_WIFI_DISCONNECTED, NULL );
           }
