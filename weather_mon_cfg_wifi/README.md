@@ -90,6 +90,45 @@ The below is the explaination of each configuration setting:
 
 * `# CONFIG_LV_BUILD_EXAMPLES is not set` and `# CONFIG_LV_BUILD_DEMOS is not set` : by disabling this setting we are configuring LVGL to not compile examples and demos to save some time.
 
+### Internal and External PSRAM
+`esp_get_free_heap` function returns the total free heap memory, this includes both internal and external RAM.  
+`heap_caps_get_free_size` returns the free memory with specific capabilities, here we have to choose what kind of memory i.e. internal or external.  
+```C
+heap_caps_get_free_size(MALLOC_CAP_INTERNAL);  // Internal RAM only  
+heap_caps_get_free_size(MALLOC_CAP_SPIRAM);    // External PSRAM only
+```
+#### How to Declare Variables in External PSRAM
+ESP-IDF gives you a few ways to place variables directly in PSRAM:
+1. Static Allocation with Attributes
+    Use `EXT_RAM_BSS_ATTR` or `EXT_RAM_ATTR` for global/static variables:
+    ```C
+    EXT_RAM_BSS_ATTR char large_buffer[4096];  // Goes into PSRAM
+    ```
+    - EXT_RAM_BSS_ATTR: For uninitialized data (.bss)
+    - EXT_RAM_ATTR: For initialized data (.data)
+2. Dynamic Allocation
+    Use `heap_caps_malloc()` or `ps_malloc()` to allocate from PSRAM:
+    ```C
+    char *buffer = heap_caps_malloc(4096, MALLOC_CAP_SPIRAM);
+    ```
+    Or simply:
+    ```C
+    char *buffer = ps_malloc(4096);  // Shortcut for PSRAM allocation
+    ```
+    ✅ Make sure PSRAM is enabled in your project (CONFIG_SPIRAM_USE_MALLOC should be set).
+
+3. Component-Level Placement
+    If you're working with structs or arrays in a component, you can tag them like:
+    ```C
+    static expStruct *expanders = (expStruct *) ps_malloc(MAX_EXPANDER * sizeof(expStruct));
+    ```
+    This is ideal for large datasets, sensor logs, or buffers that don’t need fast access.
+
+**Pro Tip: Check PSRAM Usage in Menuconfig**  
+Make sure these are enabled:
+- `CONFIG_SPIRAM_USE_MALLOC`
+- `CONFIG_SPIRAM_ALLOW_BSS_SEG_EXTERNAL_MEMORY`
+These allow ESP-IDF to place .bss and malloc() allocations in PSRAM automatically when tagged.
 
 ### Partition Table
 
