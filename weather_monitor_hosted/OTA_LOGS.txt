@@ -1,0 +1,528 @@
+--- Warning: GDB cannot open serial ports accessed as COMx
+--- Using \\.\COM7 instead...
+--- esp-idf-monitor 1.7.0 on \\.\COM7 115200
+--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H
+ESP-ROM:esp32p4-eco2-20240710
+Build:Jul 10 2024
+rst:0x1 (POWERON),boot:0x10f (SPI_FAST_FLASH_BOOT)
+SPI mode:DIO, clock div:1
+load:0x4ff33ce0,len:0x17a4
+load:0x4ff29ed0,len:0xfc0
+--- 0x4ff29ed0: esp_bootloader_get_description at D:/tools/Espressif/frameworks/esp-idf-v5.5.1/components/esp_bootloader_format/esp_bootloader_desc.c:39
+load:0x4ff2cbd0,len:0x345c
+--- 0x4ff2cbd0: esp_flash_encryption_enabled at D:/tools/Espressif/frameworks/esp-idf-v5.5.1/components/bootloader_support/src/flash_encrypt.c:89
+entry 0x4ff29eda
+--- 0x4ff29eda: call_start_cpu0 at D:/tools/Espressif/frameworks/esp-idf-v5.5.1/components/bootloader/subproject/main/bootloader_start.c:25
+I (25) boot: ESP-IDF HEAD-HASH-NOTFOUND 2nd stage bootloader
+I (26) boot: compile time Sep 24 2025 19:41:45
+I (26) boot: Multicore bootloader
+I (28) boot: chip revision: v1.0
+I (30) boot: efuse block revision: v0.3
+I (33) qio_mode: Enabling default flash chip QIO
+I (38) boot.esp32p4: SPI Speed      : 80MHz
+I (41) boot.esp32p4: SPI Mode       : QIO
+I (45) boot.esp32p4: SPI Flash Size : 16MB
+I (49) boot: Enabling RNG early entropy source...
+I (54) boot: Partition Table:
+I (56) boot: ## Label            Usage          Type ST Offset   Length
+I (62) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (69) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (75) boot:  2 factory          factory app      00 00 00010000 00400000
+I (82) boot:  3 config           Unknown data     01 40 00410000 00100000
+I (88) boot:  4 assets           Unknown data     01 83 00510000 00a00000
+I (96) boot: End of partition table
+I (99) esp_image: segment 0: paddr=00010020 vaddr=400f0020 size=ab6e8h (702184) map
+I (214) esp_image: segment 1: paddr=000bb710 vaddr=30100000 size=00068h (   104) load
+I (216) esp_image: segment 2: paddr=000bb780 vaddr=4ff00000 size=04898h ( 18584) load
+I (223) esp_image: segment 3: paddr=000c0020 vaddr=40000020 size=ec59ch (968092) map
+I (375) esp_image: segment 4: paddr=001ac5c4 vaddr=4ff04898 size=1273ch ( 75580) load
+I (390) esp_image: segment 5: paddr=001bed08 vaddr=4ff17000 size=03498h ( 13464) load
+I (394) esp_image: segment 6: paddr=001c21a8 vaddr=50108080 size=00020h (    32) load
+I (401) boot: Loaded app from partition at offset 0x10000
+I (401) boot: Disabling RNG early entropy source...
+I (418) hex_psram: vendor id    : 0x0d (AP)
+I (418) hex_psram: Latency      : 0x01 (Fixed)
+I (418) hex_psram: DriveStr.    : 0x00 (25 Ohm)
+I (419) hex_psram: dev id       : 0x03 (generation 4)
+I (424) hex_psram: density      : 0x07 (256 Mbit)
+I (428) hex_psram: good-die     : 0x06 (Pass)
+I (432) hex_psram: SRF          : 0x02 (Slow Refresh)
+I (437) hex_psram: BurstType    : 0x00 ( Wrap)
+I (441) hex_psram: BurstLen     : 0x03 (2048 Byte)
+I (446) hex_psram: BitMode      : 0x01 (X16 Mode)
+I (450) hex_psram: Readlatency  : 0x04 (14 cycles@Fixed)
+I (455) hex_psram: DriveStrength: 0x00 (1/1)
+I (459) MSPI DQS: tuning success, best phase id is 0
+I (637) MSPI DQS: tuning success, best delayline id is 17
+I (637) esp_psram: Found 32MB PSRAM device
+I (637) esp_psram: Speed: 200MHz
+I (638) hex_psram: psram CS IO is dedicated
+I (641) cpu_start: Multicore app
+I (1595) esp_psram: SPI SRAM memory test OK
+I (1604) cpu_start: Pro cpu start user code
+I (1604) cpu_start: cpu freq: 360000000 Hz
+I (1604) app_init: Application information:
+I (1604) app_init: Project name:     weather_monitor_hosted
+I (1610) app_init: App version:      9e9ebcb-dirty
+I (1614) app_init: Compile time:     Sep 24 2025 21:00:37
+I (1619) app_init: ELF file SHA256:  cef18fb38...
+I (1624) app_init: ESP-IDF:          HEAD-HASH-NOTFOUND
+I (1629) efuse_init: Min chip rev:     v0.1
+I (1632) efuse_init: Max chip rev:     v1.99
+I (1637) efuse_init: Chip rev:         v1.0
+I (1640) heap_init: Initializing. RAM available for dynamic allocation:
+I (1647) heap_init: At 4FF1BCD0 len 0001F2F0 (124 KiB): RAM
+I (1652) heap_init: At 4FF3AFC0 len 00004BF0 (18 KiB): RAM
+I (1657) heap_init: At 4FF51B70 len 0004E490 (313 KiB): RAM
+I (1663) heap_init: At 501080A0 len 00007F60 (31 KiB): RTCRAM
+I (1668) heap_init: At 30100068 len 00001F98 (7 KiB): TCM
+I (1673) esp_psram: Adding pool of 32768K of PSRAM memory to heap allocator
+I (1680) spi_flash: detected chip: gd
+I (1683) spi_flash: flash io: qio
+I (1686) host_init: ESP Hosted : Host chip_ip[18]
+I (1723) H_API: ESP-Hosted starting. Hosted_Tasks: prio:23, stack: 5120 RPC_task_stack: 5120
+I (1723) H_API: ** add_esp_wifi_remote_channels **
+I (1725) transport: Add ESP-Hosted channel IF[1]: S[0] Tx[0x4000d684] Rx[0x40022558]
+--- 0x4000d684: transport_drv_sta_tx at D:/Projects/Embedded/ESP32P4/weather_monitor_hosted/managed_components/espressif__esp_hosted/host/drivers/transport/transport_drv.c:245
+--- 0x40022558: esp_wifi_remote_channel_rx at D:/Projects/Embedded/ESP32P4/weather_monitor_hosted/managed_components/espressif__esp_wifi_remote/esp_wifi_remote_net.c:19
+I (1732) transport: Add ESP-Hosted channel IF[2]: S[0] Tx[0x4000d5c8] Rx[0x40022558]
+--- 0x4000d5c8: transport_drv_ap_tx at D:/Projects/Embedded/ESP32P4/weather_monitor_hosted/managed_components/espressif__esp_hosted/host/drivers/transport/transport_drv.c:275
+--- 0x40022558: esp_wifi_remote_channel_rx at D:/Projects/Embedded/ESP32P4/weather_monitor_hosted/managed_components/espressif__esp_wifi_remote/esp_wifi_remote_net.c:19
+sdio_mempool_create free:33709500 min-free:33709500 lfb-def:33030144 lfb-8bit:33030144
+
+I (1749) H_SDIO_DRV: sdio_data_to_rx_buf_task started
+I (1749) main_task: Started on CPU0
+I (1759) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+I (1759) main_task: Calling app_main()
+I (2769) MAIN: Starting Program
+W (2769) MAIN: Free heap: 33963976 bytes
+I (2769) LVGL: Starting LVGL task
+W (2769) ledc: GPIO 26 is not usable, maybe conflict with others
+I (2779) ESP32_P4_EV: MIPI DSI PHY Powered on
+I (2779) ESP32_P4_EV: Install MIPI DSI LCD control panel
+I (2789) ESP32_P4_EV: Install EK79007 LCD control panel
+I (2789) ek79007: version: 1.0.3
+I (2959) ESP32_P4_EV: Display initialized
+I (2959) ESP32_P4_EV: Display resolution 1024x600
+W (2959) i2c.master: Please check pull-up resistances whether be connected properly. Otherwise unexpected behavior would happen. For more detailed information, please read docs
+I (2969) GT911: I2C address initialization procedure skipped - using default GT9xx setup
+I (2979) GT911: TouchPad_ID:0x39,0x31,0x31
+I (2979) GT911: TouchPad_Config_Version:89
+I (2979) ESP32_P4_EV: Setting LCD backlight: 100%
+I (3009) ASSETS: LittleFS mounted: total=10485760 bytes, used=1241088 bytes
+W (3009) ASSETS: Read from hello.txt: Hi I am using LittleFS FAT File System.
+I (3009) GUI_CFG: UI Init. Starts
+I (3389) GUI_CFG: UI Init. Ends
+I (3419) GUI_CFG: gui_wifi_connecting
+W (3419) CFG: Access Point Name: ESP324_AP
+W (3419) CFG: IP Address: 192.168.0.100
+W (3419) CFG: Serial Number: SN0123456789
+I (3429) MAIN: Connecting with WiFi Router
+I (3429) transport: Attempt connection with slave: retry[0]
+W (3439) H_SDIO_DRV: Reset slave using GPIO[54]
+I (3439) os_wrapper_esp: GPIO [54] configured
+I (4639) sdio_wrapper: SDIO master: Slot 1, Data-Lines: 4-bit Freq(KHz)[40000 KHz]
+I (4639) sdio_wrapper: GPIOs: CLK[18] CMD[19] D0[14] D1[15] D2[16] D3[17] Slave_Reset[54]
+I (4639) sdio_wrapper: Queues: Tx[20] Rx[20] SDIO-Rx-Mode[1]
+Name:
+Type: SDIO
+Speed: 40.00 MHz (limit: 40.00 MHz)
+Size: 0MB
+CSD: ver=1, sector_size=0, capacity=0 read_bl_len=0
+SCR: sd_spec=0, bus_width=0
+TUPLE: DEVICE, size: 3: D9 01 FF
+TUPLE: MANFID, size: 4
+  MANF: 0092, CARD: 6666
+TUPLE: FUNCID, size: 2: 0C 00
+TUPLE: FUNCE, size: 4: 00 00 02 32
+TUPLE: CONFIG, size: 5: 01 01 00 02 07
+TUPLE: CFTABLE_ENTRY, size: 8
+  INDX: C1, Intface: 1, Default: 1, Conf-Entry-Num: 1
+  IF: 41
+  FS: 30, misc: 0, mem_space: 1, irq: 1, io_space: 0, timing: 0, power: 0
+  IR: 30, mask: 1,   IRQ: FF FF
+  LEN: FFFF
+TUPLE: END
+I (4719) sdio_wrapper: Function 0 Blocksize: 512
+I (4719) sdio_wrapper: Function 1 Blocksize: 512
+I (4729) H_SDIO_DRV: Card init success, TRANSPORT_RX_ACTIVE
+I (4729) transport: set_transport_state: 1
+I (4729) transport: Waiting for esp_hosted slave to be ready
+I (4749) H_SDIO_DRV: SDIO Host operating in STREAMING MODE
+I (4749) H_SDIO_DRV: Open data path at slave
+I (4749) H_SDIO_DRV: Starting SDIO process rx task
+I (4749) H_SDIO_DRV: Received ESP_PRIV_IF type message
+I (4759) transport: Received INIT event from ESP32 peripheral
+I (4759) transport: EVENT: 12
+I (4769) transport: Identified slave [esp32c6]
+I (4769) transport: EVENT: 11
+I (4769) transport: capabilities: 0xd
+I (4779) transport: Features supported are:
+I (4779) transport:      * WLAN
+I (4779) transport:        - HCI over SDIO
+I (4789) transport:        - BLE only
+I (4789) transport: EVENT: 13
+W (4789) transport: === ESP-Hosted Version Warning ===
+Version on Host is NEWER than version on co-processor
+RPC requests sent by host may encounter timeout errors
+or may not be supported by co-processor
+W (4809) transport: === ESP-Hosted Version Warning ===
+I (4819) transport: ESP board type is : 13
+
+I (4819) transport: Base transport is set-up, TRANSPORT_TX_ACTIVE
+I (4829) H_API: Transport active
+I (4829) transport: Slave chip Id[12]
+I (4829) transport: raw_tp_dir[-], flow_ctrl: low[60] high[80]
+I (4839) transport: transport_delayed_init
+I (4839) esp_cli: Remove any existing deep_sleep cmd in cli
+I (4849) esp_cli: Registering command: crash
+I (4849) esp_cli: Registering command: reboot
+I (4849) esp_cli: Registering command: mem-dump
+I (4859) esp_cli: Registering command: task-dump
+I (4859) esp_cli: Registering command: cpu-dump
+I (4869) esp_cli: Registering command: heap-trace
+I (4869) esp_cli: Registering command: sock-dump
+I (4879) esp_cli: Registering command: host-power-save
+I (4879) hci_stub_drv: Host BT Support: Disabled
+I (4889) H_SDIO_DRV: Received INIT event
+I (4889) H_SDIO_DRV: Event type: 0x22
+I (4889) H_SDIO_DRV: Write thread started
+I (5749) RPC_WRAP: --- ESP Event: Slave ESP Init ---
+I (5869) MAIN: MAC Address: 9C:9E:6E:53:04:6C
+W (5869) MAIN: Hostname set to MAC: ESP32_9C:9E:6E:53:04:6C
+I (5979) MAIN: WiFi Initialized in Station Mode Finished.
+I (5989) RPC_WRAP: ESP Event: wifi station started
+I (6999) H_API: esp_wifi_remote_connect
+W (7029) rpc_rsp: Hosted RPC_Resp [0x21a], uid [8], resp code [12295]
+I (9909) RPC_WRAP: ESP Event: Station mode: Connected
+I (9909) esp_wifi_remote: esp_wifi_internal_reg_rxcb: sta: 0x400a6c70
+--- 0x400a6c70: wifi_sta_receive at D:/tools/Espressif/frameworks/esp-idf-v5.5.1/components/esp_wifi/src/wifi_netif.c:38
+I (11039) esp_netif_handlers: sta ip: 192.168.0.108, mask: 255.255.255.0, gw: 192.168.0.1
+I (11039) MAIN: Got IP:192.168.0.108
+I (11039) MAIN: Current Hostname: ESP32_9C:9E:6E:53:04:6C
+I (11039) MAIN: Connected to Access Point SECOND
+I (11039) MAIN: WiFi Connected, now synchronizing with NTP server.
+I (11049) GUI_CFG: gui_wifi_connected
+I (11049) MAIN: Initializing SNTP
+I (11059) MAIN: Sync Current Time: 01.01.1970 05:30:09
+I (11059) MAIN: Synchronizing the time.....0
+I (14069) MAIN: Sync Current Time: 24.09.2025 21:10:00
+I (14069) InfluxDB: Starting InfluxDB Task
+I (14069) GUI_CFG: gui_wifi_internet_connected
+W (14069) GUI_CFG: Time Starts to Load Next Screen
+I (15069) hosted_ota: http_open
+I (15089) hosted_ota: HTTP_EVENT_ON_CONNECTED
+I (15099) hosted_ota: HTTP_EVENT_HEADER_SENT
+I (15099) hosted_ota: http_fetch_headers
+I (15379) hosted_ota: HTTP_EVENT_ON_HEADER, key=Server, value=SimpleHTTP/0.6 Python/3.10.4
+I (15379) hosted_ota: HTTP_EVENT_ON_HEADER, key=Date, value=Wed, 24 Sep 2025 15:40:01 GMT
+I (15379) hosted_ota: HTTP_EVENT_ON_HEADER, key=Content-type, value=application/octet-stream
+I (15389) hosted_ota: HTTP_EVENT_ON_HEADER, key=Content-Length, value=1163136
+I (15399) hosted_ota: HTTP_EVENT_ON_HEADER, key=Last-Modified, value=Wed, 24 Sep 2025 13:26:28 GMT
+I (15409) hosted_ota: HTTP GET Status = 200, content_length = 1163136
+W (15409) hosted_ota: ********* Started Slave OTA *******************
+I (15419) hosted_ota: *** Please wait for 5 mins to let slave OTA complete ***
+I (15419) hosted_ota: Preparing OTA
+I (21639) hosted_ota: Starting OTA
+I (30169) hosted_ota: HTTP_EVENT_DISCONNECTED
+W (30169) hosted_ota: ********* Slave OTA Complete *******************
+I (30169) hosted_ota: OTA Successful, Slave will restart in while
+E (30169) hosted_ota: Need to restart host after slave OTA is complete, to avoid sync issues
+E (35189) hosted_ota: ********* Restarting Host **********************
+E (35189) sdmmc_io: sdmmc_io_rw_extended: sdmmc_send_cmd returned 0x107
+E (35189) H_SDIO_DRV: sdio_write_task: 0: Failed to send data: 263 30 30
+E (35189) sdmmc_io: sdmmc_io_rw_extended: sdmmc_send_cmd returned 0x107
+E (35199) H_SDIO_DRV: sdio_write_task: 1: Failed to send data: 263 30 30
+E (35209) H_SDIO_DRV: Unrecoverable host sdio state, reset host mcu
+I (35209) os_wrapper_esp: Restarting host
+ESP-ROM:esp32p4-eco2-20240710
+Build:Jul 10 2024
+rst:0xc (SW_CPU_RESET),boot:0x10f (SPI_FAST_FLASH_BOOT)
+Core0 Saved PC:0x4ff05052
+--- 0x4ff05052: cpu_utility_ll_reset_cpu at D:/tools/Espressif/frameworks/esp-idf-v5.5.1/components/hal/esp32p4/include/hal/cpu_utility_ll.h:25
+--- (inlined by) esp_cpu_reset at D:/tools/Espressif/frameworks/esp-idf-v5.5.1/components/esp_hw_support/cpu.c:49
+Core1 Saved PC:0x4ff051ae
+--- 0x4ff051ae: esp_cpu_wait_for_intr at D:/tools/Espressif/frameworks/esp-idf-v5.5.1/components/esp_hw_support/cpu.c:57
+SPI mode:DIO, clock div:1
+load:0x4ff33ce0,len:0x17a4
+load:0x4ff29ed0,len:0xfc0
+--- 0x4ff29ed0: esp_bootloader_get_description at D:/tools/Espressif/frameworks/esp-idf-v5.5.1/components/esp_bootloader_format/esp_bootloader_desc.c:39
+load:0x4ff2cbd0,len:0x345c
+--- 0x4ff2cbd0: esp_flash_encryption_enabled at D:/tools/Espressif/frameworks/esp-idf-v5.5.1/components/bootloader_support/src/flash_encrypt.c:89
+entry 0x4ff29eda
+--- 0x4ff29eda: call_start_cpu0 at D:/tools/Espressif/frameworks/esp-idf-v5.5.1/components/bootloader/subproject/main/bootloader_start.c:25
+I (33) boot: ESP-IDF HEAD-HASH-NOTFOUND 2nd stage bootloader
+I (33) boot: compile time Sep 24 2025 19:41:45
+I (34) boot: Multicore bootloader
+I (35) boot: chip revision: v1.0
+I (37) boot: efuse block revision: v0.3
+I (41) qio_mode: Enabling default flash chip QIO
+I (45) boot.esp32p4: SPI Speed      : 80MHz
+I (49) boot.esp32p4: SPI Mode       : QIO
+I (53) boot.esp32p4: SPI Flash Size : 16MB
+I (57) boot: Enabling RNG early entropy source...
+I (61) boot: Partition Table:
+I (64) boot: ## Label            Usage          Type ST Offset   Length
+I (70) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (76) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (83) boot:  2 factory          factory app      00 00 00010000 00400000
+I (90) boot:  3 config           Unknown data     01 40 00410000 00100000
+I (96) boot:  4 assets           Unknown data     01 83 00510000 00a00000
+I (103) boot: End of partition table
+I (106) esp_image: segment 0: paddr=00010020 vaddr=400f0020 size=ab6e8h (702184) map
+I (201) esp_image: segment 1: paddr=000bb710 vaddr=30100000 size=00068h (   104) load
+I (202) esp_image: segment 2: paddr=000bb780 vaddr=4ff00000 size=04898h ( 18584) load
+I (208) esp_image: segment 3: paddr=000c0020 vaddr=40000020 size=ec59ch (968092) map
+I (332) esp_image: segment 4: paddr=001ac5c4 vaddr=4ff04898 size=1273ch ( 75580) load
+I (345) esp_image: segment 5: paddr=001bed08 vaddr=4ff17000 size=03498h ( 13464) load
+I (348) esp_image: segment 6: paddr=001c21a8 vaddr=50108080 size=00020h (    32) load
+I (354) boot: Loaded app from partition at offset 0x10000
+I (354) boot: Disabling RNG early entropy source...
+I (373) hex_psram: vendor id    : 0x0d (AP)
+I (373) hex_psram: Latency      : 0x01 (Fixed)
+I (373) hex_psram: DriveStr.    : 0x00 (25 Ohm)
+I (374) hex_psram: dev id       : 0x03 (generation 4)
+I (379) hex_psram: density      : 0x07 (256 Mbit)
+I (383) hex_psram: good-die     : 0x06 (Pass)
+I (387) hex_psram: SRF          : 0x02 (Slow Refresh)
+I (392) hex_psram: BurstType    : 0x00 ( Wrap)
+I (396) hex_psram: BurstLen     : 0x03 (2048 Byte)
+I (401) hex_psram: BitMode      : 0x01 (X16 Mode)
+I (405) hex_psram: Readlatency  : 0x04 (14 cycles@Fixed)
+I (410) hex_psram: DriveStrength: 0x00 (1/1)
+I (414) MSPI DQS: tuning success, best phase id is 0
+I (591) MSPI DQS: tuning success, best delayline id is 17
+I (592) esp_psram: Found 32MB PSRAM device
+I (592) esp_psram: Speed: 200MHz
+I (593) hex_psram: psram CS IO is dedicated
+I (596) cpu_start: Multicore app
+I (1550) esp_psram: SPI SRAM memory test OK
+I (1558) cpu_start: Pro cpu start user code
+I (1558) cpu_start: cpu freq: 360000000 Hz
+I (1559) app_init: Application information:
+I (1559) app_init: Project name:     weather_monitor_hosted
+I (1564) app_init: App version:      9e9ebcb-dirty
+I (1568) app_init: Compile time:     Sep 24 2025 21:00:37
+I (1574) app_init: ELF file SHA256:  cef18fb38...
+I (1578) app_init: ESP-IDF:          HEAD-HASH-NOTFOUND
+I (1583) efuse_init: Min chip rev:     v0.1
+I (1587) efuse_init: Max chip rev:     v1.99
+I (1591) efuse_init: Chip rev:         v1.0
+I (1595) heap_init: Initializing. RAM available for dynamic allocation:
+I (1601) heap_init: At 4FF1BCD0 len 0001F2F0 (124 KiB): RAM
+I (1606) heap_init: At 4FF3AFC0 len 00004BF0 (18 KiB): RAM
+I (1612) heap_init: At 4FF51B70 len 0004E490 (313 KiB): RAM
+I (1617) heap_init: At 501080A0 len 00007F60 (31 KiB): RTCRAM
+I (1622) heap_init: At 30100068 len 00001F98 (7 KiB): TCM
+I (1628) esp_psram: Adding pool of 32768K of PSRAM memory to heap allocator
+I (1635) spi_flash: detected chip: gd
+I (1638) spi_flash: flash io: qio
+I (1641) host_init: ESP Hosted : Host chip_ip[18]
+I (1678) H_API: ESP-Hosted starting. Hosted_Tasks: prio:23, stack: 5120 RPC_task_stack: 5120
+I (1678) H_API: ** add_esp_wifi_remote_channels **
+I (1679) transport: Add ESP-Hosted channel IF[1]: S[0] Tx[0x4000d684] Rx[0x40022558]
+--- 0x4000d684: transport_drv_sta_tx at D:/Projects/Embedded/ESP32P4/weather_monitor_hosted/managed_components/espressif__esp_hosted/host/drivers/transport/transport_drv.c:245
+--- 0x40022558: esp_wifi_remote_channel_rx at D:/Projects/Embedded/ESP32P4/weather_monitor_hosted/managed_components/espressif__esp_wifi_remote/esp_wifi_remote_net.c:19
+I (1687) transport: Add ESP-Hosted channel IF[2]: S[0] Tx[0x4000d5c8] Rx[0x40022558]
+--- 0x4000d5c8: transport_drv_ap_tx at D:/Projects/Embedded/ESP32P4/weather_monitor_hosted/managed_components/espressif__esp_hosted/host/drivers/transport/transport_drv.c:275
+--- 0x40022558: esp_wifi_remote_channel_rx at D:/Projects/Embedded/ESP32P4/weather_monitor_hosted/managed_components/espressif__esp_wifi_remote/esp_wifi_remote_net.c:19
+sdio_mempool_create free:33709500 min-free:33709500 lfb-def:33030144 lfb-8bit:33030144
+
+I (1703) H_SDIO_DRV: sdio_data_to_rx_buf_task started
+I (1703) main_task: Started on CPU0
+I (1713) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+I (1713) main_task: Calling app_main()
+I (2723) MAIN: Starting Program
+W (2723) MAIN: Free heap: 33963976 bytes
+I (2723) LVGL: Starting LVGL task
+W (2723) ledc: GPIO 26 is not usable, maybe conflict with others
+I (2733) ESP32_P4_EV: MIPI DSI PHY Powered on
+I (2733) ESP32_P4_EV: Install MIPI DSI LCD control panel
+I (2743) ESP32_P4_EV: Install EK79007 LCD control panel
+I (2743) ek79007: version: 1.0.3
+I (2913) ESP32_P4_EV: Display initialized
+I (2913) ESP32_P4_EV: Display resolution 1024x600
+W (2913) i2c.master: Please check pull-up resistances whether be connected properly. Otherwise unexpected behavior would happen. For more detailed information, please read docs
+I (2923) GT911: I2C address initialization procedure skipped - using default GT9xx setup
+I (2933) GT911: TouchPad_ID:0x39,0x31,0x31
+I (2933) GT911: TouchPad_Config_Version:89
+I (2933) ESP32_P4_EV: Setting LCD backlight: 100%
+I (2963) ASSETS: LittleFS mounted: total=10485760 bytes, used=1241088 bytes
+W (2963) ASSETS: Read from hello.txt: Hi I am using LittleFS FAT File System.
+I (2963) GUI_CFG: UI Init. Starts
+I (3343) GUI_CFG: UI Init. Ends
+I (3373) GUI_CFG: gui_wifi_connecting
+W (3373) CFG: Access Point Name: ESP324_AP
+W (3373) CFG: IP Address: 192.168.0.100
+W (3373) CFG: Serial Number: SN0123456789
+I (3383) MAIN: Connecting with WiFi Router
+I (3383) transport: Attempt connection with slave: retry[0]
+W (3393) H_SDIO_DRV: Reset slave using GPIO[54]
+I (3393) os_wrapper_esp: GPIO [54] configured
+I (4603) sdio_wrapper: SDIO master: Slot 1, Data-Lines: 4-bit Freq(KHz)[40000 KHz]
+I (4603) sdio_wrapper: GPIOs: CLK[18] CMD[19] D0[14] D1[15] D2[16] D3[17] Slave_Reset[54]
+I (4603) sdio_wrapper: Queues: Tx[20] Rx[20] SDIO-Rx-Mode[1]
+Name:
+Type: SDIO
+Speed: 40.00 MHz (limit: 40.00 MHz)
+Size: 0MB
+CSD: ver=1, sector_size=0, capacity=0 read_bl_len=0
+SCR: sd_spec=0, bus_width=0
+TUPLE: DEVICE, size: 3: D9 01 FF
+TUPLE: MANFID, size: 4
+  MANF: 0092, CARD: 6666
+TUPLE: FUNCID, size: 2: 0C 00
+TUPLE: FUNCE, size: 4: 00 00 02 32
+TUPLE: CONFIG, size: 5: 01 01 00 02 07
+TUPLE: CFTABLE_ENTRY, size: 8
+  INDX: C1, Intface: 1, Default: 1, Conf-Entry-Num: 1
+  IF: 41
+  FS: 30, misc: 0, mem_space: 1, irq: 1, io_space: 0, timing: 0, power: 0
+  IR: 30, mask: 1,   IRQ: FF FF
+  LEN: FFFF
+TUPLE: END
+I (4683) sdio_wrapper: Function 0 Blocksize: 512
+I (4683) sdio_wrapper: Function 1 Blocksize: 512
+I (4683) H_SDIO_DRV: Card init success, TRANSPORT_RX_ACTIVE
+I (4693) transport: set_transport_state: 1
+I (4693) transport: Waiting for esp_hosted slave to be ready
+I (4703) H_SDIO_DRV: SDIO Host operating in STREAMING MODE
+I (4703) H_SDIO_DRV: Starting SDIO process rx task
+I (4703) H_SDIO_DRV: Open data path at slave
+I (4743) H_SDIO_DRV: Received ESP_PRIV_IF type message
+I (4743) transport: Received INIT event from ESP32 peripheral
+I (4743) transport: EVENT: 12
+I (4743) transport: Identified slave [esp32c6]
+I (4753) transport: EVENT: 11
+I (4753) transport: capabilities: 0xd
+I (4753) transport: Features supported are:
+I (4763) transport:      * WLAN
+I (4763) transport:        - HCI over SDIO
+I (4763) transport:        - BLE only
+I (4773) transport: EVENT: 13
+I (4773) transport: ESP board type is : 13
+
+I (4773) transport: Base transport is set-up, TRANSPORT_TX_ACTIVE
+I (4783) H_API: Transport active
+I (4783) transport: Slave chip Id[12]
+I (4793) transport: raw_tp_dir[-], flow_ctrl: low[60] high[80]
+I (4793) transport: transport_delayed_init
+I (4793) esp_cli: Remove any existing deep_sleep cmd in cli
+I (4803) esp_cli: Registering command: crash
+I (4803) esp_cli: Registering command: reboot
+I (4813) esp_cli: Registering command: mem-dump
+I (4813) esp_cli: Registering command: task-dump
+I (4823) esp_cli: Registering command: cpu-dump
+I (4823) esp_cli: Registering command: heap-trace
+I (4833) esp_cli: Registering command: sock-dump
+I (4833) esp_cli: Registering command: host-power-save
+I (4833) hci_stub_drv: Host BT Support: Disabled
+I (4843) H_SDIO_DRV: Received INIT event
+I (4843) H_SDIO_DRV: Event type: 0x22
+I (4853) H_SDIO_DRV: Write thread started
+I (5863) MAIN: MAC Address: 9C:9E:6E:53:04:6C
+W (5863) MAIN: Hostname set to MAC: ESP32_9C:9E:6E:53:04:6C
+I (6053) MAIN: WiFi Initialized in Station Mode Finished.
+I (6053) RPC_WRAP: ESP Event: wifi station started
+I (6073) RPC_WRAP: ESP Event: wifi station started
+I (7083) H_API: esp_wifi_remote_connect
+I (8843) RPC_WRAP: ESP Event: Station mode: Disconnected
+I (9343) H_API: esp_wifi_remote_connect
+I (9353) MAIN: Retry Wi-Fi connection (1/6)...
+I (11953) RPC_WRAP: ESP Event: Station mode: Connected
+I (11953) esp_wifi_remote: esp_wifi_internal_reg_rxcb: sta: 0x400a6c70
+--- 0x400a6c70: wifi_sta_receive at D:/tools/Espressif/frameworks/esp-idf-v5.5.1/components/esp_wifi/src/wifi_netif.c:38
+I (12973) esp_netif_handlers: sta ip: 192.168.0.108, mask: 255.255.255.0, gw: 192.168.0.1
+I (12973) MAIN: Got IP:192.168.0.108
+I (12973) MAIN: Current Hostname: ESP32_9C:9E:6E:53:04:6C
+I (12973) MAIN: Connected to Access Point SECOND
+I (12973) MAIN: WiFi Connected, now synchronizing with NTP server.
+I (12983) GUI_CFG: gui_wifi_connected
+I (12983) MAIN: Initializing SNTP
+I (12993) MAIN: Sync Current Time: 24.09.2025 21:10:34
+I (12993) InfluxDB: Starting InfluxDB Task
+I (13003) GUI_CFG: gui_wifi_internet_connected
+W (13003) GUI_CFG: Time Starts to Load Next Screen
+I (14003) hosted_ota: http_open
+I (14053) hosted_ota: HTTP_EVENT_ON_CONNECTED
+I (14053) hosted_ota: HTTP_EVENT_HEADER_SENT
+I (14053) hosted_ota: http_fetch_headers
+I (14063) hosted_ota: HTTP_EVENT_ON_HEADER, key=Server, value=SimpleHTTP/0.6 Python/3.10.4
+I (14063) hosted_ota: HTTP_EVENT_ON_HEADER, key=Date, value=Wed, 24 Sep 2025 15:40:35 GMT
+I (14073) hosted_ota: HTTP_EVENT_ON_HEADER, key=Content-type, value=application/octet-stream
+I (14083) hosted_ota: HTTP_EVENT_ON_HEADER, key=Content-Length, value=1163136
+I (14083) hosted_ota: HTTP_EVENT_ON_HEADER, key=Last-Modified, value=Wed, 24 Sep 2025 13:26:28 GMT
+I (14093) hosted_ota: HTTP GET Status = 200, content_length = 1163136
+W (14103) hosted_ota: ********* Started Slave OTA *******************
+I (14113) hosted_ota: *** Please wait for 5 mins to let slave OTA complete ***
+I (14113) hosted_ota: Preparing OTA
+I (20383) hosted_ota: Starting OTA
+E (28403) rpc_rsp: OTA write failed
+I (28403) hosted_ota: HTTP_EVENT_DISCONNECTED
+W (28403) hosted_ota: ********* Slave OTA Complete *******************
+I (28403) hosted_ota: OTA Successful, Slave will restart in while
+E (28413) hosted_ota: Need to restart host after slave OTA is complete, to avoid sync issues
+E (33433) hosted_ota: ********* Restarting Host **********************
+I (33483) RPC_WRAP: ESP Event: Station mode: Disconnected
+I (33483) RPC_WRAP: ESP Event: wifi station stopped
+ESP-ROM:esp32p4-eco2-20240710
+Build:Jul 10 2024
+rst:0xc (SW_CPU_RESET),boot:0x10f (SPI_FAST_FLASH_BOOT)
+Core0 Saved PC:0x4ff05052
+--- 0x4ff05052: cpu_utility_ll_reset_cpu at D:/tools/Espressif/frameworks/esp-idf-v5.5.1/components/hal/esp32p4/include/hal/cpu_utility_ll.h:25
+--- (inlined by) esp_cpu_reset at D:/tools/Espressif/frameworks/esp-idf-v5.5.1/components/esp_hw_support/cpu.c:49
+Core1 Saved PC:0x4ff051ae
+--- 0x4ff051ae: esp_cpu_wait_for_intr at D:/tools/Espressif/frameworks/esp-idf-v5.5.1/components/esp_hw_support/cpu.c:57
+SPI mode:DIO, clock div:1
+load:0x4ff33ce0,len:0x17a4
+load:0x4ff29ed0,len:0xfc0
+--- 0x4ff29ed0: esp_bootloader_get_description at D:/tools/Espressif/frameworks/esp-idf-v5.5.1/components/esp_bootloader_format/esp_bootloader_desc.c:39
+load:0x4ff2cbd0,len:0x345c
+--- 0x4ff2cbd0: esp_flash_encryption_enabled at D:/tools/Espressif/frameworks/esp-idf-v5.5.1/components/bootloader_support/src/flash_encrypt.c:89
+entry 0x4ff29eda
+--- 0x4ff29eda: call_start_cpu0 at D:/tools/Espressif/frameworks/esp-idf-v5.5.1/components/bootloader/subproject/main/bootloader_start.c:25
+I (33) boot: ESP-IDF HEAD-HASH-NOTFOUND 2nd stage bootloader
+I (33) boot: compile time Sep 24 2025 19:41:45
+I (34) boot: Multicore bootloader
+I (35) boot: chip revision: v1.0
+I (37) boot: efuse block revision: v0.3
+I (41) qio_mode: Enabling default flash chip QIO
+I (45) boot.esp32p4: SPI Speed      : 80MHz
+I (49) boot.esp32p4: SPI Mode       : QIO
+I (53) boot.esp32p4: SPI Flash Size : 16MB
+I (57) boot: Enabling RNG early entropy source...
+I (61) boot: Partition Table:
+I (64) boot: ## Label            Usage          Type ST Offset   Length
+I (70) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (76) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (83) boot:  2 factory          factory app      00 00 00010000 00400000
+I (90) boot:  3 config           Unknown data     01 40 00410000 00100000
+I (96) boot:  4 assets           Unknown data     01 83 00510000 00a00000
+I (103) boot: End of partition table
+I (106) esp_image: segment 0: paddr=00010020 vaddr=400f0020 size=ab6e8h (702184) map
+I (201) esp_image: segment 1: paddr=000bb710 vaddr=30100000 size=00068h (   104) load
+I (202) esp_image: segment 2: paddr=000bb780 vaddr=4ff00000 size=04898h ( 18584) load
+I (208) esp_image: segment 3: paddr=000c0020 vaddr=40000020 size=ec59ch (968092) map
+I (332) esp_image: segment 4: paddr=001ac5c4 vaddr=4ff04898 size=1273ch ( 75580) load
+I (345) esp_image: segment 5: paddr=001bed08 vaddr=4ff17000 size=03498h ( 13464) load
+I (348) esp_image: segment 6: paddr=001c21a8 vaddr=50108080 size=00020h (    32) load
+I (354) boot: Loaded app from partition at offset 0x10000
+I (354) boot: Disabling RNG early entropy source...
+I (373) hex_psram: vendor id    : 0x0d (AP)
+I (373) hex_psram: Latency      : 0x01 (Fixed)
+I (373) hex_psram: DriveStr.    : 0x00 (25 Ohm)
+I (374) hex_psram: dev id       : 0x03 (generation 4)
+I (379) hex_psram: density      : 0x07 (256 Mbit)
+I (383) hex_psram: good-die     : 0x06 (Pass)
+I (387) hex_psram: SRF          : 0x02 (Slow Refresh)
+I (392) hex_psram: BurstType    : 0x00 ( Wrap)
+I (396) hex_psram: BurstLen     : 0x03 (2048 Byte)
+I (401) hex_psram: BitMode      : 0x01 (X16 Mode)
+I (405) hex_psram: Readlatency  : 0x04 (14 cycles@Fixed)
+I (410) hex_psram: DriveStrength: 0x00 (1/1)
+I (414) MSPI DQS: tuning success, best phase id is 0
+I (591) MSPI DQS: tuning success, best delayline id is 17
+I (592) esp_psram: Found 32MB PSRAM device
+I (592) esp_psram: Speed: 200MHz
+I (593) hex_psram: psram CS IO is dedicated
+I (596) cpu_start: Multicore app
