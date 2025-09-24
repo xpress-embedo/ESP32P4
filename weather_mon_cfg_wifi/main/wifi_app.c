@@ -287,8 +287,8 @@ static void wifi_app_task(void *pvParameter)
 
           break;
         case WIFI_APP_MSG_STA_DISCONNECTED:
-          ESP_LOGI(TAG,"WIFI_APP_MSG_STA_DISCONNECTED");
-
+          // Send the information to main module that device is disconnected from Router
+          main_send_event( MAIN_EV_STA_DISCONNECTED, NULL );
           // send message to mqtt application regarding disconnection
           // mqtt_app_send_msg( MQTT_APP_MSG_STOP_CONNECTION );
 

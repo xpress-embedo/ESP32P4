@@ -217,6 +217,7 @@ static void gui_wifi_disconnected( void *data )
   // update the connect icon status to disconnected
   lv_img_set_src( ui_imgWiFiStatus1,  &ui_img_wifi_disconnected_png );
   lv_img_set_src( ui_imgWiFiStatus2,  &ui_img_wifi_disconnected_png );
+  gui_menu_mng_wifi_disconnected();
   GUI_UNLOCK();
   ESP_LOGI( TAG, "gui_wifi_disconnected" );
 }

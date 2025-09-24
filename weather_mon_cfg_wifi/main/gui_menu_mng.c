@@ -11,8 +11,8 @@
 #include "gui_menu_mng.h"
 
 #include "esp_log.h"
-
-#include "wifi_sta_mng.h"
+#include "wifi_app.h"   // included to get some macros definition, but make sure to not call any function directly
+#include "main.h"
 
 // Private Macros
 // un-comment this macro to use Menu in sidebar
@@ -27,7 +27,7 @@ static lv_obj_t * cb_wifi  = NULL;              // object pointer for drop down 
 static w_button_t * connect_btn;                // object pointer for connect button
 static w_button_t * disconnect_btn;             // object pointer for disconnect button
 static w_button_t * rescan_btn;                 // object pointer for re-scan button
-static char wifi_ssid[WIFI_SSID_MAX_LEN] = { 0 };
+static char wifi_ssid[WIFI_MAX_SSID_LEN] = { 0 };
 
 // Enumerations
 typedef enum
@@ -448,7 +448,7 @@ static void btn_connect_event_cb( lv_event_t * e )
   {
     // lv_obj_t * btn = lv_event_get_target( e );
     ESP_LOGI( TAG, "Connect Button Clicked" );
-    lv_dropdown_get_selected_str( cb_wifi, wifi_ssid, WIFI_SSID_MAX_LEN );
+    lv_dropdown_get_selected_str( cb_wifi, wifi_ssid, WIFI_MAX_SSID_LEN );
     // wifi_sta_start_connecting( wifi_ssid, lv_textarea_get_text(txt_box_wifi_pswd) );
     // handle connect button click
   }
@@ -465,8 +465,8 @@ static void btn_disconnect_event_cb( lv_event_t * e )
   {
     // lv_obj_t * btn = lv_event_get_target( e );
     ESP_LOGI( TAG, "Disconnect Button Clicked" );
-    // wifi_sta_start_disconnecting();
-    // handle disconnect button click
+    // send this event to main module and it will handle the disconnection
+    main_send_event( MAIN_EV_GUI_REQ_USER_DISCONNECT, NULL );
   }
 }
 

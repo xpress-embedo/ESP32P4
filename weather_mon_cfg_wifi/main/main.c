@@ -126,6 +126,19 @@ void app_main(void)
           // need to add a check inside the module, to not start again if already started
           influxdb_start();
           break;
+        case MAIN_EV_GUI_REQ_USER_DISCONNECT:
+          ESP_LOGI( TAG, "User Requested WiFi Disconnect" );
+          // send the event to wifi app to disconnect, same proceduure as from http_server
+          wifi_app_send_msg( WIFI_APP_MSG_USR_REQUESTED_STA_DISCONNECT );
+          break;
+        case MAIN_EV_STA_DISCONNECTED:
+          // this could happen either someone presses the disconnect button from GUI
+          // or someone presses the disconnect button from HTTP server
+          gui_send_event( GUI_MNG_EV_WIFI_DISCONNECTED, NULL );
+          break;
+        case MAIN_EV_GUI_REQ_USER_CONNECT:
+          ESP_LOGI( TAG, "User Requested WiFi Connect" );
+          break;
         default:
           ESP_LOGE( TAG, "Invalid Event Received" );
           break;
