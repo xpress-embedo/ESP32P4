@@ -18,5 +18,7 @@
 // Public Function Prototypes
 void gui_menu_mng_init( void );
 void gui_menu_mng_wifi_ap_available( char * wifi_ap_list );
+void gui_menu_mng_wifi_connected( void );
+void gui_menu_mng_wifi_disconnected( void );
 
 #endif /* MAIN_GUI_MNG_CFG_H_ */

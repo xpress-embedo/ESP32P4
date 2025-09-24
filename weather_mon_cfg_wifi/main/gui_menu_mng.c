@@ -20,10 +20,13 @@
 
 // Private Variables
 static const char *TAG = "GUI_MENU";
-static lv_obj_t * menu = NULL;                 // object pointer for the whole menu
-static lv_obj_t * kb_wifi_pswd = NULL;         // object pointer for the keyboard
-static lv_obj_t * txt_box_wifi_pswd = NULL;    // object pointer for the text area to enter WiFi password
-static lv_obj_t * cb_wifi  = NULL;             // object pointer for drop down box
+static lv_obj_t * menu = NULL;                  // object pointer for the whole menu
+static lv_obj_t * kb_wifi_pswd = NULL;          // object pointer for the keyboard
+static lv_obj_t * txt_box_wifi_pswd = NULL;     // object pointer for the text area to enter WiFi password
+static lv_obj_t * cb_wifi  = NULL;              // object pointer for drop down box
+static w_button_t * connect_btn;                // object pointer for connect button
+static w_button_t * disconnect_btn;             // object pointer for disconnect button
+static w_button_t * rescan_btn;                 // object pointer for re-scan button
 static char wifi_ssid[WIFI_SSID_MAX_LEN] = { 0 };
 
 // Enumerations
@@ -69,6 +72,26 @@ void gui_menu_mng_wifi_ap_available( char * wifi_ap_list )
   lv_obj_remove_flag( ui_imgSetting, LV_OBJ_FLAG_HIDDEN );
   // updating the drop down list
   lv_dropdown_set_options( cb_wifi, wifi_ap_list );
+}
+
+void gui_menu_mng_wifi_connected( void )
+{
+  // enable the connect button and disable the disconnect button
+  lv_obj_clear_flag( connect_btn->btn, LV_OBJ_FLAG_CLICKABLE );
+  lv_obj_add_state( connect_btn->btn, LV_STATE_DISABLED );
+
+  lv_obj_add_flag( disconnect_btn->btn, LV_OBJ_FLAG_CLICKABLE );
+  lv_obj_remove_state( disconnect_btn->btn, LV_STATE_DISABLED );
+}
+
+void gui_menu_mng_wifi_disconnected( void )
+{
+  // disable the disconnect button and enable the connect button
+  lv_obj_clear_flag( disconnect_btn->btn, LV_OBJ_FLAG_CLICKABLE );
+  lv_obj_add_state( disconnect_btn->btn, LV_STATE_DISABLED );
+
+  lv_obj_add_flag( connect_btn->btn, LV_OBJ_FLAG_CLICKABLE );
+  lv_obj_remove_state( connect_btn->btn, LV_STATE_DISABLED );
 }
 
 // Private Function Definitions
@@ -230,6 +253,9 @@ static void create_menu_settings( void )
   lv_style_set_text_color(&style_menu_dark, lv_color_white());
   lv_style_set_text_font(&style_menu_dark, &lv_font_montserrat_20);
   */
+
+  // this function will update the button styling for disconnected state
+  gui_menu_mng_wifi_disconnected();
 }
 
 /**
@@ -338,13 +364,9 @@ static void create_wifi_settings_page( lv_obj_t * parent )
   lv_obj_set_flex_align( cont_btn, LV_FLEX_ALIGN_SPACE_EVENLY, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_SPACE_EVENLY );
   lv_obj_remove_flag( cont_btn, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE );
 
-  // w_button_t * connect_btn = w_button_create( cont_btn, "Connect", NULL );
-  // w_button_t * disconnect_btn = w_button_create( cont_btn, "Disconnect", NULL );
-  // w_button_t * rescan_btn = w_button_create( cont_btn, "Re Scan", NULL );
-  // NOTE: using the below lines to avoid warnings
-  w_button_create( cont_btn, "Connect", btn_connect_event_cb );
-  w_button_create( cont_btn, "Disconnect", btn_disconnect_event_cb );
-  w_button_create( cont_btn, "Re Scan", btn_rescan_event_cb );
+  connect_btn = w_button_create( cont_btn, "Connect", btn_connect_event_cb );
+  disconnect_btn = w_button_create( cont_btn, "Disconnect", btn_disconnect_event_cb );
+  rescan_btn = w_button_create( cont_btn, "Re Scan", btn_rescan_event_cb );
 
   // 4. Keyboard (hidden by default, shown when text area is focused)
   kb_wifi_pswd = lv_keyboard_create( main_cont );

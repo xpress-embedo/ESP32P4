@@ -182,6 +182,8 @@ static void gui_wifi_connected( void *data )
   // update the connect icon status to wifi connected with no internet
   lv_img_set_src( ui_imgWiFiStatus1,  &ui_img_wifi_png );
   lv_img_set_src( ui_imgWiFiStatus2,  &ui_img_wifi_png );
+  // when connected to router, update the connect and disconnect button status
+  gui_menu_mng_wifi_connected();
   GUI_UNLOCK();
   ESP_LOGI( TAG, "gui_wifi_connected" );
 }
