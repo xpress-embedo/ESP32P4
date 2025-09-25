@@ -347,6 +347,11 @@ static void wifi_app_task(void *pvParameter)
           wifi_app_send_msg( WIFI_APP_MSG_START_HTTP_SERVER );
 
           break;
+        case WIFI_APP_MSG_USR_REQUESTED_AP_LIST_RESCAN:
+          ESP_LOGI(TAG, "WIFI_APP_MSG_USR_REQUESTED_AP_LIST_RESCAN");
+          // scan for the available list of access points
+          wifi_app_scan_ap_list();
+          break;
         default:
           break;
       }

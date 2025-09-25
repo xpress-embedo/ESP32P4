@@ -78,24 +78,42 @@ void gui_menu_mng_wifi_ap_available( char * wifi_ap_list )
   lv_dropdown_set_options( cb_wifi, wifi_ap_list );
 }
 
+/**
+ * @brief Updates the graphical states of widgest when WiFi is connected
+ * @param  none
+ */
 void gui_menu_mng_wifi_connected( void )
 {
-  // enable the connect button and disable the disconnect button
+  // device is connected to router, so connect button should be disabled
   lv_obj_clear_flag( connect_btn->btn, LV_OBJ_FLAG_CLICKABLE );
   lv_obj_add_state( connect_btn->btn, LV_STATE_DISABLED );
 
+  // disable button should be active
   lv_obj_add_flag( disconnect_btn->btn, LV_OBJ_FLAG_CLICKABLE );
   lv_obj_remove_state( disconnect_btn->btn, LV_STATE_DISABLED );
+
+  // re-scan button should be deactivated (rescanning is allowed only in disconnected state)
+  lv_obj_clear_flag( rescan_btn->btn, LV_OBJ_FLAG_CLICKABLE );
+  lv_obj_add_state( rescan_btn->btn, LV_STATE_DISABLED );
 }
 
+/**
+ * @brief Updates the graphical states of widgest when WiFi is disconnected
+ * @param  none
+ */
 void gui_menu_mng_wifi_disconnected( void )
 {
-  // disable the disconnect button and enable the connect button
+  // device is not connected to router, so disconnect button should be disabled
   lv_obj_clear_flag( disconnect_btn->btn, LV_OBJ_FLAG_CLICKABLE );
   lv_obj_add_state( disconnect_btn->btn, LV_STATE_DISABLED );
 
+  // connect button should be active
   lv_obj_add_flag( connect_btn->btn, LV_OBJ_FLAG_CLICKABLE );
   lv_obj_remove_state( connect_btn->btn, LV_STATE_DISABLED );
+
+  // re-scan button should be active (rescanning is allowed only in disconnected state)
+  lv_obj_add_flag( rescan_btn->btn, LV_OBJ_FLAG_CLICKABLE );
+  lv_obj_remove_state( rescan_btn->btn, LV_STATE_DISABLED );
 }
 
 // Private Function Definitions
@@ -522,7 +540,8 @@ static void btn_rescan_event_cb( lv_event_t * e )
   {
     // lv_obj_t * btn = lv_event_get_target( e );
     ESP_LOGI( TAG, "Re-Scan Button Clicked" );
-    // handle re-scan button click
+    // send this event to main module and it will handle the re-scan
+    main_send_event( MAIN_EV_AP_LIST_RESCAN, NULL );
   }
 }
 

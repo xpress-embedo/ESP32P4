@@ -110,6 +110,11 @@ void app_main(void)
         case MAIN_EV_AP_LIST_AVAILABLE:
           gui_send_event( GUI_MNG_EV_WIFI_AP_LIST_AVAILABLE, main_msg.data );
           break;
+        case MAIN_EV_AP_LIST_RESCAN:
+          ESP_LOGI( TAG, "User Requested WiFi AP List Re-Scan" );
+          // send the event to wifi app to re-scan for available APs
+          wifi_app_send_msg( WIFI_APP_MSG_USR_REQUESTED_AP_LIST_RESCAN );
+          break;
         case MAIN_EV_STA_CONNECTED:
           ESP_LOGI( TAG, "WiFi Connected, now synchronizing with NTP server." );
           gui_send_event( GUI_MNG_EV_WIFI_CONNECTED, NULL );
