@@ -55,6 +55,15 @@ void influxdb_start( void )
   else
   {
     ESP_LOGW( TAG, "InfludxDB was already initialized" );
+    // we are here because of re-connection of WiFi
+    // so we need to cleanup the previous client if any
+    if ( client != NULL )
+    {
+      // cleanup the previous client
+      esp_http_client_cleanup(client);
+      // reset the client handle and then in send event function esp_http_client_init will create a new client
+      client = NULL;
+    }
   }
 }
 
