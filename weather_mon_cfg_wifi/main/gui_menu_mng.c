@@ -11,8 +11,9 @@
 #include "gui_menu_mng.h"
 
 #include "esp_log.h"
-#include "wifi_app.h"   // included to get some macros definition, but make sure to not call any function directly
+#include "wifi_app.h"     // included to get some macros definition, but make sure to not call any function directly
 #include "main.h"
+#include "bsp/esp-bsp.h"  // for display brightness and contrast functions
 
 // Private Macros
 // un-comment this macro to use Menu in sidebar
@@ -527,6 +528,9 @@ static void check_box_show_pswd_event_cb( lv_event_t * e )
 static void display_brightness_event( int32_t value )
 {
   ESP_LOGI( TAG, "Display Brightness: %d", value);
+  // clamp the value between 0 and 100
+  value = value < 0 ? 0 : (value > 100 ? 100 : value);
+  bsp_display_brightness_set( value );
 }
 
 /**
