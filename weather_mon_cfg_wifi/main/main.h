@@ -39,9 +39,9 @@ typedef enum
   MAIN_EV_AP_LIST_AVAILABLE,
   MAIN_EV_STA_CONNECTED,              // Connected to WiFi Router
   MAIN_EV_START_INFLUXDB,
+  MAIN_EV_GUI_REQ_USER_CONNECT,       // User has requested connect from GUI
   MAIN_EV_GUI_REQ_USER_DISCONNECT,    // User has requested disconnect from GUI
   MAIN_EV_STA_DISCONNECTED,           // Disconnected from WiFi Router
-  MAIN_EV_GUI_REQ_USER_CONNECT,       // User has requested connect from GUI
   MAIN_EV_MAX,
 } main_event_t;
 

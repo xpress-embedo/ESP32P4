@@ -328,6 +328,7 @@ static void create_wifi_settings_page( lv_obj_t * parent )
   lv_obj_set_align( txt_box_wifi_pswd, LV_ALIGN_CENTER );
   lv_textarea_set_placeholder_text( txt_box_wifi_pswd, "Enter Password" );
   lv_textarea_set_password_mode( txt_box_wifi_pswd, true );
+  lv_textarea_set_max_length( txt_box_wifi_pswd, 64 );
 
   lv_obj_t * check_box_show_pswd = lv_checkbox_create( cont_pswd );
   lv_checkbox_set_text( check_box_show_pswd, "Show Password" );
@@ -450,7 +451,22 @@ static void btn_connect_event_cb( lv_event_t * e )
     ESP_LOGI( TAG, "Connect Button Clicked" );
     lv_dropdown_get_selected_str( cb_wifi, wifi_ssid, WIFI_MAX_SSID_LEN );
     // wifi_sta_start_connecting( wifi_ssid, lv_textarea_get_text(txt_box_wifi_pswd) );
-    // handle connect button click
+    // Update the WiFi Network Configuration and let the WiFi Application Know
+    wifi_config_t * wifi_config_ptr = wifi_app_get_wifi_config();
+    // If no memory is allocated to wifi_config then we can Store Access Fault
+    if ( !wifi_config_ptr )
+    {
+      ESP_LOGE(TAG, "wifi_config is NULL!");
+    }
+    else
+    {
+      memset( wifi_config_ptr, 0x00, sizeof(wifi_config_t) );
+      strncpy( (char*)wifi_config_ptr->sta.ssid, wifi_ssid, sizeof(wifi_config_ptr->sta.ssid)-1 );
+      strncpy( (char*)wifi_config_ptr->sta.password, lv_textarea_get_text(txt_box_wifi_pswd), sizeof(wifi_config_ptr->sta.password)-1 );
+      ESP_LOGI( TAG, "WiFi Config Updated: SSID: %s, Password: %s", wifi_config_ptr->sta.ssid, wifi_config_ptr->sta.password );
+      // send this event to main module and it will handle the connection
+      main_send_event( MAIN_EV_GUI_REQ_USER_CONNECT, NULL );
+    }
   }
 }
 
