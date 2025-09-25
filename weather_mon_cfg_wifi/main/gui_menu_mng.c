@@ -620,6 +620,8 @@ static lv_obj_t * create_slider( lv_obj_t * parent, const char * icon, const cha
 
   lv_obj_add_event_cb( slider, generic_slider_event_cb, LV_EVENT_VALUE_CHANGED, (void *)cb );
 
+  lv_obj_clear_flag( slider, LV_OBJ_FLAG_GESTURE_BUBBLE );
+
   // if no icon is provided, make the slider start in a new row
   if ( icon == NULL )
   {
