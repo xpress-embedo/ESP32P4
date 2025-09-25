@@ -28,6 +28,7 @@
 // Private Variables
 static const char *TAG = "MAIN";
 static sensor_data_t sensor_data = { .sensor_idx = 0 };
+static bool sntp_initialized = false;
 static bool sntp_connect_status = false;
 static QueueHandle_t main_q_event = NULL;
 
@@ -257,10 +258,16 @@ static void measure_temp_humidity( void )
  */
 static void app_sntp_init( void )
 {
+  if ( sntp_initialized )
+  {
+    ESP_LOGW( TAG, "SNTP already initialized" );
+    return;
+  }
   ESP_LOGI( TAG, "Initializing SNTP" );
   esp_sntp_setoperatingmode( SNTP_OPMODE_POLL );
   esp_sntp_setservername( 0, "pool.ntp.org" );  // set the SNTP server
   esp_sntp_init();
+  sntp_initialized = true;
 }
 
 /**
