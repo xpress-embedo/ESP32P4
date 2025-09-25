@@ -17,6 +17,7 @@ static const char TAG[] = "NVS";
 
 // NVS name space used for station mode credentials
 const char app_nvs_sta_creds_namespace[] = "stacreds";
+const char app_nvs_display_info_namespace[] = "displayinfo";
 
 // Public Function Definition
 /*
@@ -172,6 +173,127 @@ esp_err_t nvs_app_clear_sta_creds( void )
   nvs_close(handle);
 
   ESP_LOGI(TAG, "app_nvs_clear_sta_creds: returned ESP_OK");
+
+  return ESP_OK;
+}
+
+/*
+ * Saves Display Information to NVS
+ * @return ESP_OK if successful
+ */
+/*
+ * Saves Display Information (Brightness and Contrast) to NVS
+ * @return ESP_OK if successful
+ */
+esp_err_t nvs_app_save_display_information( uint8_t brightness, uint8_t contrast )
+{
+  nvs_handle handle;
+  esp_err_t esp_err;
+  ESP_LOGI( TAG, "nvs_app_save_display_information: Saving brightness and contrast to flash" );
+
+  esp_err = nvs_open( app_nvs_display_info_namespace, NVS_READWRITE, &handle );
+  if ( esp_err != ESP_OK )
+  {
+    ESP_LOGI( TAG, "nvs_app_save_display_information: Error (%s) opening NVS handle.", esp_err_to_name(esp_err) );
+    return esp_err;
+  }
+
+  // Set Brightness
+  esp_err = nvs_set_u8( handle, "brightness", brightness );
+  if ( esp_err != ESP_OK )
+  {
+    ESP_LOGI(TAG, "nvs_app_save_display_information: Error (%s) setting brightness to NVS.", esp_err_to_name(esp_err));
+    return esp_err;
+  }
+
+  // Set Contrast
+  esp_err = nvs_set_u8( handle, "contrast", contrast );
+  if ( esp_err != ESP_OK )
+  {
+    ESP_LOGI( TAG, "nvs_app_save_display_information: Error (%s) setting contrast to NVS.", esp_err_to_name(esp_err) );
+    return esp_err;
+  }
+
+  // Commit Display Info
+  esp_err = nvs_commit( handle );
+  if( esp_err != ESP_OK )
+  {
+    ESP_LOGI( TAG, "nvs_app_save_display_information: Error (%s) committing display info to NVS.", esp_err_to_name(esp_err) );
+    return esp_err;
+  }
+
+  nvs_close( handle );
+  ESP_LOGI( TAG, "nvs_app_save_display_information: Saved Brightness: %d, Contrast: %d", brightness, contrast );
+  return ESP_OK;
+}
+
+/*
+ * Loads Display Information (Brightness and Contrast) from NVS
+ * @return true if both brightness and contrast were found
+ */
+bool nvs_app_load_display_information( uint8_t *brightness, uint8_t *contrast )
+{
+  nvs_handle handle;
+  esp_err_t esp_err;
+  ESP_LOGI( TAG, "nvs_app_load_display_information: Loading brightness and contrast from flash" );
+
+  esp_err = nvs_open( app_nvs_display_info_namespace, NVS_READONLY, &handle );
+  if ( esp_err != ESP_OK )
+  {
+    ESP_LOGI( TAG, "nvs_app_load_display_information: Error (%s) opening NVS handle.", esp_err_to_name(esp_err) );
+    return false;
+  }
+
+  // Load Brightness
+  esp_err = nvs_get_u8( handle, "brightness", brightness );
+  if ( esp_err != ESP_OK )
+  {
+    ESP_LOGI( TAG, "nvs_app_load_display_information: (%s) brightness not found in NVS", esp_err_to_name(esp_err) );
+    nvs_close( handle);
+    return false;
+  }
+
+  // Load Contrast
+  esp_err = nvs_get_u8( handle, "contrast", contrast );
+  if ( esp_err != ESP_OK )
+  {
+    ESP_LOGI( TAG, "nvs_app_load_display_information: (%s) contrast not found in NVS", esp_err_to_name(esp_err) );
+    nvs_close( handle );
+    return false;
+  }
+
+  nvs_close( handle );
+  ESP_LOGI( TAG, "nvs_app_load_display_information: Loaded Brightness: %d, Contrast: %d", *brightness, *contrast );
+  return true;
+}
+
+/*
+ * Clears Display Information (Brightness and Contrast) from NVS
+ * @return ESP_OK if successful
+ */
+esp_err_t nvs_app_clear_display_information( void )
+{
+  nvs_handle handle;
+  esp_err_t esp_err;
+  ESP_LOGI( TAG, "nvs_app_clear_display_information: Clearing brightness and contrast from flash" );
+
+  esp_err = nvs_open( app_nvs_display_info_namespace, NVS_READWRITE, &handle );
+  if ( esp_err != ESP_OK )
+  {
+    ESP_LOGI( TAG, "nvs_app_clear_display_information: Error (%s) opening NVS handle", esp_err_to_name(esp_err) );
+    return esp_err;
+  }
+
+  // Erase Display Info
+  esp_err = nvs_erase_all( handle );
+  if ( esp_err != ESP_OK )
+  {
+    ESP_LOGI( TAG, "nvs_app_clear_display_information: Error (%s) erasing display info", esp_err_to_name(esp_err) );
+    return esp_err;
+  }
+
+  nvs_close( handle );
+  ESP_LOGI( TAG, "nvs_app_clear_display_information: returned ESP_OK" );
 
   return ESP_OK;
 }

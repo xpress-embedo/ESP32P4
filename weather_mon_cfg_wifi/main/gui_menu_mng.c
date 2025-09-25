@@ -10,6 +10,7 @@
 #include "widgets.h"
 #include "gui_menu_mng.h"
 
+#include "nvs_app.h"
 #include "esp_log.h"
 #include "wifi_app.h"     // included to get some macros definition, but make sure to not call any function directly
 #include "main.h"
@@ -29,6 +30,8 @@ static w_button_t * connect_btn;                // object pointer for connect bu
 static w_button_t * disconnect_btn;             // object pointer for disconnect button
 static w_button_t * rescan_btn;                 // object pointer for re-scan button
 static char wifi_ssid[WIFI_MAX_SSID_LEN] = { 0 };
+static uint8_t disp_brightness = 50;             // default brightness
+static uint8_t disp_contrast = 50;               // default contrast
 
 // Enumerations
 typedef enum
@@ -157,8 +160,22 @@ static void create_menu_settings( void )
   lv_obj_t * disp_page = lv_menu_page_create( menu, "Dislay Settings" );
   lv_menu_separator_create( disp_page );
   lv_obj_t * disp_section = lv_menu_section_create( disp_page );
-  create_slider( disp_section, LV_SYMBOL_SETTINGS, "Brightness", 0, 100, 50, display_brightness_event );
-  create_slider( disp_section, LV_SYMBOL_SETTINGS, "Contrast", 0, 100, 30, display_contrast_event);
+  // before creating the slider, load the saved brightness and contrast values
+  nvs_app_load_display_information( &disp_brightness, &disp_contrast );
+  // if someone accidently saved wrong values, then reset to default
+  if ( (disp_brightness > 100) || (disp_brightness < 10) )
+  {
+    disp_brightness = 50;
+  }
+  // set the display brightness to saved value
+  bsp_display_brightness_set( disp_brightness );
+  // contrast is not implemented in BSP, so just clamp the value
+  if ( (disp_contrast > 100) || (disp_contrast < 10) )
+  {
+    disp_contrast = 50;
+  }
+  create_slider( disp_section, LV_SYMBOL_SETTINGS, "Brightness", 0, 100, disp_brightness, display_brightness_event );
+  create_slider( disp_section, LV_SYMBOL_SETTINGS, "Contrast", 0, 100, disp_contrast, display_contrast_event );
 
   // WiFi Sub Page
   lv_obj_t * wifi_page = lv_menu_page_create( menu, "WiFi Settings" );
@@ -403,6 +420,13 @@ static void generic_slider_event_cb( lv_event_t * e )
       cb( val );
     }
   }
+  else if ( code == LV_EVENT_RELEASED )
+  {
+    // TODO: not the correct way to do this, need to find a better way
+    // save the brightness value to NVS
+    ESP_LOGW( TAG, "Saving Brightness: %d, Contrast: %d to NVS", disp_brightness, disp_contrast );
+    nvs_app_save_display_information( disp_brightness, disp_contrast );
+  }
 }
 
 /**
@@ -528,8 +552,9 @@ static void check_box_show_pswd_event_cb( lv_event_t * e )
 static void display_brightness_event( int32_t value )
 {
   ESP_LOGI( TAG, "Display Brightness: %d", value);
-  // clamp the value between 0 and 100
-  value = value < 0 ? 0 : (value > 100 ? 100 : value);
+  // clamp the value between 10 and 100
+  value = value < 10 ? 10 : (value > 100 ? 100 : value);
+  disp_brightness = (uint8_t)value;
   bsp_display_brightness_set( value );
 }
 
@@ -540,6 +565,9 @@ static void display_brightness_event( int32_t value )
 static void display_contrast_event( int32_t value )
 {
   ESP_LOGI( TAG, "Display Contrast: %d", value);
+  // clamp the value between 10 and 100
+  value = value < 10 ? 10 : (value > 100 ? 100 : value);
+  disp_contrast = (uint8_t)value;
 }
 
 /**
@@ -618,7 +646,7 @@ static lv_obj_t * create_slider( lv_obj_t * parent, const char * icon, const cha
   lv_obj_set_style_bg_color( slider, lv_color_hex(0x708090), LV_PART_KNOB | LV_STATE_DEFAULT );
   lv_obj_set_style_bg_opa( slider, 255, LV_PART_KNOB | LV_STATE_DEFAULT );
 
-  lv_obj_add_event_cb( slider, generic_slider_event_cb, LV_EVENT_VALUE_CHANGED, (void *)cb );
+  lv_obj_add_event_cb( slider, generic_slider_event_cb, LV_EVENT_ALL, (void *)cb );
 
   lv_obj_clear_flag( slider, LV_OBJ_FLAG_GESTURE_BUBBLE );
 
