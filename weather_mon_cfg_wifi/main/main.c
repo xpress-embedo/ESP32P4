@@ -191,7 +191,14 @@ BaseType_t main_send_event( main_event_t event, void *ptr_data )
   {
     msg.event_id  = event;
     msg.data      = ptr_data;
-    status = xQueueSend( main_q_event, &msg, portMAX_DELAY );
+    if ( NULL == main_q_event )
+    {
+      ESP_LOGE( TAG, "Main Queue Problem" );
+    }
+    else
+    {
+      status = xQueueSend( main_q_event, &msg, portMAX_DELAY );
+    }
   }
   return status;
 }

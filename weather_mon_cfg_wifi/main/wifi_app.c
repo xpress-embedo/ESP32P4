@@ -111,9 +111,19 @@ void wifi_app_start( void )
 
 BaseType_t wifi_app_send_msg( wifi_app_msg_e msg_id )
 {
+  BaseType_t status = pdFALSE;
   wifi_app_queue_msg_t msg;
   msg.msg_id = msg_id;
-  return xQueueSend( wifi_app_q_handle, &msg, portMAX_DELAY );
+
+  if ( NULL == wifi_app_q_handle )
+  {
+    ESP_LOGE( TAG, "wifi_app_q_handle is NULL" );
+  }
+  else
+  {
+    status = xQueueSend( wifi_app_q_handle, &msg, portMAX_DELAY );
+  }
+  return status;
 }
 
 /*

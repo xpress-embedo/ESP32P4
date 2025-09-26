@@ -29,7 +29,7 @@ static const char *TAG = "InfluxDB";
 static const char *influxdb_url = INFLUXDB_URL;
 static const char *influxdb_org = INFLUXDB_ORG;
 static const char *influxdb_bucket = INFLUXDB_BUCKET;
-static QueueHandle_t influxdb_event = NULL;
+static QueueHandle_t influxdb_q_event = NULL;
 static bool influxdb_init = false;
 static esp_http_client_handle_t client = NULL;
 
@@ -44,8 +44,8 @@ void influxdb_start( void )
   {
     ESP_LOGI( TAG, "Starting InfluxDB Task" );
     // create message queue with the length THINGSPEAK_EVENT_QUEUE_LEN
-    influxdb_event = xQueueCreate( INFLUXDB_EVENT_QUEUE_LEN, sizeof(influxdb_q_msg_t) );
-    if( influxdb_event == NULL )
+    influxdb_q_event = xQueueCreate( INFLUXDB_EVENT_QUEUE_LEN, sizeof(influxdb_q_msg_t) );
+    if( influxdb_q_event == NULL )
     {
       ESP_LOGE(TAG, "Unable to Create Queue");
     }
@@ -82,7 +82,14 @@ BaseType_t influxdb_send_event( influxdb_event_t event, uint8_t *pData )
   {
     msg.event_id  = event;
     msg.data      = pData;
-    status = xQueueSend( influxdb_event, &msg, portMAX_DELAY );
+    if ( NULL == influxdb_q_event )
+    {
+      ESP_LOGE( TAG, "InfluxDB Queue Problem" );
+    }
+    else
+    {
+      status = xQueueSend( influxdb_q_event, &msg, portMAX_DELAY );
+    }
   }
   return status;
 }
@@ -102,7 +109,7 @@ static void influxdb_task( void *pvParameters )
   while( 1 )
   {
     // Wait for events posted in Queue
-    if( xQueueReceive(influxdb_event, &msg, portMAX_DELAY) )
+    if( xQueueReceive(influxdb_q_event, &msg, portMAX_DELAY) )
     {
       // the below is the code to handle the state machine
       if( INFLUXDB_EV_NONE != msg.event_id )

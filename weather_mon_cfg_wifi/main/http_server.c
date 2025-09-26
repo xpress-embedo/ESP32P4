@@ -99,11 +99,21 @@ void http_server_stop(void)
  * @param msg_id Message ID from the http_server_msg_e enum
  * @return pdTRUE if an item was successfully sent to the queue, otherwise pdFALSE
  */
-BaseType_t http_server_monitor_send_msg(http_server_msg_e msg_id)
+BaseType_t http_server_monitor_send_msg( http_server_msg_e msg_id )
 {
+  BaseType_t status = pdFALSE;
   http_server_q_msg_t msg;
+  
   msg.msg_id = msg_id;
-  return xQueueSend(http_server_monitor_q_handle, &msg, portMAX_DELAY );
+  if ( NULL == http_server_monitor_q_handle )
+  {
+    ESP_LOGE( TAG, "http_server_monitor_q_handle is NULL" );
+  }
+  else
+  {
+    status = xQueueSend( http_server_monitor_q_handle, &msg, portMAX_DELAY );
+  }
+  return status;
 }
 
 // Private Function Definitions

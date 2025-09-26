@@ -59,7 +59,14 @@ BaseType_t gui_send_event( gui_mng_event_t event, void *pData )
   {
     msg.event_id  = event;
     msg.data      = pData;
-    status = xQueueSend( gui_q_event, &msg, portMAX_DELAY );
+    if ( NULL == gui_q_event )
+    {
+      ESP_LOGE( TAG, "GUI Queue Problem" );
+    }
+    else
+    {
+      status = xQueueSend( gui_q_event, &msg, portMAX_DELAY );
+    }
   }
   return status;
 }
