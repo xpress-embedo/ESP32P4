@@ -108,6 +108,11 @@ void app_main(void)
           gui_send_event( GUI_MNG_EV_WIFI_CONNECTING, NULL );
           break;
         case MAIN_EV_AP_LIST_AVAILABLE:
+          if ( main_msg.data == NULL )
+          {
+            ESP_LOGE( TAG, "MAIN_EV_AP_LIST_AVAILABLE: Invalid Data Pointer" );
+            break;
+          }
           gui_send_event( GUI_MNG_EV_WIFI_AP_LIST_AVAILABLE, main_msg.data );
           break;
         case MAIN_EV_AP_LIST_RESCAN:
@@ -147,6 +152,9 @@ void app_main(void)
           // this could happen either someone presses the disconnect button from GUI
           // or someone presses the disconnect button from HTTP server
           gui_send_event( GUI_MNG_EV_WIFI_DISCONNECTED, NULL );
+          break;
+        case MAIN_EV_DNS_REFRESH:
+          wifi_app_send_msg( WIFI_APP_MSG_DNS_REFRESH );
           break;
         default:
           ESP_LOGE( TAG, "Invalid Event Received" );

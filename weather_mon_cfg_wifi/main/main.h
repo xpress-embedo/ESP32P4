@@ -43,6 +43,7 @@ typedef enum
   MAIN_EV_GUI_REQ_USER_CONNECT,       // User has requested connect from GUI
   MAIN_EV_GUI_REQ_USER_DISCONNECT,    // User has requested disconnect from GUI
   MAIN_EV_STA_DISCONNECTED,           // Disconnected from WiFi Router
+  MAIN_EV_DNS_REFRESH,                // Force DNS Refresh Timeout
   MAIN_EV_MAX,
 } main_event_t;
 

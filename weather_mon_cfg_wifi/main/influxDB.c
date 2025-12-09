@@ -181,6 +181,10 @@ static void influxdb_send_temp_humidity( void )
   else
   {
     ESP_LOGE(TAG, "HTTP POST request failed: %s", esp_err_to_name(err));
+    esp_http_client_cleanup(client);
+    client = NULL;
+    // send event to refresh the DNS
+    main_send_event( MAIN_EV_DNS_REFRESH, NULL );
   }
 
   // If you want to cleanup the client after each request, uncomment the below line

@@ -60,6 +60,7 @@ static void wifi_app_soft_ap_config( void );
 static void wifi_app_connect_sta( void );
 static void wifi_app_scan_ap_list( void );
 static void wifi_app_event_handler( void *arg, esp_event_base_t event_base, int32_t event_id, void * event_data );
+static void wifi_dns_refresh( void );
 
 #if 0
 // Test Code to Log DNS Info
@@ -88,6 +89,12 @@ void log_dns_info()
 
 
 // Public Function Definitions
+
+/**
+ * @brief wifi_app_start
+ *       Start the WiFi Application Task
+ * @param  
+ */
 void wifi_app_start( void )
 {
   ESP_LOGI( TAG, "Starting WiFi Application" );
@@ -109,6 +116,12 @@ void wifi_app_start( void )
   xTaskCreate(&wifi_app_task, "wifi app task", WIFI_APP_TASK_SIZE, NULL, WIFI_APP_TASK_PRIORITY, NULL);
 }
 
+/**
+ * @brief wifi_app_send_msg
+ *        Send a message to the WiFi Application Task
+ * @param msg_id 
+ * @return 
+ */
 BaseType_t wifi_app_send_msg( wifi_app_msg_e msg_id )
 {
   BaseType_t status = pdFALSE;
@@ -188,6 +201,12 @@ void wifi_app_get_mac_address( char *mac_address )
 }
 
 // Private Function Definitions
+
+/**
+ * @brief wifi_app_task
+ *        Main WiFi Application Task
+ * @param pvParameter 
+ */
 static void wifi_app_task(void *pvParameter)
 {
   wifi_app_queue_msg_t msg;
@@ -362,6 +381,11 @@ static void wifi_app_task(void *pvParameter)
           // scan for the available list of access points
           wifi_app_scan_ap_list();
           break;
+        case WIFI_APP_MSG_DNS_REFRESH:
+          ESP_LOGI(TAG, "WIFI_APP_MSG_DNS_REFRESH");
+          // Force DNS refresh timeout
+          wifi_dns_refresh();
+          break;
         default:
           break;
       }
@@ -369,7 +393,12 @@ static void wifi_app_task(void *pvParameter)
   }
 }
 
-// initialize the wifi application event handler for WiFo and IP Events
+
+/**
+ * @brief wifi_app_event_handler_init
+ *        Initializes the event handler for WiFi and IP events
+ * @param  
+ */
 static void wifi_app_event_handler_init( void )
 {
   ESP_ERROR_CHECK( esp_event_loop_create_default() );
@@ -389,6 +418,11 @@ static void wifi_app_event_handler_init( void )
                                                         &instance_ip_event) );
 }
 
+/**
+ * @brief wifi_app_default_wifi_init
+ *        Initializes the TCP/IP stack and WiFi with default configuration
+ * @param  None
+ */
 static void wifi_app_default_wifi_init( void )
 {
   // initialize TCP/IP stack
@@ -424,6 +458,11 @@ static void wifi_app_default_wifi_init( void )
   // logic for setting MAC address as hostname (ends)
 }
 
+/**
+ * @brief wifi_app_soft_ap_config
+ *        Configures the ESP32 as a Soft Access Point with static IP and DHCP server
+ * @param  None
+ */
 static void wifi_app_soft_ap_config( void )
 {
   // SoftAP- wifi access point configuration
@@ -468,9 +507,10 @@ static void wifi_app_soft_ap_config( void )
   ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_STA_POWER_SAVE));
 }
 
-/*
- * Connects the ESP32 to an external access point using the updated station
- * configuration
+/**
+ * @brief wifi_app_connect_sta
+ *       Connects the ESP32 to an external access point using the updated station
+ * @param  
  */
 static void wifi_app_connect_sta(void)
 {
@@ -491,6 +531,11 @@ static void wifi_app_connect_sta(void)
   }
 }
 
+/**
+ * @brief wifi_app_scan_ap_list
+ *        Scans for available WiFi Access Points and prepares a list of SSIDs
+ * @param  None
+ */
 static void wifi_app_scan_ap_list( void )
 {
   // Start scanning
@@ -602,27 +647,38 @@ static void wifi_app_event_handler( void *arg, esp_event_base_t event_base, int3
     {
       case IP_EVENT_STA_GOT_IP:
         ESP_LOGI( TAG, "IP_EVENT_STA_GOT_IP");
-        /*
-         * Need to change DNS because MQTT was not working, i.e. not able to connect
-         * Some points/reasons:
-         * - Router DNS works for some devices, not all
-         * - ESP32's DNS Query Format or Timing wasn't compatible
-         * - No Fallback DNS behavior
-         */
-        // log_dns_info();
-        esp_netif_dns_info_t new_dns =
-        {
-            .ip.u_addr.ip4.addr = ipaddr_addr("8.8.8.8"),
-            .ip.type = IPADDR_TYPE_V4,
-        };
-
-        esp_netif_t *netif = esp_netif_get_handle_from_ifkey("WIFI_STA_DEF");
-        esp_netif_set_dns_info(netif, ESP_NETIF_DNS_MAIN, &new_dns);
-        ESP_LOGI(TAG, "DNS manually set to 8.8.8.8");
-
+        wifi_dns_refresh();
         wifi_app_send_msg( WIFI_APP_MSG_STA_CONNECTED_GOT_IP );
         break;
     }
   }
+}
+
+/**
+ * @brief wifi_dns_refresh
+ *        Changes the DNS server to
+ */
+static void wifi_dns_refresh( void )
+{
+  /*
+  * Need to change DNS because MQTT was not working, i.e. not able to connect
+  * Some points/reasons:
+  * - Router DNS works for some devices, not all
+  * - ESP32's DNS Query Format or Timing wasn't compatible
+  * - No Fallback DNS behavior
+  */
+  // log_dns_info();
+  esp_netif_dns_info_t dns =
+  {
+    .ip.u_addr.ip4.addr = ipaddr_addr("8.8.8.8"),
+    .ip.type = IPADDR_TYPE_V4,
+  };
+  // The below two lines are same as above
+  // inet_pton(AF_INET, "8.8.8.8", &dns.ip.u_addr.ip4);
+  // dns.ip.type = ESP_IPADDR_TYPE_V4;
+  
+  esp_netif_t *esp_netif_sta = esp_netif_get_handle_from_ifkey("WIFI_STA_DEF");
+  esp_netif_set_dns_info( esp_netif_sta, ESP_NETIF_DNS_MAIN, &dns );
+  ESP_LOGI(TAG, "DNS Refreshed to 8.8.8.8");
 }
 
