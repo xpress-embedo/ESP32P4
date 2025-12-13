@@ -13,6 +13,9 @@ extern "C" {
 #endif
 
 // Public Macros
+
+// Apart from GUI Task there is also LVGL task which is handled by esp lvgl port
+// it is done inside the function "bsp_display_start" & specifically inside "ESP_LVGL_PORT_INIT_CONFIG"
 #define GUI_TASK_NAME                               "gui task"
 #define GUI_TASK_STACK_SIZE                         (1024*8)
 #define GUI_TASK_PRIORITY                           (5)
@@ -41,6 +44,8 @@ extern "C" {
 #define INFLUX_DB_TASK_PRIORITY                     (4)
 #define INFLUX_DB_TASK_CORE                         (0)
 
+// DHT11 sensor is very slow, and hence its task is running on core-1, while
+// other tasks are running on core-0, this is done to avoid flickering on display
 #define DHT_TASK_NAME                               "dht task"
 #define DHT_TASK_SIZE                               (configMINIMAL_STACK_SIZE*3)
 #define DHT_TASK_PRIORITY                           (1)
