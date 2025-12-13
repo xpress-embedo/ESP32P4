@@ -6,7 +6,7 @@ idf_component_register(
     wifi_app.c
     http_server.c
     nvs_app.c
-    dht11.c
+    # dht11.c
     influxDB.c
     gui_mng.c
     gui_mng_cfg.c

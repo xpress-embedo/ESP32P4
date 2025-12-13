@@ -11,7 +11,7 @@
 #include "esp_sntp.h"
 
 #include "main.h"
-#include "dht11.h"
+#include "dht.h"
 #include "influxDB.h"
 #include "gui_mng.h"
 #include "data_config.h"
@@ -34,9 +34,9 @@ static QueueHandle_t main_q_event = NULL;
 
 // Private Function Declarations
 static void log_app_heap( void );
-static void measure_temp_humidity( void );
 static void app_sntp_init( void );
 static bool app_sntp_get_time( void );
+static void dht_task( void *pvParameters );
 
 // Application Main Entry Point
 void app_main(void)
@@ -81,21 +81,19 @@ void app_main(void)
   // start wifi application (soft access point and HTTP web server)
   wifi_app_start();
 
-  // initialize dht sensor library
-  dht11_init( DHT11_PIN, true );
+  // dht task
+  xTaskCreatePinnedToCore( dht_task, "dht_task", configMINIMAL_STACK_SIZE * 3, NULL, 1, NULL, 1 );
     
   while(1)
   {
-    static uint8_t measure_counter = 0;
-    measure_counter++;
+    static uint8_t counter = 10;
+    counter++;
     // 1 min per measurement
-    if ( measure_counter >= 60u )
+    if ( counter >= 10u )
     {
-      // Get DHT11 Temperature and Humidity Values
-      measure_temp_humidity();
       // print available heap
       log_app_heap();
-      measure_counter = 0u;
+      counter = 0u;
     }
     // Wait for events posted in Queue
     if( xQueueReceive( main_q_event, &main_msg, pdMS_TO_TICKS(MAIN_TASK_PERIOD) ) )
@@ -229,67 +227,6 @@ static void log_app_heap( void )
   ESP_LOGW( TAG, "External PSRAM: Free = %u bytes, Largest block = %u bytes", external_free, largest_external );
 }
 
-static void measure_temp_humidity( void )
-{
-  // uncomment this macro to simulate the temperature and humidity
-  // #define SIMULATE_TEMP_HUMIDITY
-
-  uint8_t temp = 0;
-
-  #ifndef SIMULATE_TEMP_HUMIDITY
-  // Get DHT11 Temperature and Humidity Values
-  if( dht11_read().status == DHT11_OK )
-  #else
-  if ( 1 )
-  #endif
-  {
-    #ifndef SIMULATE_TEMP_HUMIDITY
-    temp = 50 + (uint8_t)(esp_random() % 10);
-    #else
-    temp = (uint8_t)dht_reading.humidity;
-    #endif
-    // humidity can't be greater than 100%, that means invalid data
-    if( temp < 100 )
-    {
-      if( sensor_data.sensor_idx < SENSOR_BUFF_SIZE )
-      {
-        sensor_data.humidity[sensor_data.sensor_idx] = temp;
-        sensor_data.humidity_current = temp;
-        #ifndef SIMULATE_TEMP_HUMIDITY
-        temp = 20 + (uint8_t)(esp_random() % 5);
-        #else
-        temp = (uint8_t)dht_reading.temperature;
-        #endif
-        sensor_data.temperature[sensor_data.sensor_idx] = temp;
-        sensor_data.temperature_current = temp;
-        ESP_LOGI(TAG, "Temperature: %d", sensor_data.temperature_current);
-        ESP_LOGI(TAG, "Humidity: %d", sensor_data.humidity_current);
-        sensor_data.sensor_idx++;
-        // trigger event to display temperature and humidity
-        gui_send_event( GUI_MNG_EV_TEMP_HUMID, (void*)(&sensor_data) );
-        // if wifi is connected, trigger event to send data to ThingSpeak
-        if( wifi_app_is_connected() && sntp_connect_status )
-        {
-          influxdb_send_event(INFLUXDB_EV_TEMP_HUMID, NULL);
-        }
-        // reset the index
-        if( sensor_data.sensor_idx >= SENSOR_BUFF_SIZE )
-        {
-          sensor_data.sensor_idx = 0;
-        }
-      }
-    }
-    else
-    {
-      ESP_LOGE(TAG, "In-correct data received from DHT11 -> %u", temp);
-    }
-  }
-  else
-  {
-    ESP_LOGE(TAG, "Unable to Read DHT11 Status");
-  }
-}
-
 /**
  * @brief Initialize the SNTP
  * @param  None
@@ -359,3 +296,47 @@ static bool app_sntp_get_time( void )
   return status;
 }
 
+/**
+ * @brief DHT Sensor Task to periodically read temperature and humidity values
+ * @param pvParameters 
+ */
+static void dht_task( void *pvParameters )
+{
+  int16_t humidity, temperature;
+
+  while( 1 )
+  {
+    // Get DHT11 Temperature and Humidity Values
+    if( ESP_OK == dht_read_data( DHT_TYPE_DHT11, DHT11_PIN, &humidity, &temperature) )
+    {
+      if( sensor_data.sensor_idx < SENSOR_BUFF_SIZE )
+      {
+        sensor_data.humidity_current = (uint8_t)(humidity/10);
+        sensor_data.humidity[sensor_data.sensor_idx] = sensor_data.humidity_current;
+        sensor_data.temperature_current = (uint8_t)(temperature/10);
+        sensor_data.temperature[sensor_data.sensor_idx] = sensor_data.temperature_current;
+        ESP_LOGI(TAG, "Temperature: %d", sensor_data.temperature_current);
+        ESP_LOGI(TAG, "Humidity: %d", sensor_data.humidity_current);
+        sensor_data.sensor_idx++;
+        // trigger event to display temperature and humidity
+        gui_send_event( GUI_MNG_EV_TEMP_HUMID, (void*)(&sensor_data) );
+        // if wifi is connected, trigger event to send data to ThingSpeak
+        if( wifi_app_is_connected() && sntp_connect_status )
+        {
+          influxdb_send_event(INFLUXDB_EV_TEMP_HUMID, NULL);
+        }
+        // reset the index
+        if( sensor_data.sensor_idx >= SENSOR_BUFF_SIZE )
+        {
+          sensor_data.sensor_idx = 0;
+        }
+      }
+    }
+    else
+    {
+      ESP_LOGE( TAG, "Could not read data from sensor" );
+    }
+
+    vTaskDelay( pdMS_TO_TICKS(10000) );
+  }
+}
