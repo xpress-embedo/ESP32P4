@@ -175,7 +175,7 @@ static void influxdb_send_temp_humidity( void )
 
   if (err == ESP_OK)
   {
-    ESP_LOGI( TAG, "HTTP POST Status = %d", esp_http_client_get_status_code(client) );
+    // ESP_LOGI( TAG, "HTTP POST Status = %d", esp_http_client_get_status_code(client) );
     // ESP_LOGI( TAG, "content_length = %d", esp_http_client_get_content_length(client));
   }
   else

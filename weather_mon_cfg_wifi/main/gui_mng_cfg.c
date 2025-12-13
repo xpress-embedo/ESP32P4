@@ -254,7 +254,7 @@ static void gui_update_sensor_data( void *data )
   bool overflow = false;
   sensor_data_t *sensor_data;
   sensor_data = (sensor_data_t*)data;
-  ESP_LOGI( TAG, "gui_update_sensor_data" );
+  // ESP_LOGI( TAG, "gui_update_sensor_data" );
   uint8_t temperature = sensor_data->temperature_current;
   uint8_t humidity = sensor_data->humidity_current;
   GUI_LOCK();

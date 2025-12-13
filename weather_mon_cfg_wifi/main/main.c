@@ -22,7 +22,7 @@
 
 // Private Macros
 #define MAIN_TASK_PERIOD                    (1000)
-#define DHT11_PIN                           (GPIO_NUM_17)
+#define DHT11_PIN                           (GPIO_NUM_32)
 #define MAIN_EVENT_QUEUE_LEN                (5)
 
 // Private Variables
@@ -82,14 +82,14 @@ void app_main(void)
   wifi_app_start();
 
   // initialize dht sensor library
-  // dht11_init(DHT11_PIN, true);
+  dht11_init( DHT11_PIN, true );
     
   while(1)
   {
     static uint8_t measure_counter = 0;
     measure_counter++;
     // 1 min per measurement
-    if ( measure_counter >= 10u )
+    if ( measure_counter >= 60u )
     {
       // Get DHT11 Temperature and Humidity Values
       measure_temp_humidity();
@@ -231,11 +231,23 @@ static void log_app_heap( void )
 
 static void measure_temp_humidity( void )
 {
-  // if( dht11_read().status == DHT11_OK )
+  // uncomment this macro to simulate the temperature and humidity
+  // #define SIMULATE_TEMP_HUMIDITY
+
+  uint8_t temp = 0;
+
+  #ifndef SIMULATE_TEMP_HUMIDITY
+  // Get DHT11 Temperature and Humidity Values
+  if( dht11_read().status == DHT11_OK )
+  #else
   if ( 1 )
+  #endif
   {
-    // uint8_t temp = (uint8_t)dht11_read().humidity;
-    uint8_t temp = 50 + (uint8_t)(esp_random() % 10);
+    #ifndef SIMULATE_TEMP_HUMIDITY
+    temp = 50 + (uint8_t)(esp_random() % 10);
+    #else
+    temp = (uint8_t)dht_reading.humidity;
+    #endif
     // humidity can't be greater than 100%, that means invalid data
     if( temp < 100 )
     {
@@ -243,15 +255,18 @@ static void measure_temp_humidity( void )
       {
         sensor_data.humidity[sensor_data.sensor_idx] = temp;
         sensor_data.humidity_current = temp;
-        // temp = (uint8_t)dht11_read().temperature;
+        #ifndef SIMULATE_TEMP_HUMIDITY
         temp = 20 + (uint8_t)(esp_random() % 5);
+        #else
+        temp = (uint8_t)dht_reading.temperature;
+        #endif
         sensor_data.temperature[sensor_data.sensor_idx] = temp;
         sensor_data.temperature_current = temp;
         ESP_LOGI(TAG, "Temperature: %d", sensor_data.temperature_current);
         ESP_LOGI(TAG, "Humidity: %d", sensor_data.humidity_current);
         sensor_data.sensor_idx++;
         // trigger event to display temperature and humidity
-        gui_send_event(GUI_MNG_EV_TEMP_HUMID, (void*)(&sensor_data) );
+        gui_send_event( GUI_MNG_EV_TEMP_HUMID, (void*)(&sensor_data) );
         // if wifi is connected, trigger event to send data to ThingSpeak
         if( wifi_app_is_connected() && sntp_connect_status )
         {

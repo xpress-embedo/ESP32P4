@@ -1,4 +1,44 @@
 dependencies:
+  esp-idf-lib/dht:
+    component_hash: 85509c7af4a6a992215061a6152813026d8ed4b7baf9b8a17e0f05224505e15f
+    dependencies:
+    - name: esp-idf-lib/esp_idf_lib_helpers
+      registry_url: https://components.espressif.com
+      require: private
+      version: '*'
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    targets:
+    - esp32
+    - esp32c2
+    - esp32c3
+    - esp32c5
+    - esp32c6
+    - esp32c61
+    - esp32h2
+    - esp32p4
+    - esp32s2
+    - esp32s3
+    version: 1.1.7
+  esp-idf-lib/esp_idf_lib_helpers:
+    component_hash: a8049b1e609679fb54b2d57b0399dd29c4d1fda09a797edac9926f7810aa5703
+    dependencies: []
+    source:
+      registry_url: https://components.espressif.com
+      type: service
+    targets:
+    - esp32
+    - esp32c2
+    - esp32c3
+    - esp32c5
+    - esp32c6
+    - esp32c61
+    - esp32h2
+    - esp32p4
+    - esp32s2
+    - esp32s3
+    version: 1.3.10
   espressif/cmake_utilities:
     component_hash: 351350613ceafba240b761b4ea991e0f231ac7a9f59a9ee901f751bddc0bb18f
     dependencies:
@@ -74,7 +114,7 @@ dependencies:
       type: service
     version: 1.2.0
   espressif/esp_hosted:
-    component_hash: 53544436deb5fcbfdbf4a8e2c643cdbe31126556781784278c016d674df99cd2
+    component_hash: b989e55fee1337c9423f1687e90d9541f3d919a76c4181c9e7f894791f3b8488
     dependencies:
     - name: idf
       require: private
@@ -82,7 +122,7 @@ dependencies:
     source:
       registry_url: https://components.espressif.com
       type: service
-    version: 2.7.0
+    version: 2.7.3
   espressif/esp_lcd_ek79007:
     component_hash: 8005700b7f10c7136b6e2a3f19a48f972aa1d13ed107ed298574e8d24d17ea83
     dependencies:
@@ -122,7 +162,7 @@ dependencies:
       type: service
     version: 0.1.3
   espressif/esp_lcd_touch:
-    component_hash: cf4741f4903bdfe83c0a6606cb33314957e78605398954154f247e03acfd306b
+    component_hash: 3f85a7d95af876f1a6ecca8eb90a81614890d0f03a038390804e5a77e2caf862
     dependencies:
     - name: idf
       require: private
@@ -130,9 +170,9 @@ dependencies:
     source:
       registry_url: https://components.espressif.com/
       type: service
-    version: 1.2.0
+    version: 1.2.1
   espressif/esp_lcd_touch_gt911:
-    component_hash: bb9676973f0473bb1d5670230006542fc7cb950b415abad007198a0d33a73709
+    component_hash: be02e243d18b9a661bc13b0d22c0a5cfa3f708cf04d6eb059772276c8c8a4d76
     dependencies:
     - name: espressif/esp_lcd_touch
       registry_url: https://components.espressif.com
@@ -144,7 +184,7 @@ dependencies:
     source:
       registry_url: https://components.espressif.com/
       type: service
-    version: 1.2.0
+    version: 1.2.0~1
   espressif/esp_lvgl_port:
     component_hash: f872401524cb645ee6ff1c9242d44fb4ddcfd4d37d7be8b9ed3f4e85a404efcd
     dependencies:
@@ -225,6 +265,7 @@ dependencies:
       type: service
     version: 9.4.0
 direct_dependencies:
+- esp-idf-lib/dht
 - espressif/esp32_p4_function_ev_board
 - espressif/esp_lcd_ek79007
 - espressif/esp_lcd_ili9881c
@@ -235,6 +276,6 @@ direct_dependencies:
 - idf
 - joltwallet/littlefs
 - lvgl/lvgl
-manifest_hash: 15088390a495661ab514aa05ab97757b6fbb97e3c6f711c4205fd14dacd3924c
+manifest_hash: 614fba858464fcf2fc056172f72a8ab09a46fcb8d9829c5a8f23df9b65e2a248
 target: esp32p4
 version: 2.0.0
