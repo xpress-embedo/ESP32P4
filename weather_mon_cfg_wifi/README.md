@@ -10,11 +10,13 @@ This project uses ESP32P4 Function EV development board, and ESP-IDF version 5.5
 ![Grafana Demo](doc/demo_grafana.jpg)
 
 Following are the features of this project.
-* It connects with the WiFi Router (as of now this information is hard-coded)
+* It connects with the WiFi Router, this information is not hard-coded, there are two ways to connect with the WiFi Router
+    - The first method is to connect with the device as it is in Access Point mode, and then open the `192.168.0.1` and enter the WiFi Router i.e. Station Mode SSID and Credentials.
+    - The second method is by using the `Setting` - `WiFi` screen to select the Public SSID and enter password to connect.
 * It fetches the IST time using SNTP
 * It initializes the display and shows several meaningful screens and actions on the screens.
 * It initializes the DHT11 sensor and send the data to InfluxDB cloud, which is then used for visualization purpose on Grafana
-* DHT11 data is also displayed on Display.
+* DHT11 data is also displayed on Display. (Here I am now using the library and it is mapped to Core-1, else I was getting flicker).
 
 #### The following is documentation from Hello World project, which is still applicable
 The following is the website which we are using to add several components to our project.  
@@ -29,6 +31,8 @@ The following are the components/dependencies we have added to our base project 
 * `esp_lvgl_port` : This component contains the ESP LVGL port
 * `lvgl` : This component contains the LVGL graphics library.
 * `joltwallet/littlefs` : This components contains the Little Fat File System Library. Which can be used to store assets and other stuff.
+* `espressif/esp_wifi_remote` : TODO
+* `esp-idf-lib/dht`: DHT sensor library
 
 ### SDK Config Defaults
 By default the ESP-IDF uses the `sdkconfig` during the build, and `sdkconfig.defaults` is only used when generating `sdkconfig` for the first time or when it is missing. Usualluy we write only the changes or preset values we want to apply.
@@ -41,14 +45,40 @@ CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y
 CONFIG_PARTITION_TABLE_CUSTOM=y
 CONFIG_SPIRAM=y
 CONFIG_SPIRAM_SPEED_200M=y
-CONFIG_SPIRAM_XIP_FROM_PSRAM=y
-CONFIG_LV_USE_SYSMON=y
-CONFIG_LV_USE_PERF_MONITOR=y
+# CONFIG_SPIRAM_XIP_FROM_PSRAM=y
+CONFIG_TASK_WDT_TIMEOUT_S=10
+CONFIG_ESP_TLS_INSECURE=y
+CONFIG_ESP_TLS_SKIP_SERVER_CERT_VERIFY=y
+CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC=y
+CONFIG_MBEDTLS_DEBUG=y
+CONFIG_MBEDTLS_DEBUG_LEVEL_WARN=y
+CONFIG_MBEDTLS_SSL_IN_CONTENT_LEN=4096
+CONFIG_MBEDTLS_SSL_OUT_CONTENT_LEN=2048
+CONFIG_HTTPD_MAX_URI_LEN=1024
+# CONFIG_LV_USE_SYSMON=y
+# CONFIG_LV_USE_PERF_MONITOR=y
 CONFIG_LV_PERF_MONITOR_ALIGN_BOTTOM_RIGHT=y
+CONFIG_LV_FONT_MONTSERRAT_10=y
+CONFIG_LV_FONT_MONTSERRAT_16=y
+CONFIG_LV_FONT_MONTSERRAT_18=y
+CONFIG_LV_FONT_MONTSERRAT_20=y
+CONFIG_LV_FONT_MONTSERRAT_22=y
+CONFIG_LV_FONT_MONTSERRAT_24=y
+CONFIG_LV_FONT_MONTSERRAT_26=y
+CONFIG_LV_FONT_MONTSERRAT_28=y
+CONFIG_LV_FONT_MONTSERRAT_40=y
 CONFIG_LV_FONT_MONTSERRAT_48=y
+CONFIG_LV_MEM_SIZE_KILOBYTES=128
 # CONFIG_LV_BUILD_EXAMPLES is not set
 # CONFIG_LV_BUILD_DEMOS is not set
 CONFIG_IDF_EXPERIMENTAL_FEATURES=y
+
+CONFIG_ESP_WIFI_SSID="SECOND"
+CONFIG_ESP_WIFI_PASSWORD="Brutal@garry"
+CONFIG_INFLUXDB_URL="https://us-east-1-1.aws.cloud2.influxdata.com"
+CONFIG_INFLUXDB_ORG="697c4e83a61ce79b"
+CONFIG_INFLUXDB_BUCKET="EmLab"
+CONFIG_INFLUXDB_TOKEN="ZUhdAhpcI806uM-OG9GrIL1NOBvsfOFzB26f37xVAFH-QNH-JOndHiaQevUxi-vt_RvsODb-gyV5KnPKwlnaKg=="
 ```
 
 The below is the explaination of each configuration setting: 
@@ -80,6 +110,7 @@ The below is the explaination of each configuration setting:
     - Normally, code is executed from flash or internal RAM.  
     - With XIP, certain code sections (like large libraries or assets) can be executed directly from PSRAM.  
     - This is useful when internal RAM is limited and you want to run large applications without copying code into RAM.  
+    - This is disabled as of now
 
 * `CONFIG_LV_OS_FREERTOS=y` : This tells LVGL to use FreeRTOS as its operating system backend. It enables LVGL to use FreeRTOS primitives like tasks, semaphores, and mutexes for internal operations. **This setting is removed because due to some reason the CPU consumption was 100%, will evaluate this later.**
 * `CONFIG_LV_USE_FREERTOS_TASK_NOTIFY=y` : This enables LVGL to use FreeRTOS task notifications for signaling between tasks (e.g., waking up the GUI task when there's input or rendering to do). It's a lightweight and efficient mechanism compared to semaphores or queues. **This setting is removed because due to some reason the CPU consumption was 100%, will evaluate this later.**
@@ -89,6 +120,12 @@ The below is the explaination of each configuration setting:
 * `CONFIG_IDF_EXPERIMENTAL_FEATURES=y` : This enables the experimental features or some features which shall not be enabled accidently, for example `CONFIG_SPIRAM_SPEED_200M=y` this is available only when experimental features are enabled.
 
 * `# CONFIG_LV_BUILD_EXAMPLES is not set` and `# CONFIG_LV_BUILD_DEMOS is not set` : by disabling this setting we are configuring LVGL to not compile examples and demos to save some time.
+
+* `CONFIG_ESP_TLS_INSECURE=y` and `CONFIG_ESP_TLS_SKIP_SERVER_CERT_VERIFY=y`: This is needed as I am not using any certificate to communicate with InfluxDB server.
+
+* `CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC=y` , `CONFIG_MBEDTLS_SSL_IN_CONTENT_LEN=4096` and `CONFIG_MBEDTLS_SSL_OUT_CONTENT_LEN=2048` : Sometimes I am facing issues due to less internal memory and program was crashing, external memory is used and size are also increased.
+* `CONFIG_MBEDTLS_DEBUG` : Debugging issues with mbedtls.
+
 
 ### Internal and External PSRAM
 `esp_get_free_heap` function returns the total free heap memory, this includes both internal and external RAM.  
