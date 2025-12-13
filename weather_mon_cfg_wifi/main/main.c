@@ -6,10 +6,9 @@
 #include "esp_log.h"
 #include "freertos/idf_additions.h"
 
-// #include "wifi_sta_mng.h"
-
 #include "esp_sntp.h"
 
+#include "prj_ref.h"
 #include "main.h"
 #include "dht.h"
 #include "influxDB.h"
@@ -17,8 +16,6 @@
 #include "data_config.h"
 #include "wifi_app.h"
 
-// Test Code
-#include "esp_random.h"
 
 // Private Macros
 #define MAIN_TASK_PERIOD                    (1000)
@@ -82,7 +79,8 @@ void app_main(void)
   wifi_app_start();
 
   // dht task
-  xTaskCreatePinnedToCore( dht_task, "dht_task", configMINIMAL_STACK_SIZE * 3, NULL, 1, NULL, 1 );
+  xTaskCreatePinnedToCore(  dht_task, DHT_TASK_NAME, DHT_TASK_SIZE, \
+                            NULL, DHT_TASK_PRIORITY, NULL, DHT_TASK_CORE );
     
   while(1)
   {

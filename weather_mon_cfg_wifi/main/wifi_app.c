@@ -15,6 +15,7 @@
 #include "esp_mac.h"
 #include "lwip/netdb.h"
 
+#include "prj_ref.h"
 #include "wifi_app.h"
 #include "http_server.h"
 #include "nvs_app.h"
@@ -23,8 +24,9 @@
 
 // Private Macros
 #define WIFI_APP_QUEUE_SIZE                           (5)
-#define WIFI_APP_TASK_SIZE                            (4*1024u)
-#define WIFI_APP_TASK_PRIORITY                        (5u)
+// moved to prj_ref.h
+// #define WIFI_APP_TASK_SIZE                            (4*1024u)
+// #define WIFI_APP_TASK_PRIORITY                        (5u)
 
 // Private Variables
 static const char *TAG = "WiFi_APP";
@@ -113,7 +115,11 @@ void wifi_app_start( void )
   wifi_app_event_group = xEventGroupCreate();
 
   // start the WiFi application task
-  xTaskCreate(&wifi_app_task, "wifi app task", WIFI_APP_TASK_SIZE, NULL, WIFI_APP_TASK_PRIORITY, NULL);
+  xTaskCreatePinnedToCore(  &wifi_app_task, WIFI_APP_TASK_NAME, \
+                            WIFI_APP_TASK_SIZE, NULL, \
+                            WIFI_APP_TASK_PRIORITY, NULL, \
+                            WIFI_APP_TASK_CORE
+                          );
 }
 
 /**

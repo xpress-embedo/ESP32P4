@@ -9,18 +9,20 @@
 #include "esp_wifi.h"
 #include "esp_log.h"
 
+#include "prj_ref.h"
 #include "wifi_app.h"
 #include "http_server.h"
 
 // Private Macros
-#define HTTP_SERVER_TASK_SIZE                       (8*1024u)
-#define HTTP_SERVER_TASK_PRIORITY                   (4u)
+// Moved to prj_ref.h file
+// #define HTTP_SERVER_TASK_SIZE                       (8*1024u)
+// #define HTTP_SERVER_TASK_PRIORITY                   (4u)
 #define HTTP_SERVER_MAX_URI_HANDLERS                (20u)
 #define HTTP_SERVER_RECEIVE_WAIT_TIMEOUT            (10u)   // in seconds
 #define HTTP_SERVER_SEND_WAIT_TIMEOUT               (10u)   // in seconds
 
-#define HTTP_SERVER_MONITOR_TASK_SIZE               (4*1024u)
-#define HTTP_SERVER_MONITOR_TASK_PRIORITY           (3u)
+// #define HTTP_SERVER_MONITOR_TASK_SIZE               (4*1024u)
+// #define HTTP_SERVER_MONITOR_TASK_PRIORITY           (3u)
 #define HTTP_SERVER_MONITOR_QUEUE_SIZE              (4u)
 
 
@@ -181,9 +183,11 @@ static httpd_handle_t http_server_configure(void)
   }
 
   // create HTTP Server Monitor Task
-  xTaskCreate(&http_server_monitor, "http_server_monitor", \
-              HTTP_SERVER_MONITOR_TASK_SIZE, NULL, \
-              HTTP_SERVER_MONITOR_TASK_PRIORITY, &task_http_server_monitor);  
+  xTaskCreatePinnedToCore(  &http_server_monitor, HTTP_SERVER_MONITOR_TASK_NAME, \
+                            HTTP_SERVER_MONITOR_TASK_SIZE, NULL, \
+                            HTTP_SERVER_MONITOR_TASK_PRIORITY, \
+                            &task_http_server_monitor,  \
+                            HTTP_SERVER_MONITOR_TASK_CORE );  
 
   // want to specify core id where the task should run, then use config.code_id
   // note ESP32-S2 has single core only, so this will not work on there

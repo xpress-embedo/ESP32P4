@@ -5,6 +5,7 @@
  *      Author: abc@xyz
  */
 
+#include "prj_ref.h"
 #include "gui_mng.h"
 
 #include "esp_log.h"
@@ -41,7 +42,7 @@ void gui_start( void )
   xTimerStart(gui_refresh_timer, 0);
     
   // callback function, task name, stack size, parameters, priority, task handle
-  xTaskCreate(&gui_task, "gui task", 4096*8, NULL, 5, NULL);
+  xTaskCreatePinnedToCore( &gui_task, GUI_TASK_NAME, GUI_TASK_STACK_SIZE, NULL, GUI_TASK_PRIORITY, NULL, GUI_TASK_CORE );
 }
 
 /**

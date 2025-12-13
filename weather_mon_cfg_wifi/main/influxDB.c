@@ -12,6 +12,7 @@
 
 #include "esp_http_client.h"
 
+#include "prj_ref.h"
 #include "main.h"
 #include "wifi_app.h"
 #include "influxDB.h"
@@ -49,7 +50,11 @@ void influxdb_start( void )
     {
       ESP_LOGE(TAG, "Unable to Create Queue");
     }
-    xTaskCreate(&influxdb_task, "InfluxDB Task", 4096*2, NULL, 6, NULL);
+    xTaskCreatePinnedToCore(  &influxdb_task, INFLUX_DB_TASK_NAME, \
+                              INFLUX_DB_TASK_SIZE, NULL, \
+                              INFLUX_DB_TASK_PRIORITY, NULL, \
+                              INFLUX_DB_TASK_CORE
+                            );
     influxdb_init = true;
   }
   else
