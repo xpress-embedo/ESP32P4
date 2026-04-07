@@ -44,7 +44,7 @@ void influxdb_start( void )
   if ( false == influxdb_init )
   {
     ESP_LOGI( TAG, "Starting InfluxDB Task" );
-    // create message queue with the length THINGSPEAK_EVENT_QUEUE_LEN
+    // create message queue with the length INFLUXDB_EVENT_QUEUE_LEN
     influxdb_q_event = xQueueCreate( INFLUXDB_EVENT_QUEUE_LEN, sizeof(influxdb_q_msg_t) );
     if( influxdb_q_event == NULL )
     {
@@ -59,7 +59,7 @@ void influxdb_start( void )
   }
   else
   {
-    ESP_LOGW( TAG, "InfludxDB was already initialized" );
+    ESP_LOGW( TAG, "InfluxDB was already initialized" );
     // we are here because of re-connection of WiFi
     // so we need to cleanup the previous client if any
     if ( client != NULL )
@@ -89,7 +89,7 @@ BaseType_t influxdb_send_event( influxdb_event_t event, uint8_t *pData )
     msg.data      = pData;
     if ( NULL == influxdb_q_event )
     {
-      ESP_LOGE( TAG, "InfluxDB Queue Problem" );
+      ESP_LOGE( TAG, "Cannot send event: InfluxDB queue is NULL" );
     }
     else
     {
@@ -170,6 +170,11 @@ static void influxdb_send_temp_humidity( void )
       // .crt_bundle_attach = esp_crt_bundle_attach,  // Attach the certificate bundle
     };
     client = esp_http_client_init( &config );
+    if ( client == NULL )
+    {
+      ESP_LOGE(TAG, "Failed to initialize HTTP client");
+      return;
+    }
     // set header
     esp_http_client_set_header( client, "Authorization", "Token " INFLUXDB_TOKEN );
     esp_http_client_set_header( client, "Content-Type", "text/plain" );
