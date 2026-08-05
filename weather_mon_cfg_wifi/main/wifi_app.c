@@ -508,7 +508,7 @@ static void wifi_app_soft_ap_config( void )
   // Set the mode as Access Point and Station Mode
   ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_APSTA));
   // Set our configuration
-  ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_AP, &ap_config));
+  ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &ap_config));
   // our Default bandwidth is 20MHz
   ESP_ERROR_CHECK(esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_AP_BANDWIDTH));
   ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_STA_POWER_SAVE));
@@ -529,7 +529,7 @@ static void wifi_app_connect_sta(void)
   }
   
   ESP_LOGI( TAG, "STA Connection Starting" );
-  ESP_ERROR_CHECK( esp_wifi_set_config(ESP_IF_WIFI_STA, wifi_config_ptr ) );
+  ESP_ERROR_CHECK( esp_wifi_set_config(WIFI_IF_STA, wifi_config_ptr ) );
   // ESP_ERROR_CHECK( esp_wifi_connect() );   // This is too harsh and can crash the system
   esp_err_t err = esp_wifi_connect();
   if ( err != ESP_OK )

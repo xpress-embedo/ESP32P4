@@ -29,7 +29,7 @@
 #define WIFI_AP_IP                      "192.168.0.1"   // default IP address
 #define WIFI_AP_GATEWAY                 "192.168.0.1"
 #define WIFI_AP_NETMASK                 "255.255.255.0"
-#define WIFI_AP_BANDWIDTH               WIFI_BW_HT20    // AP Bandwidth 20MHz (40MHz is other option)
+#define WIFI_AP_BANDWIDTH               WIFI_BW20       // AP Bandwidth 20MHz (40MHz is other option)
 #define WIFI_STA_POWER_SAVE             WIFI_PS_NONE    // No Power Save
 #define WIFI_MAX_SSID_LEN               (20)            // Default is 32 but I am restricting to 20
 #define WIFI_MAX_PSWD_LEN               (20)            // Default is 64 but I am restricting to 20
